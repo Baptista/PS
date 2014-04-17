@@ -93,6 +93,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gamestats.Data\Gamestats.Data.csproj">
+      <Project>{488BD1DD-8302-4B9B-B1F5-95823ACF3F57}</Project>
+      <Name>Gamestats.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gamestats.DomainModel\Gamestats.DomainModel.csproj">
+      <Project>{08E3E03C-C4A0-4F3E-B9A4-AB92C5A0B8E9}</Project>
+      <Name>Gamestats.DomainModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gamestats.Entity\Gamestats.Entity.csproj">
       <Project>{CBD2862D-E22A-44E7-A237-E50BE8FB9107}</Project>
       <Name>Gamestats.Entity</Name>
