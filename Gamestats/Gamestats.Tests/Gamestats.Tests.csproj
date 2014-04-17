@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="SqlTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -92,6 +93,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gamestats.Entity\Gamestats.Entity.csproj">
+      <Project>{CBD2862D-E22A-44E7-A237-E50BE8FB9107}</Project>
+      <Name>Gamestats.Entity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gamestats\Gamestats.csproj">
       <Project>{A726B500-E438-4F3C-831B-32714B07FE13}</Project>
       <Name>Gamestats</Name>
