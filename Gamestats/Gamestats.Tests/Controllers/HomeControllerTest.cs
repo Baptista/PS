@@ -31,7 +31,8 @@ namespace Gamestats.Tests.Controllers
         [TestMethod]
         public void Index()
         {
-            Assert.IsNotNull(_mapperGameEventToGameEventModel.MapAll(_repo.GetAllEvents()));
+            _repo = new SqlGamestatsRepository();
+            Assert.IsNotNull(_repo.GetAllEvents());
         }
 
         [TestMethod]
