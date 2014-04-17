@@ -19,7 +19,7 @@ namespace Gamestats.Data
         private SqlConnection AcessDb()
         {
             SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = "Data Source=(LocalDb)\v11.0;AttachDbFilename=|DataDirectory|\aspnet-Gamestats-20140415010223.mdf;Initial Catalog=aspnet-Gamestats-20140415010223;Integrated Security=True ";//providerName=System.Data.SqlClient";
+            conn.ConnectionString = "Data Source=.;AttachDbFilename=|DataDirectory|DbGamestats.mdf;Initial Catalog=DbGamestats;Integrated Security=True;";
                 //"Server=2c561a59-23ab-4f93-b2a2-a310010e1526.sqlserver.sequelizer.com;Database=db2c561a5923ab4f93b2a2a310010e1526;User ID=qbbzknotjbnefvmn;Password=4aMjMmn7rgNoFoV3oF8kzhySBYyGuesRbVTEC3NzWfNrZuohoM5MYsgUJ4QWVNKm;";
                 //"Data Source=BAPTISTA;Initial Catalog=Gamestats;Integrated Security=True";
             conn.Open();
