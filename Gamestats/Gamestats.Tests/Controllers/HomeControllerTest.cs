@@ -28,13 +28,14 @@ namespace Gamestats.Tests.Controllers
 
         //
         // GET: /GameEvent/
-        public ActionResult Index2()
+        [TestMethod]
+        public void Index()
         {
             Assert.IsNotNull(_mapperGameEventToGameEventModel.MapAll(_repo.GetAllEvents()));
         }
 
         [TestMethod]
-        public void Index()
+        public void Index2()
         {
 
 
