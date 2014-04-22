@@ -9,10 +9,28 @@ namespace Gamestats.DomainModel
 {
     public interface IRepositoryGamestats
     {
+        /// Eventos
+        
         IEnumerable<GameEvent> GetEvents(String Acronym);
         IEnumerable<GameEvent> GetAllEvents();
         void CreateEvent(GameEvent gameevent);
-        void UpdadeEvent(int id);
+        void UpdadeEvent(GameEvent gameEvent);
         GameEvent GetEvent(int id);
+        void DeleteEvent(int id);
+        
+        /// Player
+        void CreatePlayer(GamePlayer gamePlayer);
+        void UpdatePlayer(GamePlayer gameEvent);
+        GamePlayer GetPlayer(int id);
+        IEnumerable<GamePlayer> GetAllPlayers(); 
+        void DeletePlayer(int id);
+
+
+        //GameSetUp
+        void CreateGameSetUp(GameSetUp gameSetUp);
+        GameSetUp GetGameSetUp(int id);
+        IEnumerable<GameSetUp> GetAllGameSetUps();
+        void UpdateSetUp(GameSetUp gameSetUp);
+        void DeleteSetUp(int id);
     }
 }

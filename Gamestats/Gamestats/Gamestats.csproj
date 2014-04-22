@@ -160,24 +160,28 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GameEventController.cs" />
+    <Compile Include="Controllers\GamePlayerController.cs" />
+    <Compile Include="Controllers\GameSetUpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Mappers\GameEventModel_To_GameEvent.cs" />
     <Compile Include="Mappers\GameEvent_To_GameEventModel.cs" />
+    <Compile Include="Mappers\GamePlayerModel_To_GamePlayer.cs" />
+    <Compile Include="Mappers\GamePlayer_To_GamePlayerModel.cs" />
+    <Compile Include="Mappers\GameSetUpModel_To_GameSetUp.cs" />
+    <Compile Include="Mappers\GameSetUp_To_GameSetUpModel.cs" />
     <Compile Include="Mappers\IDataMapper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\GameEventModels.cs" />
+    <Compile Include="Models\GamePlayerModels.cs" />
+    <Compile Include="Models\GameSetUpModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\DbGamestats.mdf" />
-    <Content Include="App_Data\DbGamestats_log.ldf">
-      <DependentUpon>DbGamestats.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -198,7 +202,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -225,6 +231,20 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\GameEvent\Index.cshtml" />
     <Content Include="Views\GameEvent\Create.cshtml" />
+    <Content Include="Views\GameEvent\Edit.cshtml" />
+    <Content Include="Views\GameEvent\Details.cshtml" />
+    <Content Include="Views\GamePlayer\Index.cshtml" />
+    <Content Include="Views\GamePlayer\Details.cshtml" />
+    <Content Include="Views\GamePlayer\Edit.cshtml" />
+    <Content Include="Views\GameEvent\Delete.cshtml" />
+    <Content Include="Views\GamePlayer\Delete.cshtml" />
+    <Content Include="Views\GamePlayer\Create.cshtml" />
+    <Content Include="Views\GameSetUp\SetUp.cshtml" />
+    <Content Include="Views\GameSetUp\Create.cshtml" />
+    <Content Include="Views\GameSetUp\Details.cshtml" />
+    <Content Include="Views\GameSetUp\Index.cshtml" />
+    <Content Include="Views\GameSetUp\Edit.cshtml" />
+    <Content Include="Views\GameSetUp\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -233,7 +253,11 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Photos\" />
+    <Folder Include="Svg\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gamestats.Data\Gamestats.Data.csproj">
       <Project>{488BD1DD-8302-4B9B-B1F5-95823ACF3F57}</Project>

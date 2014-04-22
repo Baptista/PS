@@ -45,17 +45,30 @@ namespace Gamestats.Controllers
 
         public ActionResult Edit(int id)
         {
-            throw new NotImplementedException();
+            return View(_mapperGameEventToGameEventModel.Map(_repo.GetEvent(id)));
+        }
+
+        [HttpPost]
+        public ActionResult Edit(GameEventModels gameEventModels)
+        {
+            _repo.UpdadeEvent(_mapperGameEventModelToGameEvent.Map(gameEventModels));
+            return RedirectToAction("Index");
         }
 
         public ActionResult Details(int id)
         {
-            throw new NotImplementedException();
+            return View(_mapperGameEventToGameEventModel.Map(_repo.GetEvent(id)));
         }
 
         public ActionResult Delete(int id)
         {
-            throw new NotImplementedException();
+            return View(_mapperGameEventToGameEventModel.Map(_repo.GetEvent(id)));
+        }
+        [HttpPost,ActionName("Delete")]
+        public ActionResult DeleteComfirmed(int id)
+        {
+            _repo.DeleteEvent(id);
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,0 +1,48 @@
+﻿@model Gamestats.Models.GameSetUpModels
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>GameSetUpModels</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.stadium)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.stadium)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.nameHomeTeam)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nameHomeTeam)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.nameAwayTeam)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nameAwayTeam)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.formation)
+        </dt>
+
+        <dd>
+            <object type="image/svg+xml" data=@Url.Content("~/Svg/"+Model.formation) />
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
