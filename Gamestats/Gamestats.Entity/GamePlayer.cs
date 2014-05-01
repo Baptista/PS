@@ -9,7 +9,14 @@ namespace Gamestats.Entity
         public String Name { get; set; }
         public String Img { get; set; }
         public String ImgType { get; set; }
-        public String Acronym { get; set; }
-        public String Team { get; set; }
+        public String Club { get; set; }
+        public String Position { get; set; }
+        public DateTime Born { get; set; }
+        public String Nationality { get; set; }
+        public String Titles { get; set; }
+        public String Facebook { get; set; }
+        public double Height { get; set; }
+        public int Weight { get; set; }
+
     }
 }

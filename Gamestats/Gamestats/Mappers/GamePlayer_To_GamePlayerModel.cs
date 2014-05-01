@@ -18,8 +18,14 @@ namespace Gamestats.Mappers
                 Name = source.Name,
                 Img = source.Img,
                 ImgType = source.ImgType,
-                Acronym = source.Acronym,
-                Team = source.Team
+                Club = source.Club,
+                Position = source.Position,
+                Born = source.Born,
+                Nationality = source.Nationality,
+                Titles = source.Titles,
+                Facebook = source.Facebook,
+                Height = source.Height,
+                Weight = source.Weight
             };
         }
 

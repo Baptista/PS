@@ -25,6 +25,7 @@ namespace Gamestats.DomainModel
         IEnumerable<GamePlayer> GetAllPlayers(); 
         void DeletePlayer(int id);
 
+        IEnumerable<GamePlayer> GetAllPlayers(String club , String position); 
 
         //GameSetUp
         void CreateGameSetUp(GameSetUp gameSetUp);

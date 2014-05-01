@@ -6,15 +6,21 @@
 
 <h2>Details</h2>
 
+@section scripts
+{
+    <script src="/Scripts/AddPlayerToGame.js" type="text/javascript"> </script>
+}
+
+
 <div>
     <h4>GameSetUpModels</h4>
-	<hr />
-    <dl class="dl-horizontal">
+    <hr />
+    <dl class="dl-horizontal" id="tabel">
         <dt>
             @Html.DisplayNameFor(model => model.stadium)
         </dt>
 
-        <dd>
+        <dd id="idstatadium">
             @Html.DisplayFor(model => model.stadium)
         </dd>
 
@@ -22,7 +28,7 @@
             @Html.DisplayNameFor(model => model.nameHomeTeam)
         </dt>
 
-        <dd>
+        <dd id="idhometeam">
             @Html.DisplayFor(model => model.nameHomeTeam)
         </dd>
 
@@ -30,7 +36,7 @@
             @Html.DisplayNameFor(model => model.nameAwayTeam)
         </dt>
 
-        <dd>
+        <dd id="idawayteam">
             @Html.DisplayFor(model => model.nameAwayTeam)
         </dd>
         <dt>
@@ -38,10 +44,13 @@
         </dt>
 
         <dd>
-            <object type="image/svg+xml" data=@Url.Content("~/Svg/"+Model.formation) />
+           <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/Svg/"+Model.formation) />
         </dd>
     </dl>
 </div>
+
+
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
     @Html.ActionLink("Back to List", "Index")

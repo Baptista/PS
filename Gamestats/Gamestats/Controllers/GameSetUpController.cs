@@ -19,11 +19,13 @@ namespace Gamestats.Controllers
         private GameSetUpModel_To_GameSetUp _mapGameSetUpModelToGameSetUp;
         private GameSetUp_To_GameSetUpModel _mapGameSetUpToGameSetUpModel;
 
+        private GamePlayer_To_GamePlayerModel _mapPlayerToGamePlayerModel;
         public GameSetUpController()
         {
             _repo = new SqlGamestatsRepository();
             _mapGameSetUpModelToGameSetUp = new GameSetUpModel_To_GameSetUp();
-            _mapGameSetUpToGameSetUpModel = new GameSetUp_To_GameSetUpModel();        
+            _mapGameSetUpToGameSetUpModel = new GameSetUp_To_GameSetUpModel();
+            _mapPlayerToGamePlayerModel = new GamePlayer_To_GamePlayerModel();
         }
 
         public ViewResult Index()
@@ -45,7 +47,16 @@ namespace Gamestats.Controllers
 
         public ActionResult Details(int id)
         {
-            return View(_mapGameSetUpToGameSetUpModel.Map(_repo.GetGameSetUp(id)));
+            GameSetUpModels game = _mapGameSetUpToGameSetUpModel.Map(_repo.GetGameSetUp(id));
+            //IEnumerable<GamePlayerModels> homeplayers = _mapPlayerToGamePlayerModel.MapAll(_repo.GetAllPlayers(game.nameHomeTeam,game));
+            //IEnumerable<GamePlayerModels> awayplayers = _mapPlayerToGamePlayerModel.MapAll(_repo.GetAllPlayers(game.nameAwayTeam));
+
+            //AddPlayerToGameSetUp modelview = new AddPlayerToGameSetUp();
+            //modelview.gameSetUpModels = game;
+            //modelview.gamePlayerHome = homeplayers;
+            //modelview.gamePlayerAway = awayplayers;
+
+            return View(game);
         }
 
         public ActionResult Edit(int id)
@@ -69,5 +80,12 @@ namespace Gamestats.Controllers
             _repo.DeleteSetUp(id);
             return RedirectToAction("Index");
         }
+
+
+        public ActionResult GetPlayers(String club, String position)
+        {
+            return Json(_mapPlayerToGamePlayerModel.MapAll(_repo.GetAllPlayers(club, position)) , JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

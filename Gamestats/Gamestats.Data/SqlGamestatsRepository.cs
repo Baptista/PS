@@ -172,11 +172,11 @@ namespace Gamestats.Data
             p2.Direction = ParameterDirection.Input;
 
             SqlParameter p3 = new SqlParameter("@acronym", SqlDbType.VarChar , 50);
-            p3.Value = gamePlayer.Acronym;
+            p3.Value = gamePlayer.Position;
             p3.Direction = ParameterDirection.Input;
 
             SqlParameter p4 = new SqlParameter("@team" , SqlDbType.VarChar , 100);
-            p4.Value = gamePlayer.Team;
+            p4.Value = gamePlayer.Club;
             p4.Direction  = ParameterDirection.Input;
 
             comm.Parameters.Add(p1);
@@ -207,11 +207,11 @@ namespace Gamestats.Data
             p3.Direction = ParameterDirection.Input;
 
             SqlParameter p4 = new SqlParameter("@acronym", SqlDbType.VarChar, 50);
-            p4.Value = gamePlayer.Acronym;
+            p4.Value = gamePlayer.Position;
             p4.Direction = ParameterDirection.Input;
 
             SqlParameter p5 = new SqlParameter("@team", SqlDbType.VarChar, 100);
-            p5.Value = gamePlayer.Team;
+            p5.Value = gamePlayer.Club;
             p5.Direction = ParameterDirection.Input;
 
             comm.Parameters.Add(p1);
@@ -239,8 +239,14 @@ namespace Gamestats.Data
                         Id = (int)reader.GetValue(0),
                         Name = reader.GetString(1),
                         Img = (string)reader[2],
-                        Acronym = reader.GetString(3),
-                        Team = reader.GetString(4)
+                        Club = reader.GetString(3),
+                        Position = reader.GetString(4),
+                        //Born = (DateTime)reader[5],
+                        Nationality = reader.GetString(6),
+                        Titles = reader.GetString(7),
+                        Facebook = reader.GetString(8),
+                        Height = reader.GetFloat(9),
+                        Weight = reader.GetInt32(10)
                     };
 
                 }
@@ -269,8 +275,14 @@ namespace Gamestats.Data
                         Id = (int)reader.GetValue(0),
                         Name = reader.GetString(1),
                         Img = (string)reader[2],
-                        Acronym = reader.GetString(3),
-                        Team = reader.GetString(4)
+                        Club = reader.GetString(3),
+                        Position = reader.GetString(4),
+                        Born = (DateTime)reader[5],
+                        Nationality = reader.GetString(6),
+                        Titles = reader.GetString(7),
+                        Facebook = reader.GetString(8),
+                        Height = reader.GetFloat(9),
+                        Weight = reader.GetInt32(10)
                     };
                     list.Add(geEvent);
                 }
@@ -294,6 +306,42 @@ namespace Gamestats.Data
 
             comm.ExecuteNonQuery();
             conn.Close();
+        }
+
+        public IEnumerable<GamePlayer> GetAllPlayers(string club , string position)
+        {
+            SqlConnection conn = AcessDb();
+            SqlCommand comm = conn.CreateCommand();
+            comm.CommandText = "select * from GamePlayer where club='"+club+"' and position='"+position+"'";
+            List<GamePlayer> list = new List<GamePlayer>();
+
+            using (SqlDataReader reader = comm.ExecuteReader())
+            {
+
+                while (reader.Read())
+                {
+                    
+                    GamePlayer geEvent = new GamePlayer()
+                    {
+
+                        Id = (int)reader.GetValue(0),
+                        Name = reader.GetString(1),
+                        Img = (string)reader[2],
+                        Club = reader.GetString(3),
+                        Position = reader.GetString(4),
+                        Born = (DateTime)reader[5],
+                        Nationality = reader.GetString(6),
+                        Titles = reader.GetString(7),
+                        Facebook = reader.GetString(8),
+                        Height = reader.GetDouble(9),
+                        Weight = (int)reader[10]
+                    };
+                    list.Add(geEvent);
+                }
+
+                reader.Close();
+            }
+            return list;
         }
 
         public void CreateGameSetUp(GameSetUp gameSetUp)
@@ -332,7 +380,7 @@ namespace Gamestats.Data
         {
            SqlConnection conn = AcessDb();
             SqlCommand comm = conn.CreateCommand();
-            comm.CommandText = "select * from GameSetUp where id=" + id;
+            comm.CommandText = "select * from Game where id=" + id;
             
             using (SqlDataReader reader = comm.ExecuteReader())
             {
@@ -360,7 +408,7 @@ namespace Gamestats.Data
         {
             SqlConnection conn = AcessDb();
             SqlCommand comm = conn.CreateCommand();
-            comm.CommandText = "select * from GameSetUp";
+            comm.CommandText = "select * from Game";
             List<GameSetUp> list = new List<GameSetUp>();
 
             using (SqlDataReader reader = comm.ExecuteReader())
