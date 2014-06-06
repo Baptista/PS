@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameObserver", "GameObserve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameObserver.Tests", "GameObserver.Tests\GameObserver.Tests.csproj", "{5DFB45FF-4907-4EF7-984D-8DA482BE9ED6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameObserver.Data", "GameObserver.Data\GameObserver.Data.csproj", "{0F1A046B-B07D-483D-BA12-3EB758E6F16A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameObserver.DomainModel", "GameObserver.DomainModel\GameObserver.DomainModel.csproj", "{912ABED5-C584-4BF6-9D05-E6B13CBD6099}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{5DFB45FF-4907-4EF7-984D-8DA482BE9ED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DFB45FF-4907-4EF7-984D-8DA482BE9ED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DFB45FF-4907-4EF7-984D-8DA482BE9ED6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1A046B-B07D-483D-BA12-3EB758E6F16A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1A046B-B07D-483D-BA12-3EB758E6F16A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1A046B-B07D-483D-BA12-3EB758E6F16A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1A046B-B07D-483D-BA12-3EB758E6F16A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{912ABED5-C584-4BF6-9D05-E6B13CBD6099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{912ABED5-C584-4BF6-9D05-E6B13CBD6099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{912ABED5-C584-4BF6-9D05-E6B13CBD6099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{912ABED5-C584-4BF6-9D05-E6B13CBD6099}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
