@@ -154,5 +154,15 @@ namespace GameObserver.Controllers
 
             return Json(pla, JsonRequestBehavior.AllowGet);
         }
+
+        public void InserirPlayerOnTeam(String idclub, String idplayer, String date, String onstarteam)
+        {
+            _repo.InsertPlayersOnTeam(Convert.ToInt32(idplayer),Convert.ToInt32(idclub),Convert.ToDateTime(date),Convert.ToInt32(onstarteam));
+        }
+        public void RemovePlayerOnTeam(int idclub, int idplayer, DateTime date)
+        {
+            _repo.RemovePlayersOnTeam(Convert.ToInt32(idplayer), Convert.ToInt32(idclub), Convert.ToDateTime(date));
+        }
+
     }
 }

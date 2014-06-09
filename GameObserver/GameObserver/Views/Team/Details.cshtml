@@ -22,13 +22,44 @@
     <p> @Model.Club.Name </p>
     <p> @Model.Formation.Designation </p>
 </div>
-
+<p id="ididclub" style="display: none">@Model.Club.Id</p>
+<p id="iddata" style="display: none">@Model.Team.Data</p>
 <div >
     <input type="search" name="value" size="30" id="idsearch"/>
     <div id="searchresult"></div>
 </div>
 
-<div id="idplayersonteam"></div>
+<p> "Players on Team"</p>
+
+<div id="idplayersonteam">
+
+
+
+    @foreach (var item in Model.PlayersByTeam)
+{
+    <div id="iddiv">
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <img src=@Url.Content("~/Photos/"+item.Photo) />
+            </td>
+            @*new { idclub = @Model.Team.IdClub, idplayer = item.Id, date = @Model.Team.Data },FormMethod.Post, new { @enctype = "multipart/form-data" }*@
+            <td>
+                @using (Html.BeginForm("RemovePlayerOnTeam", "Team"))
+                {
+                    <input type="hidden" name="idclub" value=@Model.Team.IdClub />
+                    <input type="hidden" name="idplayer" value=@item.Id />
+                    <input type="hidden" name="date" value=@Model.Team.Data />
+                    <input type="submit" value="Remove" />
+                }
+            </td>
+        </tr>
+    </div>
+}
+</div>
+
 
 <p>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |

@@ -19,7 +19,9 @@ namespace GameObserver.DomainModel
 
         IEnumerable<Actor> GetPlayers(String sub);
 
-        void InsertPlayersOnTeam(Team team,Player player,Boolean onfield);
+        void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int onfield);
+
+        void RemovePlayersOnTeam(int idplayer, int idclub, DateTime date);
 
         IEnumerable<Stadium> GetAllStadiums();
         IEnumerable<Actor> GetAllReferees();

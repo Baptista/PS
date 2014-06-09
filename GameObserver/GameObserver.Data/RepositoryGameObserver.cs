@@ -199,7 +199,7 @@ namespace GameObserver.Data
             }
         }
 
-        public void InsertPlayersOnTeam(Team team, Player player, bool onfield)
+        public void InsertPlayersOnTeam(int idplayer, int idclub,DateTime date, int onfield)
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
@@ -207,15 +207,15 @@ namespace GameObserver.Data
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter p1 = new SqlParameter("@idjogador", SqlDbType.Int, 4);
-                p1.Value = player.Id;
+                p1.Value = idplayer;
                 p1.Direction = ParameterDirection.Input;
 
                 SqlParameter p2 = new SqlParameter("@idclube", SqlDbType.Int, 4);
-                p2.Value = team.IdClub;
+                p2.Value = idclub;
                 p2.Direction = ParameterDirection.Input;
 
                 SqlParameter p3 = new SqlParameter("@dataequipa", SqlDbType.Date, 8);
-                p3.Value = team.Data;
+                p3.Value = date;
                 p3.Direction = ParameterDirection.Input;
 
                 SqlParameter p4 = new SqlParameter("@emcampo", SqlDbType.Int, 4);
@@ -226,6 +226,41 @@ namespace GameObserver.Data
                 cmd.Parameters.Add(p2);
                 cmd.Parameters.Add(p3);
                 cmd.Parameters.Add(p4);
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        public void RemovePlayersOnTeam(int idplayer, int idclub, DateTime date)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = new SqlCommand("RemoverJogadorNaEquipa", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter p1 = new SqlParameter("@idjogador", SqlDbType.Int, 4);
+                p1.Value = idplayer;
+                p1.Direction = ParameterDirection.Input;
+
+                SqlParameter p2 = new SqlParameter("@idclube", SqlDbType.Int, 4);
+                p2.Value = idclub;
+                p2.Direction = ParameterDirection.Input;
+
+                SqlParameter p3 = new SqlParameter("@dateequipa", SqlDbType.Date, 8);
+                p3.Value = date.Date.ToString("yyyy-MM-dd");
+                p3.Direction = ParameterDirection.Input;
+
+                cmd.Parameters.Add(p1);
+                cmd.Parameters.Add(p2);
+                cmd.Parameters.Add(p3);
+                
                 try
                 {
                     conn.Open();
@@ -384,10 +419,11 @@ namespace GameObserver.Data
 
         public Team GetTeam(DateTime date, int idclub)
         {
+            String data = date.Date.ToString("yyyy-MM-dd");
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Equipa where data='"+date+"' and id="+idclub;
+                cmd.CommandText = "select * from Equipa where data='"+data+"' and id="+idclub;
 
                 try
                 {
@@ -420,10 +456,11 @@ namespace GameObserver.Data
 
         public IEnumerable<Actor> GetPlayersByTeam(Team team)
         {
+            string data = team.Data.Date.ToString("yyyy-MM-dd");
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select Actor.* from Equipa inner join conter on(Equipa.id=conter.idclube and Equipa.data=conter.dataequipa) inner join Jogador on(Jogador.id=conter.idjogador)inner join Actor on(Jogador.id=Actor.id) where Equipa.id="+team.IdClub+" and Equipa.data="+team.Data;
+                cmd.CommandText = "select Actor.* from Equipa inner join conter on(Equipa.id=conter.idclube and Equipa.data=conter.dataequipa) inner join Jogador on(Jogador.id=conter.idjogador)inner join Actor on(Jogador.id=Actor.id) where Equipa.id="+team.IdClub+" and Equipa.data='"+data+"'";
 
                 try
                 {
