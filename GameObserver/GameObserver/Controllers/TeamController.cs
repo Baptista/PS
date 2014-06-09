@@ -164,5 +164,9 @@ namespace GameObserver.Controllers
             _repo.RemovePlayersOnTeam(Convert.ToInt32(idplayer), Convert.ToInt32(idclub), Convert.ToDateTime(date));
         }
 
+        public ActionResult GetImage(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -43,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <img src=@Url.Content("~/Photos/"+item.Photo) />
+                <img src="@Url.Content("~/Photos/"+@item.Photo)" />
             </td>
             @*new { idclub = @Model.Team.IdClub, idplayer = item.Id, date = @Model.Team.Data },FormMethod.Post, new { @enctype = "multipart/form-data" }*@
             <td>

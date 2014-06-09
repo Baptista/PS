@@ -1,0 +1,33 @@
+﻿@model GameObserver.Models.TeamPositionModel
+@section header
+{
+    <script src="/Scripts/Move.js" type="text/javascript"> </script>
+}
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div id="playeshtlm">
+
+    <div style="float: left; display: inline-block; width:40%">
+        @foreach (var item in Model.PlayerHome)
+        {
+            <img src="@Url.Content("~/Photos/"+@item.Photo)" width="50" height="50" />
+    
+        }
+    </div>
+    <div style="float: right; display: inline-block; width: 40%">
+        @foreach (var item in Model.PlayerAway)
+        {
+            <img src="@Url.Content("~/Photos/"+@item.Photo)" width="50" height="50" />
+        }
+    </div>
+</div>
+<div class="row">
+    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/4x3x3-4x4x2.svg") width="1200" height="1000" />
+
+
+</div>

@@ -21,6 +21,8 @@ namespace GameObserver.DomainModel
 
         void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int onfield);
 
+
+
         void RemovePlayersOnTeam(int idplayer, int idclub, DateTime date);
 
         IEnumerable<Stadium> GetAllStadiums();
