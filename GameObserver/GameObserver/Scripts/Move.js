@@ -1,33 +1,78 @@
 ﻿window.onload = function() {
 
-    SVGDocument = evt.target.ownerDocument;
-    SVGRoot = SVGDocument.documentElement;
+    
+    var a = document.getElementById("svgobject");
+    var svg = a.contentDocument;
+    
     var xmlhttp = new XMLHttpRequest();
 
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function () {
 
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var a = JSON.parse(xmlhttp.response);
-            
-            a.forEach(function(entry) {
-                var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-                svgimg.setAttributeNS(null, 'height', '50');
-                svgimg.setAttributeNS(null, 'width', '50');
-                svgimg.setAttributeNS(null, 'id', entry.Id);
-                svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', entry.Photo);
-                svgimg.setAttributeNS(null, 'x', e.clientX + 10);
-                svgimg.setAttributeNS(null, 'y', e.clientY + 10);
-                svgimg.setAttributeNS(null, 'visibility', 'visible');
-                SVGRoot.appendChild(svgimg);
+            var resp = JSON.parse(xmlhttp.response);
+            var rect = svg.getElementById("all");
+            var pos = rect.getBoundingClientRect();
+            console.log(pos.top, pos.right, pos.left, pos.bottom);
+            var st = pos.left;
+            var x = pos.left;
+            var y = pos.top;
+            resp.forEach(function (entry) {
+                PhotoonSvg(entry, x, y);
+                x = x + 50;
+                if (x >= ((pos.right - pos.left) / 2)-50) {
+                    y = y + 50;
+                    x = pos.left;
+                }
             });
         }
 
     };
-    xmlhttp.open("GET", "/SetUp/GetPlayers", true);
+    xmlhttp.open("GET", "/SetUp/GetHomePlayers", true);
     xmlhttp.send();
-};
-//var a = document.getElementById("svgobject");
-    //var svg = a.contentDocument;
+
+
+    var xmlhttp2= new XMLHttpRequest();
+
+    xmlhttp2.onreadystatechange = function () {
+
+        if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+            var resp2 = JSON.parse(xmlhttp2.response);
+            var rect = svg.getElementById("all");
+            var pos = rect.getBoundingClientRect();
+            var st = pos.left;
+            var x = ((pos.right - pos.left) / 2);
+            var y = pos.top;
+            resp2.forEach(function (entry) {
+                PhotoonSvg(entry, x, y);
+                x = x + 50;
+                if (x >= pos.right-50) {
+                    y = y + 50;
+                    x = ((pos.right - pos.left) / 2);
+                }
+            });
+        }
+    };
+    xmlhttp2.open("GET", "/SetUp/GetAwayPlayers", true);
+    xmlhttp2.send();
+
+
+
+
+    function PhotoonSvg(entry, posx, posy) {
+        var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        svgimg.setAttributeNS(null, 'height', '50');
+        svgimg.setAttributeNS(null, 'width', '50');
+        svgimg.setAttributeNS(null, 'id', entry.Id);
+        svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', entry.Photo);
+        svgimg.setAttributeNS(null, 'x', posx);
+        svgimg.setAttributeNS(null, 'y', posy);
+        svgimg.setAttributeNS(null, 'visibility', 'visible');
+        svg.getElementById("all").appendChild(svgimg);
+
+    }
+
+
+
 
     var SVGDocument = null;
     var SVGRoot = null;
@@ -35,87 +80,52 @@
     var GrabPoint = null;
     var BackDrop = null;
     var DragTarget = null;
-    function Init(evt) {
-        SVGDocument = evt.target.ownerDocument;
-        SVGRoot = SVGDocument.documentElement;
-        // these svg points hold x and y values...
-        // very handy, but they do not display on the screen (just so you know)
-        TrueCoords = SVGRoot.createSVGPoint();
-        GrabPoint = SVGRoot.createSVGPoint();
-        // this will serve as the canvas over which items are dragged.
-        // having the drag events occur on the mousemove over a backdrop
-        // (instead of the dragged element) prevents the dragged element
-        // from being inadvertantly dropped when the mouse is moved rapidly
-        BackDrop = SVGDocument.getElementById('svg_1');
-    }
-    function Grab(evt) {
-        // find out which element we moused down on
+    
+    SVGDocument = svg;
+    SVGRoot = SVGDocument.documentElement;
+    TrueCoords = SVGRoot.createSVGPoint();
+    GrabPoint = SVGRoot.createSVGPoint();
+
+    BackDrop = svg.getElementById('all');
+    
+    SVGDocument.onmousedown = function (evt) {
         var targetElement = evt.target;
-        // you cannot drag the background itself, so ignore any attempts to mouse down on it
         if (BackDrop != targetElement) {
-            //set the item moused down on as the element to be dragged
+       
             DragTarget = targetElement;
-            // move this element to the "top" of the display, so it is (almost)
-            // always over other elements (exception: in this case, elements that are
-            // "in the folder" (children of the folder group) with only maintain
-            // hierarchy within that group
             DragTarget.parentNode.appendChild(DragTarget);
-            // turn off all pointer events to the dragged element, this does 2 things:
-            // 1) allows us to drag text elements without selecting the text
-            // 2) allows us to find out where the dragged element is dropped (see Drop)
+            console.log(DragTarget);
             DragTarget.setAttributeNS(null, 'pointer-events', 'none');
-            // we need to find the current position and translation of the grabbed element,
-            // so that we only apply the differential between the current location
-            // and the new location
             var transMatrix = DragTarget.getCTM();
             GrabPoint.x = TrueCoords.x - Number(transMatrix.e);
             GrabPoint.y = TrueCoords.y - Number(transMatrix.f);
         }
     };
-    function Drag(evt) {
-        // account for zooming and panning
+    SVGDocument.onmousemove = function (evt) {
         GetTrueCoords(evt);
-        // if we don't currently have an element in tow, don't do anything
         if (DragTarget) {
-            // account for the offset between the element's origin and the
-            // exact place we grabbed it... this way, the drag will look more natural
             var newX = TrueCoords.x - GrabPoint.x;
             var newY = TrueCoords.y - GrabPoint.y;
-            // apply a new tranform translation to the dragged element, to display
-            // it in its new location
             DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
         }
     };
-    function Drop(evt) {
-        // if we aren't currently dragging an element, don't do anything
+    SVGDocument.onmouseup = function (evt) {
         if (DragTarget) {
-            // since the element currently being dragged has its pointer-events turned off,
-            // we are afforded the opportunity to find out the element it's being dropped on
-            var targetElement = evt.target;
-            // turn the pointer-events back on, so we can grab this item later
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
-            if ('Folder' == targetElement.parentNode.id) {
-                // if the dragged element is dropped on an element that is a child
-                // of the folder group, it is inserted as a child of that group
-                targetElement.parentNode.appendChild(DragTarget);
-                alert(DragTarget.id + ' has been dropped into a folder, and has been inserted as a child of the containing group.');
-            }
-            else {
-                // for this example, you cannot drag an item out of the folder once it's in there;
-                // however, you could just as easily do so here
-                alert(DragTarget.id + ' has been dropped on top of ' + targetElement.id);
-            }
-            // set the global variable to null, so nothing will be dragged until we
-            // grab the next element
             DragTarget = null;
         }
     };
+
+
     function GetTrueCoords(evt) {
-        // find the current zoom level and pan setting, and adjust the reported
-        // mouse position accordingly
         var newScale = SVGRoot.currentScale;
         var translation = SVGRoot.currentTranslate;
         TrueCoords.x = (evt.clientX - translation.x) / newScale;
         TrueCoords.y = (evt.clientY - translation.y) / newScale;
     };
+
+
+   
     
+};
+

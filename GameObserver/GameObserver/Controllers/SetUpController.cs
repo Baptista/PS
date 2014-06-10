@@ -35,19 +35,27 @@ namespace GameObserver.Controllers
             return View(model);
         }
 
-        public ActionResult GetPlayers()
+        public ActionResult GetHomePlayers()
         {
             var PlayerHome =_mapperActorToActorModel.MapAll(
-                    _repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime("2014-05-23"), 2)));
+                    _repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime("2014-05-23"), 1)));
 
+            //var PlayerAway =
+            //    _mapperActorToActorModel.MapAll(
+            //        _repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime("2014-05-23"), 2)));
+
+            
+            //var all = PlayerHome.Concat(PlayerAway);
+            return Json(PlayerHome, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetAwayPlayers()
+        {
             var PlayerAway =
                 _mapperActorToActorModel.MapAll(
                     _repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime("2014-05-23"), 2)));
 
-            var all = PlayerHome.Concat(PlayerAway);
-            return Json(all, JsonRequestBehavior.AllowGet);
-        } 
-
-
+            return Json(PlayerAway, JsonRequestBehavior.AllowGet);
+        }
 	}
 }
