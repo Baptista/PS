@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace GameObserver.DomainModel.Entities
+namespace GameObserver.Models
 {
-    public class Match
+    public class MatchModel
     {
         public int IdStadium { get; set; }
         public DateTime Date { get; set; }
@@ -18,7 +17,5 @@ namespace GameObserver.DomainModel.Entities
         public DateTime DateVisitor { get; set; }
         public int IdAgainst { get; set; }
         public DateTime DateAgainst { get; set; }
-
     }
-
 }

@@ -35,6 +35,11 @@ namespace GameObserver.Controllers
             _mapperFormationToFormationModel = new FormationToFormationModel();
         }
 
+        public ActionResult AdjustTeam()
+        {
+            return View();
+        }
+
         //
         // GET: /Team/
         public ActionResult Index()
@@ -100,53 +105,7 @@ namespace GameObserver.Controllers
             }
         }
 
-        //
-        // GET: /Team/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return null;//View();
-        }
-
-        //
-        // POST: /Team/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return null;//View();
-            }
-        }
-
-        //
-        // GET: /Team/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return null;//View();
-        }
-
-        //
-        // POST: /Team/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return null;//View();
-            }
-        }
+       
 
         public ActionResult Search(String q)
         {
@@ -164,9 +123,6 @@ namespace GameObserver.Controllers
             _repo.RemovePlayersOnTeam(Convert.ToInt32(idplayer), Convert.ToInt32(idclub), Convert.ToDateTime(date));
         }
 
-        public ActionResult GetImage(int id)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

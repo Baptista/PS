@@ -39,7 +39,7 @@ window.onload = function() {
                                 var zdiv = document.createElement("div");
                                 zdiv.appendChild(document.createTextNode(entry.Name));
                                 var imag = document.createElement("img");
-                                imag.setAttribute('src',entry.Photo);
+                                imag.setAttribute('src', "../Photos/"+entry.Photo);
                                 zdiv.appendChild(imag);
                                 var xbutton = document.createElement("button");
                                 xbutton.setAttribute('type', "button");

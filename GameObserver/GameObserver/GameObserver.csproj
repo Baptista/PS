@@ -170,14 +170,23 @@
     <Compile Include="Mappers\ClubToClubModel.cs" />
     <Compile Include="Mappers\FormationToFormationModel.cs" />
     <Compile Include="Mappers\IMapper.cs" />
+    <Compile Include="Mappers\MatchModelToMatch.cs" />
+    <Compile Include="Mappers\MatchToMatchModel.cs" />
+    <Compile Include="Mappers\PositionToPositionModel.cs" />
+    <Compile Include="Mappers\StadiumToStadiumModel.cs" />
     <Compile Include="Mappers\TeamModelToTeam.cs" />
     <Compile Include="Mappers\TeamToTeamModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActorModel.cs" />
     <Compile Include="Models\ClubModel.cs" />
+    <Compile Include="Models\CreateGameModel.cs" />
     <Compile Include="Models\FormationModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MatchConfigureModel.cs" />
+    <Compile Include="Models\MatchModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
+    <Compile Include="Models\PositionModel.cs" />
+    <Compile Include="Models\StadiumModel.cs" />
     <Compile Include="Models\TeamCreateModel.cs" />
     <Compile Include="Models\TeamDetailsModel.cs" />
     <Compile Include="Models\TeamModel.cs" />
@@ -239,7 +248,10 @@
     <Content Include="Views\Team\Create.cshtml" />
     <Content Include="Views\Team\Index.cshtml" />
     <Content Include="Views\Team\Details.cshtml" />
+    <Content Include="Views\Team\AdjustTeam.cshtml" />
+    <Content Include="Views\Setup\Create.cshtml" />
     <Content Include="Views\Setup\Index.cshtml" />
+    <Content Include="Views\Setup\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

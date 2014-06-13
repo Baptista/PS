@@ -16,6 +16,75 @@ namespace GameObserver.Data
 
         private static String Stringconn = ConfigurationManager.ConnectionStrings["GameObserverConn"].ConnectionString;
 
+        public Stadium GetStadium(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Estadio where id="+id;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            return new Stadium()
+                            {
+                                Id = reader.GetInt32(0),
+                                Morada = reader.GetString(1),
+                                Name = reader.GetString(2),
+                                Capacity = reader.GetInt32(3)
+                            };
+                        }
+                        return null;
+                    }
+
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+                return null;
+            }
+        }
+
+        public Position GetPosition(int idplayer)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select Posicao from Jogador inner join jogar on(Jogador.id = jogar.idjog) inner join Posicao on(Posicao.id = jogar.idpos) where Jogador.id = " + idplayer;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            return new Position()
+                            {
+                                Id = reader.GetInt32(0),
+                                Designation = reader.GetString(1)
+                            };
+                        }
+                    }
+                    
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
 
         public IEnumerable<Actor> GetPlayers(String sub)
         {
@@ -169,7 +238,7 @@ namespace GameObserver.Data
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
-                SqlCommand cmd = new SqlCommand("inserirEquipa",conn);
+                SqlCommand cmd = new SqlCommand("InserirEquipa",conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter p1 = new SqlParameter("@idformacao", SqlDbType.Int, 4);
@@ -203,7 +272,7 @@ namespace GameObserver.Data
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
-                SqlCommand cmd = new SqlCommand("inserirJogadorNaEquipa", conn);
+                SqlCommand cmd = new SqlCommand("InserirJogadorNaEquipa", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter p1 = new SqlParameter("@idjogador", SqlDbType.Int, 4);
@@ -303,6 +372,45 @@ namespace GameObserver.Data
                     conn.Close();
                 }
 
+            }
+        }
+
+        public Actor GetReferee(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Actor where Arbitro=1 and id="+id;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            return new Actor()
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                Born = reader.GetDateTime(2),
+                                Height = reader.GetDecimal(3),
+                                Photo = reader.GetString(4),
+                                Weight = reader.GetInt32(5),
+                                Referee = reader.GetInt32(6),
+                                Player = reader.GetInt32(7)
+                            };
+                        }
+                        return null;
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+                
             }
         }
 
@@ -493,10 +601,118 @@ namespace GameObserver.Data
             }
         }
 
-        public void CreateMatch(Referee first, Referee second, Referee third, Referee four, Team home, Team away, Stadium stadium,
-            DateTime date)
+
+        public IEnumerable<Match> GetAllMatches()
         {
-            throw new NotImplementedException();
+            
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Partida";
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Match()
+                            {
+                                IdStadium = reader.GetInt32(0),
+                                Date = reader.GetDateTime(1),
+                                IdFirstReferee = reader.GetInt32(2),
+                                IdSecondReferee = reader.GetInt32(3),
+                                IdThirdReferee = reader.GetInt32(4),
+                                IdFourReferee = reader.GetInt32(5),
+                                DateVisitor = reader.GetDateTime(6),
+                                IdVisitor = reader.GetInt32(7),
+                                DateAgainst = reader.GetDateTime(8),
+                                IdAgainst = reader.GetInt32(9),
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+        
+
+        public void CreateMatch(Match match)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = new SqlCommand("InserirPartida", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter p1 = new SqlParameter("@idestadio", SqlDbType.Int, 4);
+                p1.Value = match.IdStadium;
+                p1.Direction = ParameterDirection.Input;
+
+                SqlParameter p2 = new SqlParameter("@datahora", SqlDbType.DateTime, 8);
+                p2.Value = match.Date.ToString("yyyy-MM-dd");
+                p2.Direction = ParameterDirection.Input;
+
+                SqlParameter p3 = new SqlParameter("@primeiroarbitro", SqlDbType.Int, 4);
+                p3.Value = match.IdFirstReferee;
+                p3.Direction = ParameterDirection.Input;
+
+                SqlParameter p4 = new SqlParameter("@segundoarbitro", SqlDbType.Int, 4);
+                p4.Value = match.IdSecondReferee;
+                p4.Direction = ParameterDirection.Input;
+
+                SqlParameter p5 = new SqlParameter("@terceiroarbitro", SqlDbType.Int, 4);
+                p5.Value = match.IdThirdReferee;
+                p5.Direction = ParameterDirection.Input;
+
+                SqlParameter p6 = new SqlParameter("@quatroarbitro", SqlDbType.Int, 4);
+                p6.Value = match.IdFourReferee;
+                p6.Direction = ParameterDirection.Input;
+
+                SqlParameter p7 = new SqlParameter("@datavisitante", SqlDbType.DateTime, 8);
+                p7.Value = match.DateVisitor.ToString("yyyy-MM-dd");
+                p7.Direction = ParameterDirection.Input;
+
+                SqlParameter p8 = new SqlParameter("@idvisitante", SqlDbType.Int, 4);
+                p8.Value = match.IdVisitor;
+                p8.Direction = ParameterDirection.Input;
+
+                SqlParameter p9 = new SqlParameter("@datadefronta", SqlDbType.DateTime, 8);
+                p9.Value = match.DateAgainst.ToString("yyyy-MM-dd");
+                p9.Direction = ParameterDirection.Input;
+
+                SqlParameter p10 = new SqlParameter("@iddefronta", SqlDbType.Int, 4);
+                p10.Value = match.IdAgainst;
+                p10.Direction = ParameterDirection.Input;
+
+                cmd.Parameters.Add(p1);
+                cmd.Parameters.Add(p2);
+                cmd.Parameters.Add(p3);
+                cmd.Parameters.Add(p4);
+                cmd.Parameters.Add(p5);
+                cmd.Parameters.Add(p6);
+                cmd.Parameters.Add(p7);
+                cmd.Parameters.Add(p8);
+                cmd.Parameters.Add(p9);
+                cmd.Parameters.Add(p10);
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
         }
     }
 }

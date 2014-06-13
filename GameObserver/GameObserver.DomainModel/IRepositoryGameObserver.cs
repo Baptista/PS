@@ -9,6 +9,9 @@ namespace GameObserver.DomainModel
 {
     public interface IRepositoryGameObserver
     {
+
+        Stadium GetStadium(int id);
+
         IEnumerable<Club> GetAllClubs();
         IEnumerable<Formation> GetAllFormations();
 
@@ -19,6 +22,9 @@ namespace GameObserver.DomainModel
 
         IEnumerable<Actor> GetPlayers(String sub);
 
+        Position GetPosition(int idplayer);
+        
+
         void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int onfield);
 
 
@@ -27,6 +33,9 @@ namespace GameObserver.DomainModel
 
         IEnumerable<Stadium> GetAllStadiums();
         IEnumerable<Actor> GetAllReferees();
+
+        Actor GetReferee(int id);
+
         IEnumerable<Actor> GetAllPlayers();
         IEnumerable<Team> GetAllTeams();
 
@@ -34,7 +43,8 @@ namespace GameObserver.DomainModel
 
         IEnumerable<Actor> GetPlayersByTeam(Team team);
 
-        void CreateMatch(Referee first, Referee second, Referee third, Referee four, Team home, Team away,
-            Stadium stadium, DateTime date);
+        void CreateMatch(Match match);
+
+        IEnumerable<Match> GetAllMatches();
     }
 }

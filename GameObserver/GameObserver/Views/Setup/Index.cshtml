@@ -1,33 +1,92 @@
-﻿@model GameObserver.Models.TeamPositionModel
-@section header
-{
-    <script src="/Scripts/Move.js" type="text/javascript"> </script>
-}
-
+﻿@model IEnumerable<GameObserver.Models.MatchModel>
 
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
-@*<div id="playeshtlm">
 
-    <div style="float: left; display: inline-block; width:40%">
-        @foreach (var item in Model.PlayerHome)
-        {
-            <img src="@Url.Content("~/Photos/"+@item.Photo)" width="50" height="50" />
-    
-        }
-    </div>
-    <div style="float: right; display: inline-block; width: 40%">
-        @foreach (var item in Model.PlayerAway)
-        {
-            <img src="@Url.Content("~/Photos/"+@item.Photo)" width="50" height="50" />
-        }
-    </div>
-</div>*@
-<div class="row">
-    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/4x3x3-4x4x2.svg") width="1200" height="1000" />
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IdStadium)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdFirstReferee)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdSecondReferee)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdThirdReferee)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdFourReferee)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdVisitor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateVisitor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdAgainst)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateAgainst)
+        </th>
+        <th></th>
+    </tr>
 
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdStadium)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdFirstReferee)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdSecondReferee)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdThirdReferee)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdFourReferee)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdVisitor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateVisitor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdAgainst)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateAgainst)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new
+            {
+                idstadium = item.IdStadium, date = item.Date, idfirstref = item.IdFirstReferee,
+                idsecondref = item.IdSecondReferee, idthirdref = item.IdThirdReferee, idfourref=item.IdFourReferee,
+                idvisitor = item.IdVisitor, datevisitor = item.DateVisitor, idagainst = item.IdAgainst, dateagainst = item.DateAgainst
+            }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
 
-</div>
+</table>
