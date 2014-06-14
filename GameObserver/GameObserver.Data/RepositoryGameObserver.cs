@@ -48,7 +48,7 @@ namespace GameObserver.Data
                 {
                     conn.Close();
                 }
-                return null;
+                
             }
         }
 
@@ -57,7 +57,7 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select Posicao from Jogador inner join jogar on(Jogador.id = jogar.idjog) inner join Posicao on(Posicao.id = jogar.idpos) where Jogador.id = " + idplayer;
+                cmd.CommandText = "select Posicao.* from Jogador inner join jogar on(Jogador.id = jogar.idjog) inner join Posicao on(Posicao.id = jogar.idpos) where Jogador.id = " + idplayer;
 
                 try
                 {
@@ -74,7 +74,8 @@ namespace GameObserver.Data
                             };
                         }
                     }
-                    
+                    return null;
+
                 }
 
                 finally

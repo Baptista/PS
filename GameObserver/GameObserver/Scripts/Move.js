@@ -32,32 +32,52 @@
     var nmiddlehome;
     var nstrikerhome;
 
-    var ndefesefull = defense;
+    var ndefesefull;
+
+    var whereplayeres = [];
 
     function nextpositiondefesahome() {
-        
+        savepositions = new Object();
         if (defense % 2 == 0 && ndefensehome==defense-1) {
             savepositions.x = middledefensex;
             savepositions.y = middledefensey;
             ++ndefensehome;
-            return savepositions;
+            //return savepositions;
         }
         if (ndefensehome % 2 == 0) {
             savepositions.x = middledefensex;
             savepositions.y = middledefensey + moveupdefense;
             moveupdefense += svgheight / defense;
             ++ndefensehome;
-            return savepositions;
+            //return savepositions;
         } else {
             savepositions.x = middledefensex;
-            savepositions.y = middledefensey + movedowndefense;
-            movedowndefense += svgheight / defense;
+            savepositions.y = middledefensey - movedowndefense;
+            movedowndefense -= svgheight / defense;
             ++ndefensehome;
-            return savepositions;
+            //return savepositions;
         }
+        if (IsOccupied(savepositions)) {
+            return nextpositiondefesahome();
+        }
+        console.log("atpositions",document.elementFromPoint(savepositions.x , savepositions.y));
+        return savepositions;
     }
 
-    function createcircle(xx , yy) {
+    function IsOccupied(save) {
+        for (var i = 0; i < whereplayeres.length; ++i) {
+            if (whereplayeres[i].x == save.x && whereplayeres[i].y == save.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    var allcircles = [];
+
+    function createcircle(xx, yy) {
+        console.log("circle", xx, yy);
         var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circles.setAttribute("cx", xx);
         circles.setAttribute("cy", yy);
@@ -66,8 +86,13 @@
         circles.setAttribute("r", 10);
         circles.setAttribute("id", "circ");
         svg.getElementById("all").appendChild(circles);
+        allcircles[allcircles.length] = circles;
     }
-
+    function removecircles(circles) {
+        for (var i = 0; i < circles.length; ++i) {
+            svg.getElementById("all").removeChild(circles[i]);
+        }
+    }
 
 
     
@@ -89,7 +114,7 @@
             middle = formation[1];
             striker = formation[2];
             allpostions = defense + middle + striker;
-
+            ndefesefull = defense;
 
             middledefensey = svgheight / 2;
             middledefensex = ((svgwidth / 2) / 4);
@@ -194,47 +219,59 @@
     var DragTarget = null;
 
 
-    var OldCoor;
+    var OldCoor={};
     var PosToMove = [];
-    var indexPosToMove = 0;
+    
 
-    function IsInPositonRange() {
-        
+    function IsInPositonRange(x,y) {
+        for (var i = 0; i < PosToMove.length; ++i) {
+            if (x < PosToMove[i].x + 10 && x > PosToMove[i].x - 10 && y < PosToMove[i].y + 10 && y < PosToMove[i].y - 10) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
-
-    
+    var SVGImage;
     SVGDocument = svg;
     SVGRoot = SVGDocument.documentElement;
     TrueCoords = SVGRoot.createSVGPoint();
     GrabPoint = SVGRoot.createSVGPoint();
 
+
     BackDrop = svg.getElementById('all');
     
     SVGDocument.onmousedown = function (evt) {
-        
+        allcircles = [];
         var targetElement = evt.target;
         if (targetElement.nodeName != 'image') {
             return;
         }
-
-        OldCoor.x = targetElement.x;
-        OldCoor.y = targetElement.y;
+        console.log("target",targetElement);
+        OldCoor.x = targetElement.getAttributeNS(null, 'x');
+        OldCoor.y = targetElement.getAttributeNS(null, 'y');
+        OldCoor.id = targetElement.getAttributeNS(null, 'id');
         var xmlhttp4= new XMLHttpRequest();
 
         xmlhttp4.onreadystatechange = function() {
 
             if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
-                var resp = JSON.parse(xmlhttp3.response);
+                var resp = JSON.parse(xmlhttp4.response);
                 var pos = resp.Designation;
+                
                 if (pos == "Defesa") {
-
+                    //console.log("defensefull", ndefesefull);
+                    //console.log("defese", defense);
+                    //console.log("middle", middle);
+                    console.log("striker", striker);
                     for (var i = 0; i < ndefesefull; ++i) {
+                        
                         var next = nextpositiondefesahome();
-                        PosToMove[indexPosToMove++] = next;
+                        PosToMove[PosToMove.length] = next;
                         createcircle(next.x, next.y);
                     }
+
                 }
             }
         }
@@ -242,10 +279,10 @@
         xmlhttp4.open("GET", "/SetUp/GetPlayerPosition?id=" + targetElement.id, true);
         xmlhttp4.send();
 
-
         if (BackDrop != targetElement) {
        
             DragTarget = targetElement;
+            
             DragTarget.parentNode.appendChild(DragTarget);
             DragTarget.setAttributeNS(null, 'pointer-events', 'none');
             var transMatrix = DragTarget.getCTM();
@@ -261,16 +298,39 @@
             DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
         }
     };
+
+    
+
     SVGDocument.onmouseup = function (evt) {
-        if (IsInPositonRange(DragTarget.x , DragTarget.y)) {
+        //console.log("cenas", evt.clientX);
+        
+        if (!IsInPositonRange(evt.clientX, evt.clientY)) {
+            var cenas = svg.getElementById(OldCoor.id);
+            cenas.setAttributeNS(null, 'x', OldCoor.x);
+            cenas.setAttributeNS(null, 'y', OldCoor.y);
             DragTarget.setAttributeNS(null, 'x', OldCoor.x);
             DragTarget.setAttributeNS(null, 'y', OldCoor.y);
+            DragTarget.setAttributeNS(null, 'transform', null);
+            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+            
+            DragTarget = null;
+            return;
         }
 
         if (DragTarget) {
+            console.log("end");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+            var myplace = {};
+            myplace.x = evt.clientX;
+            myplace.y = evt.clientY;
+            whereplayeres[whereplayeres.length] = myplace;
             DragTarget = null;
+            ndefesefull--;
+            moveupdefense = svgheight / defense;
+            movedowndefense = svgheight / defense;
+
         }
+        removecircles(allcircles);
     };
 
 
