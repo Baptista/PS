@@ -4,8 +4,10 @@
 
     var a = document.getElementById("svgobject");
     var svg = a.contentDocument;
-    var svgheight = a.getBoundingClientRect().height;
+    var svgheight = a.getBoundingClientRect().height - 100;
     var svgwidth = a.getBoundingClientRect().width;
+    console.log(svgheight);
+    
 
     var formation;
     var defense;
@@ -36,6 +38,18 @@
 
     var whereplayeres = [];
 
+    function IsOccupied(save, wherepla) {
+        console.log("isocuppewhered", wherepla);
+        console.log("isocupped", save);
+        for (var i = 0; i < wherepla.length; ++i) {
+            if (wherepla[i].getAttributeNS(null, 'cx') == save.x && wherepla[i].getAttributeNS(null, 'cy') == save.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     function nextpositiondefesahome() {
         savepositions = new Object();
         if (defense % 2 == 0 && ndefensehome==defense-1) {
@@ -57,21 +71,16 @@
             ++ndefensehome;
             //return savepositions;
         }
-        if (IsOccupied(savepositions)) {
+        
+        if (IsOccupied(savepositions, whereplayeres)) {
+            console.log("renew");
             return nextpositiondefesahome();
         }
-        console.log("atpositions",document.elementFromPoint(savepositions.x , savepositions.y));
+        //console.log("atpositions",document.elementFromPoint(savepositions.x , savepositions.y));
         return savepositions;
     }
 
-    function IsOccupied(save) {
-        for (var i = 0; i < whereplayeres.length; ++i) {
-            if (whereplayeres[i].x == save.x && whereplayeres[i].y == save.y) {
-                return true;
-            }
-        }
-        return false;
-    }
+    
 
 
     var allcircles = [];
@@ -83,7 +92,7 @@
         circles.setAttribute("cy", yy);
         circles.setAttribute("fill", "#ffffff");
         circles.setAttribute("stroke", "#000000");
-        circles.setAttribute("r", 10);
+        circles.setAttribute("r", 25);
         circles.setAttribute("id", "circ");
         svg.getElementById("all").appendChild(circles);
         allcircles[allcircles.length] = circles;
@@ -225,7 +234,7 @@
 
     function IsInPositonRange(x,y) {
         for (var i = 0; i < PosToMove.length; ++i) {
-            if (x < PosToMove[i].x + 10 && x > PosToMove[i].x - 10 && y < PosToMove[i].y + 10 && y < PosToMove[i].y - 10) {
+            if (x < PosToMove[i].x + 50 && x > PosToMove[i].x - 50 && y < PosToMove[i].y + 50 && y < PosToMove[i].y - 50) {
                 return true;
             }
         }
@@ -239,6 +248,7 @@
     TrueCoords = SVGRoot.createSVGPoint();
     GrabPoint = SVGRoot.createSVGPoint();
 
+    
 
     BackDrop = svg.getElementById('all');
     
@@ -264,14 +274,15 @@
                     //console.log("defensefull", ndefesefull);
                     //console.log("defese", defense);
                     //console.log("middle", middle);
-                    console.log("striker", striker);
+                    //console.log("striker", striker);
+                    allcircles = [];
                     for (var i = 0; i < ndefesefull; ++i) {
                         
                         var next = nextpositiondefesahome();
                         PosToMove[PosToMove.length] = next;
                         createcircle(next.x, next.y);
                     }
-
+                    ndefensehome=0;
                 }
             }
         }
@@ -299,31 +310,48 @@
         }
     };
 
-    
+    function whitchcircle(ev) {
+        for (var i = 0; i < allcircles.length; ++i) {
+            var circx = allcircles[i].getAttributeNS(null, 'cx');
+            var circy = allcircles[i].getAttributeNS(null, 'cy');
+            console.log("whitecirclecx", ev.clientX);
+            console.log("whitecirclex", circx);
+            console.log("whitecirclecY", ev.clientY);
+            console.log("whitecircley", circy);
+            if ((ev.clientX < parseInt(circx) + 50) && (ev.clientX > parseInt(circx) - 50) && (ev.clientY < parseInt(circy) + 50) && (ev.clientY > parseInt(circy) - 50)) {
+                console.log("whitchcirclefinal", allcircles[i]);
+                return allcircles[i];
+            }
+        }
+        return null;
+    }
 
     SVGDocument.onmouseup = function (evt) {
         //console.log("cenas", evt.clientX);
         
-        if (!IsInPositonRange(evt.clientX, evt.clientY)) {
+        if (!IsInPositonRange(evt.clientX, evt.clientY) || evt.clientY<160) {
             var cenas = svg.getElementById(OldCoor.id);
             cenas.setAttributeNS(null, 'x', OldCoor.x);
             cenas.setAttributeNS(null, 'y', OldCoor.y);
             DragTarget.setAttributeNS(null, 'x', OldCoor.x);
             DragTarget.setAttributeNS(null, 'y', OldCoor.y);
-            DragTarget.setAttributeNS(null, 'transform', null);
+            DragTarget.setAttributeNS(null, 'transform', 0);
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
             
             DragTarget = null;
+            removecircles(allcircles);
             return;
         }
 
         if (DragTarget) {
-            console.log("end");
+            //console.log("end");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
-            var myplace = {};
-            myplace.x = evt.clientX;
-            myplace.y = evt.clientY;
-            whereplayeres[whereplayeres.length] = myplace;
+            //var myplace = {};
+            console.log("call witchcircle");
+            var upcircle = whitchcircle(evt);
+            //myplace.x = upcircle.getAttribute(null, 'x');
+            //myplace.y = upcircle.getAttribute(null, 'y');
+            whereplayeres[whereplayeres.length] = upcircle;
             DragTarget = null;
             ndefesefull--;
             moveupdefense = svgheight / defense;
