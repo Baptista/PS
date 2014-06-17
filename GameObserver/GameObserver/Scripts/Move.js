@@ -4,16 +4,17 @@
 
     var a = document.getElementById("svgobject");
     var svg = a.contentDocument;
-    var svgheight = a.getBoundingClientRect().height - 100;
+    var svgheight = a.getBoundingClientRect().height;
     var svgwidth = a.getBoundingClientRect().width;
-    console.log(svgheight);
     
+    var allplayers = [];
 
     var formation;
     var defense;
     var middle;
     var striker;
     var allpostions;
+    var gk;
 
 
     var middledefensey;
@@ -22,27 +23,35 @@
     var middley;
     var middlestrikery;
     var middlestrikerx;
+    var middlegkx;
+    var middlegky;
+    var amiddledefensey;
+    var amiddledefensex;
+    var amiddlex;
+    var amiddley;
+    var amiddlestrikery;
+    var amiddlestrikerx;
+    var amiddlegkx;
+    var amiddlegky;
 
-    var moveupdefense;
-    var movedowndefense;
-    var moveupmiddle;
-    var movedownmiddle;
-    var moveupstriker;
-    var movedownstriker;
+    var movedowndefense=0;
+    var movedownmiddle=0;
+    var movedownstriker=0;
 
-    var ndefensehome;
-    var nmiddlehome;
-    var nstrikerhome;
+    var ndefensehome=0;
+    var nmiddlehome=0;
+    var nstrikerhome=0;
 
     var ndefesefull;
+    var nmiddlefull;
+    var nstrikerfull;
+    var ngkfull;
 
     var whereplayeres = [];
 
     function IsOccupied(save, wherepla) {
-        console.log("isocuppewhered", wherepla);
-        console.log("isocupped", save);
         for (var i = 0; i < wherepla.length; ++i) {
-            if (wherepla[i].getAttributeNS(null, 'cx') == save.x && wherepla[i].getAttributeNS(null, 'cy') == save.y) {
+            if (wherepla[i].getAttributeNS(null, 'x') == save.x && wherepla[i].getAttributeNS(null, 'y') == save.y) {
                 return true;
             }
         }
@@ -50,66 +59,38 @@
     }
 
 
-    function nextpositiondefesahome() {
+    function nextpositiondefesahome(mx,my,formati) {
         savepositions = new Object();
-        if (defense % 2 == 0 && ndefensehome==defense-1) {
-            savepositions.x = middledefensex;
-            savepositions.y = middledefensey;
-            ++ndefensehome;
-            //return savepositions;
-        }
-        if (ndefensehome % 2 == 0) {
-            savepositions.x = middledefensex;
-            savepositions.y = middledefensey + moveupdefense;
-            moveupdefense += svgheight / defense;
-            ++ndefensehome;
-            //return savepositions;
-        } else {
-            savepositions.x = middledefensex;
-            savepositions.y = middledefensey - movedowndefense;
-            movedowndefense -= svgheight / defense;
-            ++ndefensehome;
-            //return savepositions;
-        }
+        
+        savepositions.x = mx;
+        savepositions.y = (my + movedowndefense);
+        movedowndefense += (svgheight / formati)/2;
         
         if (IsOccupied(savepositions, whereplayeres)) {
-            console.log("renew");
-            return nextpositiondefesahome();
+            return nextpositiondefesahome(mx,my,formati);
         }
-        //console.log("atpositions",document.elementFromPoint(savepositions.x , savepositions.y));
         return savepositions;
     }
-
-    
-
 
     var allcircles = [];
 
     function createcircle(xx, yy) {
-        console.log("circle", xx, yy);
         var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circles.setAttribute("cx", xx);
         circles.setAttribute("cy", yy);
         circles.setAttribute("fill", "#ffffff");
         circles.setAttribute("stroke", "#000000");
-        circles.setAttribute("r", 25);
+        circles.setAttribute("r", 15);
         circles.setAttribute("id", "circ");
         svg.getElementById("all").appendChild(circles);
         allcircles[allcircles.length] = circles;
     }
+
     function removecircles(circles) {
         for (var i = 0; i < circles.length; ++i) {
             svg.getElementById("all").removeChild(circles[i]);
         }
     }
-
-
-    
-    var gkhx = svgwidth / 100;
-    var gkhy = svgheight / 2;
-
-    var gkax = svgwidth - (gkhx);
-    var gkay = svgheight / 2;
 
     var xmlhttp3 = new XMLHttpRequest();
 
@@ -117,28 +98,36 @@
 
         if (xmlhttp3.readyState == 4 && xmlhttp3.status == 200) {
             var resp = JSON.parse(xmlhttp3.response);
-            console.log(resp.Designation);
+            
             formation = resp.Designation.split('x');
             defense = formation[0];
             middle = formation[1];
             striker = formation[2];
+            gk = 1;
             allpostions = defense + middle + striker;
             ndefesefull = defense;
+            nmiddlefull = middle;
+            nstrikerfull = striker;
+            ngkfull = 1;
 
-            middledefensey = svgheight / 2;
-            middledefensex = ((svgwidth / 2) / 4);
-            middlex = (((svgwidth / 2) / 4) * 2);
-            middley = svgheight / 2;
-            middlestrikery = svgheight / 2;
-            middlestrikerx = (((svgwidth / 2) / 4) * 3);
+            middledefensey = (svgheight / defense) + ((svgheight /defense)/2);
+            middledefensex = ((svgwidth / 2) / defense)/2;
+            middlex = ((svgwidth / 4) -(middledefensex));
+            middley = (svgheight / middle) + ((svgheight / middle) / 2);
+            middlestrikery = svgheight / (striker);
+            middlestrikerx = ((svgwidth / 2)-(middlex));
+            middlegkx = 20;
+            middlegky = (svgheight / 2)+50;
+            
 
-
-            moveupdefense = svgheight / defense;
-            movedowndefense = svgheight / defense;
-            moveupmiddle = svgheight / middle;
-            movedownmiddle = svgheight / middle;
-            moveupstriker = svgheight / striker;
-            movedownstriker = svgheight / striker;
+            amiddledefensey = (svgheight / defense) + ((svgheight / defense) / 2);
+            amiddledefensex = svgwidth - middledefensex;
+            amiddlex = svgwidth - middlex;
+            amiddley = (svgheight / middle) + ((svgheight / middle) / 2);
+            amiddlestrikery = svgheight / (striker);
+            amiddlestrikerx = svgwidth - middlestrikerx;
+            amiddlegkx = svgwidth-20;
+            amiddlegky = (svgheight / 2) + 50;
         }
     };
     var idq = document.getElementById("iddetailssetup_idvisitor").innerHTML;
@@ -155,16 +144,16 @@
             var resp = JSON.parse(xmlhttp.response);
             var rect = svg.getElementById("all");
             var pos = rect.getBoundingClientRect();
-            var st = pos.left;
             var x = pos.left;
             var y = pos.top;
             resp.forEach(function (entry) {
-                PhotoonSvg(entry, x, y);
+                var imgadd = PhotoonSvg(entry, x, y);
                 x = x + 50;
                 if (x >= ((pos.right - pos.left) / 2)-50) {
                     y = y + 50;
                     x = pos.left;
                 }
+                allplayers[allplayers.length] = imgadd;
             });
         }
 
@@ -183,7 +172,6 @@
             var resp2 = JSON.parse(xmlhttp2.response);
             var rect = svg.getElementById("all");
             var pos = rect.getBoundingClientRect();
-            var st = pos.left;
             var x = ((pos.right - pos.left) / 2);
             var y = pos.top;
             resp2.forEach(function (entry) {
@@ -202,8 +190,6 @@
     xmlhttp2.send();
 
 
-
-
     function PhotoonSvg(entry, posx, posy) {
         var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
         svgimg.setAttributeNS(null, 'height', '50');
@@ -214,11 +200,9 @@
         svgimg.setAttributeNS(null, 'y', posy);
         svgimg.setAttributeNS(null, 'visibility', 'visible');
         svg.getElementById("all").appendChild(svgimg);
-
+        return svgimg;
     }
-
-
-
+    
 
     var SVGDocument = null;
     var SVGRoot = null;
@@ -232,9 +216,10 @@
     var PosToMove = [];
     
 
-    function IsInPositonRange(x,y) {
+    function IsInPositonRange(x, y) {
+        
         for (var i = 0; i < PosToMove.length; ++i) {
-            if (x < PosToMove[i].x + 50 && x > PosToMove[i].x - 50 && y < PosToMove[i].y + 50 && y < PosToMove[i].y - 50) {
+            if (x <= PosToMove[i].x + 30 && x >= PosToMove[i].x - 30 && y <= PosToMove[i].y + 30 && y >= PosToMove[i].y - 30) {
                 return true;
             }
         }
@@ -242,13 +227,13 @@
     }
 
 
-    var SVGImage;
+    
     SVGDocument = svg;
     SVGRoot = SVGDocument.documentElement;
     TrueCoords = SVGRoot.createSVGPoint();
     GrabPoint = SVGRoot.createSVGPoint();
 
-    
+    var currpos;
 
     BackDrop = svg.getElementById('all');
     
@@ -258,7 +243,7 @@
         if (targetElement.nodeName != 'image') {
             return;
         }
-        console.log("target",targetElement);
+        
         OldCoor.x = targetElement.getAttributeNS(null, 'x');
         OldCoor.y = targetElement.getAttributeNS(null, 'y');
         OldCoor.id = targetElement.getAttributeNS(null, 'id');
@@ -269,21 +254,42 @@
             if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
                 var resp = JSON.parse(xmlhttp4.response);
                 var pos = resp.Designation;
-                
+                var next;
+                currpos = pos;
                 if (pos == "Defesa") {
-                    //console.log("defensefull", ndefesefull);
-                    //console.log("defese", defense);
-                    //console.log("middle", middle);
-                    //console.log("striker", striker);
                     allcircles = [];
                     for (var i = 0; i < ndefesefull; ++i) {
                         
-                        var next = nextpositiondefesahome();
+                        next = nextpositiondefesahome(middledefensex,middledefensey,defense);
                         PosToMove[PosToMove.length] = next;
                         createcircle(next.x, next.y);
                     }
                     ndefensehome=0;
+                }else if (pos == "Medio") {
+                    allcircles = [];
+                    for (var i = 0; i < nmiddlefull; ++i) {
+
+                        next = nextpositiondefesahome(middlex, middley, middle);
+                        PosToMove[PosToMove.length] = next;
+                        createcircle(next.x, next.y);
+                    }
+                    ndefensehome = 0;
+                } else if(pos == "Ataque"){
+                    allcircles = [];
+                    for (var i = 0; i < nstrikerfull; ++i) {
+
+                        next = nextpositiondefesahome(middlestrikerx, middledefensey, striker);
+                        PosToMove[PosToMove.length] = next;
+                        createcircle(next.x, next.y);
+                    }
+                    ndefensehome = 0;
+                } else if (pos == "Guarda-redes") {
+                    allcircles = [];
+                    next = nextpositiondefesahome(middlegkx, middlegky, 1);
+                    PosToMove[PosToMove.length] = next;
+                    createcircle(next.x, next.y);
                 }
+                movedowndefense = 0;
             }
         }
         
@@ -314,49 +320,83 @@
         for (var i = 0; i < allcircles.length; ++i) {
             var circx = allcircles[i].getAttributeNS(null, 'cx');
             var circy = allcircles[i].getAttributeNS(null, 'cy');
-            console.log("whitecirclecx", ev.clientX);
-            console.log("whitecirclex", circx);
-            console.log("whitecirclecY", ev.clientY);
-            console.log("whitecircley", circy);
             if ((ev.clientX < parseInt(circx) + 50) && (ev.clientX > parseInt(circx) - 50) && (ev.clientY < parseInt(circy) + 50) && (ev.clientY > parseInt(circy) - 50)) {
-                console.log("whitchcirclefinal", allcircles[i]);
                 return allcircles[i];
             }
         }
         return null;
     }
 
+    function IsImageInPosition(x, y) {
+        for (var i = 0; i < whereplayeres.length; ++i) {
+            var coorx = whereplayeres[i].getAttributeNS(null, "x");
+            var coory = whereplayeres[i].getAttributeNS(null, "y");
+            
+            if (x <= parseInt(coorx) + 50 && x >= parseInt(coorx) - 50 && y <= parseInt(coory) + 50 && y >= parseInt(coory) - 50) {
+                return whereplayeres[i];
+            }
+        }
+        return null;
+    }
+
+    
+
     SVGDocument.onmouseup = function (evt) {
-        //console.log("cenas", evt.clientX);
+       
+        var oldimg = IsImageInPosition(evt.clientX, evt.clientY);
         
-        if (!IsInPositonRange(evt.clientX, evt.clientY) || evt.clientY<160) {
-            var cenas = svg.getElementById(OldCoor.id);
-            cenas.setAttributeNS(null, 'x', OldCoor.x);
-            cenas.setAttributeNS(null, 'y', OldCoor.y);
+        if (oldimg != null) {
+            DragTarget.setAttributeNS(null, 'x', oldimg.getAttributeNS(null,"x"));
+            DragTarget.setAttributeNS(null, 'y', oldimg.getAttributeNS(null, "y"));
+            DragTarget.setAttributeNS(null, 'transform', "");
+            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+            
+            oldimg.setAttributeNS(null, 'x', OldCoor.x);
+            oldimg.setAttributeNS(null, 'y', OldCoor.y);
+            oldimg.setAttributeNS(null, 'transform', "");
+            oldimg.setAttributeNS(null, 'pointer-events', 'all');
+
+            whereplayeres[whereplayeres.length] = DragTarget;
+            DragTarget = null;
+            return;
+        }
+
+
+        if (!IsInPositonRange(evt.clientX, evt.clientY)) {
+            //var cenas = svg.getElementById(OldCoor.id);
+            //cenas.setAttributeNS(null, 'x', OldCoor.x);
+            //cenas.setAttributeNS(null, 'y', OldCoor.y);
             DragTarget.setAttributeNS(null, 'x', OldCoor.x);
             DragTarget.setAttributeNS(null, 'y', OldCoor.y);
-            DragTarget.setAttributeNS(null, 'transform', 0);
+            DragTarget.setAttributeNS(null, 'transform', "");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
             
             DragTarget = null;
             removecircles(allcircles);
             return;
         }
-
+     
         if (DragTarget) {
-            //console.log("end");
+            console.log("cenas");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
-            //var myplace = {};
-            console.log("call witchcircle");
             var upcircle = whitchcircle(evt);
-            //myplace.x = upcircle.getAttribute(null, 'x');
-            //myplace.y = upcircle.getAttribute(null, 'y');
-            whereplayeres[whereplayeres.length] = upcircle;
-            DragTarget = null;
-            ndefesefull--;
-            moveupdefense = svgheight / defense;
-            movedowndefense = svgheight / defense;
 
+            DragTarget.setAttributeNS(null, 'x', upcircle.getAttributeNS(null, "cx"));
+            DragTarget.setAttributeNS(null, 'y', upcircle.getAttributeNS(null, "cy"));
+            DragTarget.setAttributeNS(null, 'transform', "");
+
+            whereplayeres[whereplayeres.length] = DragTarget;
+            
+            DragTarget = null;
+            if(currpos == "Defesa")
+                ndefesefull--;
+            else if (currpos == "Medio")
+                nmiddlefull--;
+            else if (currpos == "Ataque")
+                nstrikerfull--;
+            else if (currpos == "Guarda-redes")
+                ngkfull--;
+            movedowndefense = 0;
         }
         removecircles(allcircles);
     };
@@ -370,7 +410,65 @@
     };
 
 
-   
+
+
+
+    document.getElementById("idbuttonauto").onclick = function(ev) {
+        for (var i = 0; i < allplayers.length; ++i) {
+            callplayer(allplayers[i]);
+        }
+    }
     
+    function callplayer(idpla) {
+        var xmlhttp5 = new XMLHttpRequest();
+
+        xmlhttp5.onreadystatechange = function () {
+            
+            if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
+                var resp = JSON.parse(xmlhttp5.response);
+                var pos = resp.Designation;
+                
+                
+                if (pos == "Defesa") {
+                    if (ndefesefull == 0) return;
+                    --ndefesefull;
+                    idpla.setAttributeNS(null, 'x', middledefensex);
+                    idpla.setAttributeNS(null, 'y', middledefensey + movedowndefense);
+                    movedowndefense += (svgheight / defense) / 2;
+                    whereplayeres[whereplayeres.length] = idpla;
+                }
+            if (pos == "Medio") {
+                    if (nmiddlefull == 0) return;
+                    --nmiddlefull;
+                
+                    idpla.setAttributeNS(null, 'x', middlex);
+                    idpla.setAttributeNS(null, 'y', middley + movedownmiddle);
+                    movedownmiddle += (svgheight / middle) / 2;
+                    whereplayeres[whereplayeres.length] = idpla;
+            } 
+            if (pos == "Ataque") {
+                    if (nstrikerfull == 0) return;
+                    --nstrikerfull;
+                
+                    idpla.setAttributeNS(null, 'x', middlestrikerx);
+                    idpla.setAttributeNS(null, 'y', middlestrikery + movedownstriker);
+                    movedownstriker += (svgheight / striker) / 2;
+                    whereplayeres[whereplayeres.length] = idpla;
+             } 
+             if (pos == "Guarda-redes") {
+                    if (ngkfull == 0) return;
+                    --ngkfull;
+                 idpla.setAttributeNS(null, 'x', middlegkx);
+                 idpla.setAttributeNS(null, 'y', middlegky);
+                 whereplayeres[whereplayeres.length] = idpla;
+                }
+            }
+        }
+
+        
+        xmlhttp5.open("GET", "/SetUp/GetPlayerPosition?id=" + idpla.getAttributeNS(null,'id'), true);
+        xmlhttp5.send();
+    }
+
 };
 
