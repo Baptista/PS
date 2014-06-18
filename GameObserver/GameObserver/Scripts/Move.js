@@ -6,15 +6,23 @@
     var svg = a.contentDocument;
     var svgheight = a.getBoundingClientRect().height;
     var svgwidth = a.getBoundingClientRect().width;
-    
-    var allplayers = [];
+    console.log("with", svgwidth);
+    console.log("height", svgheight);
+    var allplayereshome = [];
+    var allplayeresaway = [];
 
     var formation;
     var defense;
     var middle;
     var striker;
+    var aformation;
+    var adefense;
+    var amiddle;
+    var astriker;
     var allpostions;
     var gk;
+    var aallpostions;
+    var agk;
 
 
     var middledefensey;
@@ -46,6 +54,10 @@
     var nmiddlefull;
     var nstrikerfull;
     var ngkfull;
+    var andefesefull;
+    var anmiddlefull;
+    var anstrikerfull;
+    var angkfull;
 
     var whereplayeres = [];
 
@@ -59,7 +71,7 @@
     }
 
 
-    function nextpositiondefesahome(mx,my,formati) {
+    function nextposition(mx,my,formati) {
         savepositions = new Object();
         
         savepositions.x = mx;
@@ -67,7 +79,7 @@
         movedowndefense += (svgheight / formati)/2;
         
         if (IsOccupied(savepositions, whereplayeres)) {
-            return nextpositiondefesahome(mx,my,formati);
+            return nextposition(mx,my,formati);
         }
         return savepositions;
     }
@@ -75,6 +87,7 @@
     var allcircles = [];
 
     function createcircle(xx, yy) {
+        console.log("create circles" , xx , yy);
         var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circles.setAttribute("cx", xx);
         circles.setAttribute("cy", yy);
@@ -87,6 +100,7 @@
     }
 
     function removecircles(circles) {
+        console.log("remove circles");
         for (var i = 0; i < circles.length; ++i) {
             svg.getElementById("all").removeChild(circles[i]);
         }
@@ -109,31 +123,67 @@
             nmiddlefull = middle;
             nstrikerfull = striker;
             ngkfull = 1;
-
+            
             middledefensey = (svgheight / defense) + ((svgheight /defense)/2);
-            middledefensex = ((svgwidth / 2) / defense)/2;
-            middlex = ((svgwidth / 4) -(middledefensex));
+            middledefensex = (((svgwidth / 2)/ defense)/2);
+            //////////////////////alterar
+            middlex = ((svgwidth / 4) - (middledefensex));
             middley = (svgheight / middle) + ((svgheight / middle) / 2);
             middlestrikery = svgheight / (striker);
             middlestrikerx = ((svgwidth / 2)-(middlex));
             middlegkx = 20;
             middlegky = (svgheight / 2)+50;
             
-
-            amiddledefensey = (svgheight / defense) + ((svgheight / defense) / 2);
-            amiddledefensex = svgwidth - middledefensex;
-            amiddlex = svgwidth - middlex;
-            amiddley = (svgheight / middle) + ((svgheight / middle) / 2);
-            amiddlestrikery = svgheight / (striker);
-            amiddlestrikerx = svgwidth - middlestrikerx;
-            amiddlegkx = svgwidth-20;
-            amiddlegky = (svgheight / 2) + 50;
+            
         }
     };
     var idq = document.getElementById("iddetailssetup_idvisitor").innerHTML;
     var dataq = document.getElementById("iddetailssetup_datevisitor").innerHTML;
     xmlhttp3.open("GET", "/SetUp/GetFormation?id=" + idq + "&dateq=" + dataq, true);
     xmlhttp3.send();
+
+
+
+    var xmlhttp7 = new XMLHttpRequest();
+
+    xmlhttp7.onreadystatechange = function() {
+
+        if (xmlhttp7.readyState == 4 && xmlhttp7.status == 200) {
+            var resp = JSON.parse(xmlhttp7.response);
+
+            aformation = resp.Designation.split('x');
+            adefense = parseInt(aformation[0]);
+            amiddle = parseInt(aformation[1]);
+            astriker = parseInt(aformation[2]);
+            agk = 1;
+            aallpostions = adefense + amiddle + astriker;
+            console.log("allpositions", aallpostions);
+            andefesefull = adefense;
+            anmiddlefull = amiddle;
+            anstrikerfull = astriker;
+            angkfull = 1;
+
+            
+            amiddledefensey = (svgheight / adefense) + ((svgheight / adefense) / 2);
+            console.log("amiddledefensey", amiddledefensey);
+            amiddledefensex = svgwidth - (((svgwidth / 2) / adefense) / 2);
+            console.log("amiddledefensex", amiddledefensex);
+            console.log("cenas", ((svgwidth / 4)));
+            amiddlex = (svgwidth - ((svgwidth / 4) - (svgwidth - amiddledefensex)));
+            console.log("amiddlex", amiddlex);
+            amiddley = (svgheight / amiddle) + ((svgheight / amiddle) / 2);
+            console.log("amiddley", amiddley);
+            amiddlestrikery = svgheight / (astriker);
+            amiddlestrikerx = (svgwidth - ((svgwidth / 2) - (svgwidth - amiddlex)));
+            console.log("amiddlestrikerx", amiddlestrikerx);
+            amiddlegkx = svgwidth - 20;
+            amiddlegky = (svgheight / 2) + 50;
+        }
+    };
+    var aidq = document.getElementById("iddetailssetup_idagainst").innerHTML;
+    var adataq = document.getElementById("iddetailssetup_dateagainst").innerHTML;
+    xmlhttp7.open("GET", "/SetUp/GetFormation?id=" + aidq + "&dateq=" + adataq, true);
+    xmlhttp7.send();
 
 
     var xmlhttp = new XMLHttpRequest();
@@ -153,7 +203,7 @@
                     y = y + 50;
                     x = pos.left;
                 }
-                allplayers[allplayers.length] = imgadd;
+                allplayereshome[allplayereshome.length] = imgadd;
             });
         }
 
@@ -175,12 +225,13 @@
             var x = ((pos.right - pos.left) / 2);
             var y = pos.top;
             resp2.forEach(function (entry) {
-                PhotoonSvg(entry, x, y);
+                var img = PhotoonSvg(entry, x, y);
                 x = x + 50;
                 if (x >= pos.right-50) {
                     y = y + 50;
                     x = ((pos.right - pos.left) / 2);
                 }
+                allplayeresaway[allplayeresaway.length] = img;
             });
         }
     };
@@ -214,6 +265,7 @@
 
     var OldCoor={};
     var PosToMove = [];
+    var aPosToMove = [];
     
 
     function IsInPositonRange(x, y) {
@@ -225,6 +277,19 @@
         }
         return false;
     }
+
+    function aIsInPositonRange(x, y) {
+
+        for (var i = 0; i < aPosToMove.length; ++i) {
+            if (x <= aPosToMove[i].x + 30 && x >= aPosToMove[i].x - 30 && y <= aPosToMove[i].y + 30 && y >= aPosToMove[i].y - 30) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
 
 
     
@@ -257,11 +322,18 @@
                 var next;
                 currpos = pos;
                 if (pos == "Defesa") {
+                    console.log("defesa");
                     allcircles = [];
                     for (var i = 0; i < ndefesefull; ++i) {
+                        if (evt.clientX >= middlex) {
+                            console.log("em casa");
+                            next = nextposition(amiddledefensex, amiddledefensey, adefense);
+                            PosToMove[PosToMove.length] = next;
+                        } else {
+                            next = nextposition(middledefensex, middledefensey, defense);
+                            PosToMove[PosToMove.length] = next;
+                        }
                         
-                        next = nextpositiondefesahome(middledefensex,middledefensey,defense);
-                        PosToMove[PosToMove.length] = next;
                         createcircle(next.x, next.y);
                     }
                     ndefensehome=0;
@@ -269,7 +341,7 @@
                     allcircles = [];
                     for (var i = 0; i < nmiddlefull; ++i) {
 
-                        next = nextpositiondefesahome(middlex, middley, middle);
+                        next = nextposition(middlex, middley, middle);
                         PosToMove[PosToMove.length] = next;
                         createcircle(next.x, next.y);
                     }
@@ -278,14 +350,14 @@
                     allcircles = [];
                     for (var i = 0; i < nstrikerfull; ++i) {
 
-                        next = nextpositiondefesahome(middlestrikerx, middledefensey, striker);
+                        next = nextposition(middlestrikerx, middledefensey, striker);
                         PosToMove[PosToMove.length] = next;
                         createcircle(next.x, next.y);
                     }
                     ndefensehome = 0;
                 } else if (pos == "Guarda-redes") {
                     allcircles = [];
-                    next = nextpositiondefesahome(middlegkx, middlegky, 1);
+                    next = nextposition(middlegkx, middlegky, 1);
                     PosToMove[PosToMove.length] = next;
                     createcircle(next.x, next.y);
                 }
@@ -343,10 +415,23 @@
 
     SVGDocument.onmouseup = function (evt) {
        
+        if (GrabPoint.x > middlex && DragTarget.getAttributeNS(null, 'x') < middlex
+                || GrabPoint.x < middlex && DragTarget.getAttributeNS(null, 'x') > middlex) {
+            DragTarget.setAttributeNS(null, 'x', OldCoor.x);
+            DragTarget.setAttributeNS(null, 'y', OldCoor.y);
+            DragTarget.setAttributeNS(null, 'transform', "");
+            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+
+            DragTarget = null;
+            removecircles(allcircles);
+            return;
+        }
+        
         var oldimg = IsImageInPosition(evt.clientX, evt.clientY);
         
         if (oldimg != null) {
-            DragTarget.setAttributeNS(null, 'x', oldimg.getAttributeNS(null,"x"));
+
+            DragTarget.setAttributeNS(null, 'x', oldimg.getAttributeNS(null, "x"));
             DragTarget.setAttributeNS(null, 'y', oldimg.getAttributeNS(null, "y"));
             DragTarget.setAttributeNS(null, 'transform', "");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
@@ -414,8 +499,8 @@
 
 
     document.getElementById("idbuttonauto").onclick = function(ev) {
-        for (var i = 0; i < allplayers.length; ++i) {
-            callplayer(allplayers[i]);
+        for (var i = 0; i < allplayereshome.length; ++i) {
+            callplayer(allplayereshome[i]);
         }
     }
     
