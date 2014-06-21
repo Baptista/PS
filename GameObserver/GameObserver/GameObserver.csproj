@@ -181,6 +181,7 @@
     <Compile Include="Models\ClubModel.cs" />
     <Compile Include="Models\CreateGameModel.cs" />
     <Compile Include="Models\FormationModel.cs" />
+    <Compile Include="Models\GameDetails.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\MatchConfigureModel.cs" />
     <Compile Include="Models\MatchModel.cs" />

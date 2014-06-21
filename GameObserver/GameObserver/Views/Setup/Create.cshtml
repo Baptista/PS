@@ -19,6 +19,7 @@
         <div class="form-group">
 
             <div class="col-md-10">
+                select home team                 
                 <select name="selectedhome">
                     @foreach (var item in Model.AllTeams)
                     {
@@ -29,8 +30,9 @@
             </div>
         </div>
         <div class="form-group">
-
+            
             <div class="col-md-10">
+                select away team
                 <select name="selectedaway">
                     @foreach (var item in Model.AllTeams)
                     {
@@ -41,8 +43,9 @@
             </div>
         </div>
         <div class="form-group">
-
+            
             <div class="col-md-10">
+                select stadium
                 <select name="selectedstadium">
                     @foreach (var item in Model.AllStadiums)
                     {
@@ -54,8 +57,9 @@
         </div>
         
         <div class="form-group">
-
+            
             <div class="col-md-10">
+                select first referee
                 <select name="selectedrefereefirst">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -68,8 +72,9 @@
         
 
         <div class="form-group">
-
+            
             <div class="col-md-10">
+                select second referee
                 <select name="selectedrefereesecond">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -81,8 +86,9 @@
         </div>
         
         <div class="form-group">
-
+            
             <div class="col-md-10">
+                select third referee
                 <select name="selectedrefereethird">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -95,8 +101,9 @@
         
         
         <div class="form-group">
-
+            
             <div class="col-md-10">
+                select four referee
                 <select name="selectedrefereefour">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -121,6 +128,6 @@
     
 </div>
 
-@section Scripts {
+@*@section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
+}*@

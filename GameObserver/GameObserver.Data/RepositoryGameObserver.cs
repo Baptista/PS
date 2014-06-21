@@ -89,16 +89,18 @@ namespace GameObserver.Data
 
         public IEnumerable<Actor> GetPlayers(String sub)
         {
-            IEnumerable<Actor> all = GetAllPlayers();
+            //IEnumerable<Actor> all = GetAllPlayers();
+            
             int i = 0;
-            foreach (Actor actor in all)
+            foreach (Actor actor in GetAllPlayers())
             {
                 if (actor.Name.ToLower().Contains(sub.ToLower()))
                 {
+                    ++i;
                     yield return actor;
                 }
                 if (i > 9) break;
-                ++i;
+                
             }
         } 
 
@@ -453,6 +455,44 @@ namespace GameObserver.Data
             }
         }
 
+        public Actor GetPlayer(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Actor where Jogador=1 and id="+id;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            return new Actor()
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                Born = reader.GetDateTime(2),
+                                Height = reader.GetDecimal(3),
+                                Photo = reader.GetString(4),
+                                Weight = reader.GetInt32(5),
+                                Referee = reader.GetInt32(6),
+                                Player = reader.GetInt32(7)
+                            };
+                        }
+                        return null;
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
 
         public IEnumerable<Actor> GetAllPlayers()
         {

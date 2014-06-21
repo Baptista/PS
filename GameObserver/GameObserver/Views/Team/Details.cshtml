@@ -11,12 +11,6 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>TeamDetailsModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
-    </dl>
-</div>
 
 <div>
     <p> @Model.Club.Name </p>
@@ -31,7 +25,7 @@
 
 <p> "Players on Team"</p>
 
-<div id="idplayersonteam">
+<div style="left: 50%;position: absolute" id="idplayersonteam">
 
 
 
@@ -43,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <img src="@Url.Content("~/Photos/"+@item.Photo)" />
+                <img src="@Url.Content("~/fonts/"+@item.Photo)"height="100" width="100" />
             </td>
             @*new { idclub = @Model.Team.IdClub, idplayer = item.Id, date = @Model.Team.Data },FormMethod.Post, new { @enctype = "multipart/form-data" }*@
             <td>

@@ -20,6 +20,7 @@ namespace GameObserver.Controllers
         private MatchToMatchModel _mapperMatchToMatchModel;
         private FormationToFormationModel _mapperFormationToFormationModel;
         private PositionToPositionModel _mapperPositionToPositionModel;
+        private ClubToClubModel _mapperClubToClubModel;
         public SetUpController()
         {
             _repo = new RepositoryGameObserver();
@@ -30,6 +31,7 @@ namespace GameObserver.Controllers
             _mapperMatchToMatchModel = new MatchToMatchModel();
             _mapperFormationToFormationModel = new FormationToFormationModel();
             _mapperPositionToPositionModel = new PositionToPositionModel();
+            _mapperClubToClubModel = new ClubToClubModel();
         }
 
         //
@@ -116,7 +118,17 @@ namespace GameObserver.Controllers
                 IdAgainst = idagainst,
                 DateAgainst = dateagainst
             };
-            return View(matchModel);
+            ClubModel visitor = _mapperClubToClubModel.Map(_repo.GetClub(idvisitor));
+            ClubModel against = _mapperClubToClubModel.Map(_repo.GetClub(idagainst));
+
+            GameDetails details = new GameDetails()
+            {
+                matchModel = matchModel,
+                clubvisitor = visitor,
+                clubagainst = against
+            };
+
+            return View(details);
         }
 
 
@@ -139,5 +151,12 @@ namespace GameObserver.Controllers
             PositionModel model = _mapperPositionToPositionModel.Map(_repo.GetPosition(Convert.ToInt32(id)));
             return Json(model, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult GetPlayer(String id)
+        {
+            ActorModel actor = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(id)));
+            return Json(actor, JsonRequestBehavior.AllowGet);
+        }
+
 	}
 }

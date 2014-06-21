@@ -1,106 +1,61 @@
-﻿@model GameObserver.Models.MatchModel
+﻿@model GameObserver.Models.GameDetails
 
 @section header
 {
     <script src="/Scripts/Move.js" type="text/javascript"> </script>
 }
 
-@{
+@*@{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Details</h2>*@
 
-<div>
-    <h4>MatchModel</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.IdStadium)
-        </dt>
+    @*<h4>MatchModel</h4>*@
+   
+    
+        
+        <p style="left:20%;position:absolute"> @Html.DisplayFor(model => model.clubvisitor.Name) </p>
+        <p style="left:60%;position: absolute">@Html.DisplayFor(model => model.clubagainst.Name)</p>
+        <p style="left:40%;position: absolute"> @Html.DisplayFor(model => model.matchModel.Date)</p>
+        @*<dt>
+            @Html.DisplayNameFor(model => model.matchModel.IdVisitor)
+        </dt>*@
 
-        <dd>
-            @Html.DisplayFor(model => model.IdStadium)
-        </dd>
+        <p hidden id="iddetailssetup_idvisitor">
+            @Html.DisplayFor(model => model.matchModel.IdVisitor)
+        </p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
+        @*<dt>
+            @Html.DisplayNameFor(model => model.matchModel.DateVisitor)
+        </dt>*@
 
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
+        <p hidden id="iddetailssetup_datevisitor">
+            @Html.DisplayFor(model => model.matchModel.DateVisitor)
+        </p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IdFirstReferee)
-        </dt>
+        @*<dt>
+            @Html.DisplayNameFor(model => model.matchModel.IdAgainst)
+        </dt>*@
 
-        <dd>
-            @Html.DisplayFor(model => model.IdFirstReferee)
-        </dd>
+        <p hidden id ="iddetailssetup_idagainst">
+            @Html.DisplayFor(model => model.matchModel.IdAgainst)
+        </p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IdSecondReferee)
-        </dt>
+        @*<dt>
+            @Html.DisplayNameFor(model => model.matchModel.DateAgainst)
+        </dt>*@
 
-        <dd>
-            @Html.DisplayFor(model => model.IdSecondReferee)
-        </dd>
+        <p hidden id="iddetailssetup_dateagainst">
+            @Html.DisplayFor(model => model.matchModel.DateAgainst)
+        </p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IdThirdReferee)
-        </dt>
+    
 
-        <dd>
-            @Html.DisplayFor(model => model.IdThirdReferee)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IdFourReferee)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IdFourReferee)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IdVisitor)
-        </dt>
-
-        <dd id="iddetailssetup_idvisitor">
-            @Html.DisplayFor(model => model.IdVisitor)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateVisitor)
-        </dt>
-
-        <dd id="iddetailssetup_datevisitor">
-            @Html.DisplayFor(model => model.DateVisitor)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IdAgainst)
-        </dt>
-
-        <dd id ="iddetailssetup_idagainst">
-            @Html.DisplayFor(model => model.IdAgainst)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateAgainst)
-        </dt>
-
-        <dd id="iddetailssetup_dateagainst">
-            @Html.DisplayFor(model => model.DateAgainst)
-        </dd>
-
-    </dl>
-</div>
 <button id="idbuttonauto">Auto</button>
 
 <div class="row">
-    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/4x3x3-4x4x2.svg") height="700" width="1017"/>
+    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/4x3x3-4x4x2.svg") height="682" width="1018"/>
 
 
 </div>

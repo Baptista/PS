@@ -17,6 +17,8 @@ namespace GameObserver.DomainModel
 
         void CreateTeam(Team team);
 
+        Actor GetPlayer(int id);
+
         Club GetClub(int id);
         Formation GetFormation(int id);
 

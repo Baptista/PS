@@ -14,6 +14,7 @@ window.onload = function() {
                 document.getElementById("searchresult").innerHTML="";
                 var a = JSON.parse(xmlhttp.response);
                 var results = "";
+                console.log(a);
                 var xdiv = document.createElement("div");
                 a.forEach(function (entry) {
 
@@ -26,6 +27,11 @@ window.onload = function() {
                     xinput.setAttribute("id", entry.id);
                     xinput.setAttribute("value", "Add Player");
                     xp.appendChild(xinput);
+                    var imag = document.createElement("img");
+                    imag.setAttribute('src', "../fonts/" + entry.Photo);
+                    imag.setAttribute('height', "50");
+                    imag.setAttribute('width', "50");
+                    xp.appendChild(imag);
                     xdiv.appendChild(xp);
 
                     xinput.onclick = function(e) {
@@ -39,7 +45,9 @@ window.onload = function() {
                                 var zdiv = document.createElement("div");
                                 zdiv.appendChild(document.createTextNode(entry.Name));
                                 var imag = document.createElement("img");
-                                imag.setAttribute('src', "../Photos/"+entry.Photo);
+                                imag.setAttribute('src', "../fonts/" + entry.Photo);
+                                imag.setAttribute('height', "50");
+                                imag.setAttribute('width', "50");
                                 zdiv.appendChild(imag);
                                 var xbutton = document.createElement("button");
                                 xbutton.setAttribute('type', "button");
