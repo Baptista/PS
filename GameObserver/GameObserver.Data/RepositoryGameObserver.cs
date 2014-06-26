@@ -494,6 +494,39 @@ namespace GameObserver.Data
             }
         }
 
+        public IEnumerable<Event> GetAllEvents()
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Evento";
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Event()
+                            {
+                                Id = reader.GetInt32(0),
+                                Icone = (reader.IsDBNull(1))?null:reader.GetString(2),
+                                Type = reader.GetString(2)
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
         public IEnumerable<Actor> GetAllPlayers()
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))
@@ -755,5 +788,264 @@ namespace GameObserver.Data
                 }
             }
         }
+
+        public void CreateOpinion(DateTime minutosegundo, int idestadio, DateTime datahora, DateTime datavisitante,
+            int idvisitante,
+            DateTime datadefronta, int iddefronta, int idutilizador, int causou, int? executou, DateTime datahoraopiniao,
+            int negativa, int idevento)
+        {
+
+
+
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = new SqlCommand("InserirOpiniao", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter p1 = new SqlParameter("@minutosegundo", SqlDbType.DateTime, 8);
+                p1.Value = minutosegundo.ToString("hh:mm:ss");
+                p1.Direction = ParameterDirection.Input;
+
+                SqlParameter p2 = new SqlParameter("@idestadio", SqlDbType.Int, 4);
+                p2.Value = idestadio;
+                p2.Direction = ParameterDirection.Input;
+
+                SqlParameter p3 = new SqlParameter("@datahora", SqlDbType.DateTime, 8);
+                p3.Value = datahora.ToString("yyyy-MM-dd HH:mm:ss");
+                p3.Direction = ParameterDirection.Input;
+
+                SqlParameter p4 = new SqlParameter("@datavisitante", SqlDbType.DateTime, 8);
+                p4.Value = datavisitante.ToString("yyyy-MM-dd");
+                p4.Direction = ParameterDirection.Input;
+
+                SqlParameter p5 = new SqlParameter("@idvisitante", SqlDbType.Int, 4);
+                p5.Value = idvisitante;
+                p5.Direction = ParameterDirection.Input;
+
+                SqlParameter p6 = new SqlParameter("@datadefronta", SqlDbType.DateTime, 8);
+                p6.Value = datadefronta.ToString("yyyy-MM-dd");
+                p6.Direction = ParameterDirection.Input;
+
+                SqlParameter p7 = new SqlParameter("@iddefronta", SqlDbType.Int, 4);
+                p7.Value = iddefronta;
+                p7.Direction = ParameterDirection.Input;
+
+                SqlParameter p8 = new SqlParameter("@idutilizador", SqlDbType.Int, 4);
+                p8.Value = idutilizador;
+                p8.Direction = ParameterDirection.Input;
+
+                SqlParameter p9 = new SqlParameter("@causou", SqlDbType.Int, 4);
+                p9.Value = causou;
+                p9.Direction = ParameterDirection.Input;
+
+                SqlParameter p10 = new SqlParameter("@executou", SqlDbType.Int, 4);
+                p10.Value = 9;
+                p10.Direction = ParameterDirection.Input;
+
+                SqlParameter p11 = new SqlParameter("@datahoraopiniao", SqlDbType.DateTime, 8);
+                p11.Value = datahoraopiniao.ToString("yyyy-MM-dd hh:mm:ss");
+                p11.Direction = ParameterDirection.Input;
+
+                SqlParameter p12 = new SqlParameter("@negativa", SqlDbType.Int, 4);
+                p12.Value = negativa;
+                p12.Direction = ParameterDirection.Input;
+
+                SqlParameter p13 = new SqlParameter("@idevento", SqlDbType.Int, 4);
+                p13.Value = idevento;
+                p13.Direction = ParameterDirection.Input;
+
+
+
+                cmd.Parameters.Add(p1);
+                cmd.Parameters.Add(p2);
+                cmd.Parameters.Add(p3);
+                cmd.Parameters.Add(p4);
+                cmd.Parameters.Add(p5);
+                cmd.Parameters.Add(p6);
+                cmd.Parameters.Add(p7);
+                cmd.Parameters.Add(p8);
+                cmd.Parameters.Add(p9);
+                cmd.Parameters.Add(p10);
+                cmd.Parameters.Add(p11);
+                cmd.Parameters.Add(p12);
+                cmd.Parameters.Add(p13);
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+        }
+
+        public IEnumerable<Instant> GetOpinionByMatch(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, int idutilizador)
+        {
+            return null;
+        }
+
+
+        public IEnumerable<Instant> GetAllInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Instante where idestadio="+idstadium+" and datahora='"+datahora.ToString("yyy-MM-dd HH:mm:ss")+
+                    "' and datavisitante='" + dataequipav.ToString("yyyy-MM-dd") + "' and idvisitante=" + idequipav +
+                    " and datadefronta='" + dataequipag.ToString("yyyy-MM-dd") + "' and iddefronta=" + idequipag + " and idutilizador=" + 1;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Instant()
+                            {
+                                MinuteSeconds = reader.GetDateTime(0),
+                                IdStadium = reader.GetInt32(1),
+                                DateMatch = reader.GetDateTime(2),
+                                DateVisitor = reader.GetDateTime(3),
+                                IdVisitor = reader.GetInt32(4),
+                                DateAgainst = reader.GetDateTime(5),
+                                IdAgainst = reader.GetInt32(6),
+                                IdUser = reader.GetInt32(7),
+                                IdCause = reader.GetInt32(8),
+                                IdExecute = reader.GetInt32(9)
+                                
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+
+        public IEnumerable<Opinion> GetAllOpinionsByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, DateTime minitosegundo)
+        {
+
+
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Opiniao where minutosegundoinstante='" + minitosegundo.ToString("yyyy-MM-dd HH:mm:ss") + "' and idestadio=" + idstadium + " and datahora='" + datahora.ToString("yyy-MM-dd HH:mm:ss") +
+                    "' and datavisitante='" + dataequipav.ToString("yyyy-MM-dd") + "' and idvisitante=" + idequipav +
+                    " and datadefronta='" + dataequipag.ToString("yyyy-MM-dd") + "' and iddefronta=" + idequipag + " and idutilizador=" + 1;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Opinion()
+                            {
+                                Date = reader.GetDateTime(0),
+                                Negative = Convert.ToBoolean(reader.GetInt32(1)),
+                                IdUser = reader.GetInt32(2),
+                                IdStadium = reader.GetInt32(3),
+                                DateInstant = reader.GetDateTime(4),
+                                DataPartida = reader.GetDateTime(5),
+                                DateVisitor = reader.GetDateTime(6),
+                                IdVisitor = reader.GetInt32(7),
+                                DateAgainst = reader.GetDateTime(8),
+                                IdAgainst = reader.GetInt32(9),
+                                
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+        public IEnumerable<Associate> GetAllAssociatesbyOpinionEvent(DateTime datahora, int iduser)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from associar where datahora='" + datahora.ToString("yyyy-MM-dd HH:mm:ss") + "' and idutilizador=" + 1;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Associate()
+                            {
+                                IdEvent = reader.GetInt32(0),
+                                Date = reader.GetDateTime(1),
+                                IdUser = reader.GetInt32(2),
+                                
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+        public Event GetEvent(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Evento where id=" + id;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            return new Event()
+                            {
+                                Id = reader.GetInt32(0),
+                                Icone = reader.GetString(1),
+                                Type = reader.GetString(2)
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
     }
 }

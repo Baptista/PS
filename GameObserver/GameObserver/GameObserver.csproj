@@ -167,24 +167,33 @@
     </Compile>
     <Compile Include="Mappers\ActorModelToActor.cs" />
     <Compile Include="Mappers\ActorToActorModel.cs" />
+    <Compile Include="Mappers\AssociateToAssociateModel.cs" />
     <Compile Include="Mappers\ClubToClubModel.cs" />
+    <Compile Include="Mappers\EventToEventModel.cs" />
     <Compile Include="Mappers\FormationToFormationModel.cs" />
     <Compile Include="Mappers\IMapper.cs" />
+    <Compile Include="Mappers\InstantToInstantModel.cs" />
     <Compile Include="Mappers\MatchModelToMatch.cs" />
     <Compile Include="Mappers\MatchToMatchModel.cs" />
+    <Compile Include="Mappers\OpinionToOpinionModel.cs" />
     <Compile Include="Mappers\PositionToPositionModel.cs" />
     <Compile Include="Mappers\StadiumToStadiumModel.cs" />
     <Compile Include="Mappers\TeamModelToTeam.cs" />
     <Compile Include="Mappers\TeamToTeamModel.cs" />
+    <Compile Include="Models\TimeLineModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActorModel.cs" />
+    <Compile Include="Models\AssociateModel.cs" />
     <Compile Include="Models\ClubModel.cs" />
     <Compile Include="Models\CreateGameModel.cs" />
+    <Compile Include="Models\EventModel.cs" />
     <Compile Include="Models\FormationModel.cs" />
     <Compile Include="Models\GameDetails.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\InstantModel.cs" />
     <Compile Include="Models\MatchConfigureModel.cs" />
     <Compile Include="Models\MatchModel.cs" />
+    <Compile Include="Models\OpinionModel.cs" />
     <Compile Include="Models\PlayerModel.cs" />
     <Compile Include="Models\PositionModel.cs" />
     <Compile Include="Models\StadiumModel.cs" />
@@ -192,6 +201,7 @@
     <Compile Include="Models\TeamDetailsModel.cs" />
     <Compile Include="Models\TeamModel.cs" />
     <Compile Include="Models\TeamPositionModel.cs" />
+    <Compile Include="Models\TimeLineNameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

@@ -21,6 +21,10 @@ namespace GameObserver.Controllers
         private FormationToFormationModel _mapperFormationToFormationModel;
         private PositionToPositionModel _mapperPositionToPositionModel;
         private ClubToClubModel _mapperClubToClubModel;
+        private EventToEventModel _mapperEventToEventModel;
+        private InstantToInstantModel _mapperInstantToInstantModel;
+        private OpinionToOpinionModel _mapperOpinionToOpinionModel;
+        private AssociateToAssociateModel _mapperAssociateToAssociateModel;
         public SetUpController()
         {
             _repo = new RepositoryGameObserver();
@@ -32,6 +36,10 @@ namespace GameObserver.Controllers
             _mapperFormationToFormationModel = new FormationToFormationModel();
             _mapperPositionToPositionModel = new PositionToPositionModel();
             _mapperClubToClubModel = new ClubToClubModel();
+            _mapperEventToEventModel = new EventToEventModel();
+            _mapperInstantToInstantModel = new InstantToInstantModel();
+            _mapperOpinionToOpinionModel = new OpinionToOpinionModel();
+            _mapperAssociateToAssociateModel = new AssociateToAssociateModel();
         }
 
         //
@@ -156,6 +164,77 @@ namespace GameObserver.Controllers
         {
             ActorModel actor = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(id)));
             return Json(actor, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetEvents()
+        {
+            IEnumerable<EventModel> evens = _mapperEventToEventModel.MapAll(_repo.GetAllEvents());
+            return Json(evens , JsonRequestBehavior.AllowGet);
+        }
+
+        public void CreateOpinion(
+            String idstadium, String datahora, String datavisitor, String idvisitante, String datadefronta,
+            String iddefronta, String idcausador , int idevento)
+        {
+            _repo.CreateOpinion(DateTime.Now , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitante),Convert.ToDateTime(datadefronta),
+                Convert.ToInt32(iddefronta),1,Convert.ToInt32(idcausador), null,DateTime.Now,1,Convert.ToInt32(idevento));
+        }
+
+
+        public IEnumerable<TimeLineModel> CreateTimeLine(String idstadium, String datahora, String idequipav, String dataequipav,
+            String idequipag, String dataequipag)
+        {
+            IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
+                Convert.ToDateTime(dataequipav),
+                Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag)));
+
+            foreach (var allInstantModel in allInstantModels)
+            {
+                IEnumerable<OpinionModel> allOpinionModels =
+                    _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
+                        Convert.ToDateTime(datahora),
+                        Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
+                        Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
+                foreach (var opinion in allOpinionModels)
+                {
+                    IEnumerable<AssociateModel> allAssociateModels = _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
+                        1));
+
+                    foreach (var allAssociateModel in allAssociateModels)
+                    {
+                        yield return new TimeLineModel()
+                        {
+                            date = opinion.Date,
+                            eventId = allAssociateModel.IdEvent,
+                            causeId = allInstantModel.IdCause,
+                            executeId = allInstantModel.IdExecute
+                        };
+                    }
+                }
+            }
+        }
+
+        public ActionResult GetTimeLine(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag)
+        {
+
+            IEnumerable<TimeLineModel> allTimeLineModels = CreateTimeLine(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag);
+            return Json(allTimeLineModels, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult GetNamesForTimeLine(String idevent, String idcause, String idexecute)
+        {
+            EventModel ev = _mapperEventToEventModel.Map(_repo.GetEvent(Convert.ToInt32(idevent)));
+            ActorModel ac = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(idcause)));
+            ActorModel ae = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(idexecute)));
+
+            TimeLineNameModel tm = new TimeLineNameModel()
+            {
+                eventName = ev.Type,
+                causeName = ac.Name,
+                executeName = ae.Name
+            };
+            return Json(tm, JsonRequestBehavior.AllowGet);
         }
 
 	}

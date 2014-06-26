@@ -9,7 +9,7 @@ namespace GameObserver.Models
     {
         public int Id { get; set; }
         public String Name { get; set; }
-        public DateTime Born { get; set; }
+        public DateTime? Born { get; set; }
         public decimal Height { get; set; }
         public String Photo { get; set; }
         public int Weight { get; set; }
