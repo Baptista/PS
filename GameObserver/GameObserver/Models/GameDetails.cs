@@ -10,5 +10,6 @@ namespace GameObserver.Models
         public MatchModel matchModel { get; set; }
         public ClubModel clubvisitor { get; set; }
         public ClubModel clubagainst { get; set; }
+        //public String svg { get; set; }
     }
 }

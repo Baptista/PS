@@ -7,6 +7,7 @@
 <h2>Index</h2>
 
 <p>
+    
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
@@ -15,10 +16,10 @@
             @Html.DisplayNameFor(model => model.Data)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IdClub)
+            @Html.DisplayNameFor(model => model.NameClub)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IdFormation)
+            @Html.DisplayNameFor(model => model.Formation)
         </th>
         <th></th>
     </tr>
@@ -26,18 +27,17 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Data)
+            @Html.Encode(item.Data.ToString("d"))
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IdClub)
+            @Html.DisplayFor(modelItem => item.NameClub)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IdFormation)
+            @Html.DisplayFor(modelItem => item.Formation)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { date=item.Data,idclub=item.IdClub/* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new {date=item.Data,idclub=item.IdClub,idformation=item.IdFormation }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("AdjustTeam", "AdjustTeam", new { date = item.Data, idclub = item.IdClub, idformation = item.IdFormation })
+            
         </td>
     </tr>
 }

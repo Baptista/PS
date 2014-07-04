@@ -11,16 +11,17 @@ namespace GameObserver.DomainModel
     public interface IRepositoryGameObserver
     {
 
+        Event GetEvent(int id); 
         Stadium GetStadium(int id);
 
         IEnumerable<Club> GetAllClubs();
         IEnumerable<Formation> GetAllFormations();
 
-        void CreateTeam(Team team);
+        void CreateTeam(int idFormation, int idClub, DateTime data);
 
         Actor GetPlayer(int id);
 
-        Event GetEvent(int id);
+        IEnumerable<Actor> GetPlayersByClub(int idclub);
 
         Club GetClub(int id);
         Formation GetFormation(int id);
@@ -30,7 +31,7 @@ namespace GameObserver.DomainModel
         Position GetPosition(int idplayer);
         
 
-        void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int onfield);
+        void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int idpos);
 
 
 
@@ -46,7 +47,7 @@ namespace GameObserver.DomainModel
 
         Team GetTeam(DateTime date, int idclub);
 
-        IEnumerable<Actor> GetPlayersByTeam(Team team);
+        IEnumerable<Integrate> GetPlayersByTeam(int idclub, DateTime date);
 
         void CreateMatch(Match match);
 
@@ -67,9 +68,23 @@ namespace GameObserver.DomainModel
             int idequipag, DateTime dataequipag);
 
 
+        void InsertLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag , DateTime horaminuto, String svg);
+
+
         IEnumerable<Opinion> GetAllOpinionsByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag , DateTime minitosegundo);
 
         IEnumerable<Associate> GetAllAssociatesbyOpinionEvent(DateTime datahora , int iduser);
+
+        void InsertUser(String name, int idrole);
+
+        Layout GetLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag);
+
+
+        void UpdateIntegrate(int idclub, DateTime date, int idplayer, int position);
+
+
     }
 }

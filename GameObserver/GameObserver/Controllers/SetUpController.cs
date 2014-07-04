@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -25,6 +26,8 @@ namespace GameObserver.Controllers
         private InstantToInstantModel _mapperInstantToInstantModel;
         private OpinionToOpinionModel _mapperOpinionToOpinionModel;
         private AssociateToAssociateModel _mapperAssociateToAssociateModel;
+        private LayoutToLayoutModel _mapperLayoutToLayoutModel;
+
         public SetUpController()
         {
             _repo = new RepositoryGameObserver();
@@ -40,6 +43,7 @@ namespace GameObserver.Controllers
             _mapperInstantToInstantModel = new InstantToInstantModel();
             _mapperOpinionToOpinionModel = new OpinionToOpinionModel();
             _mapperAssociateToAssociateModel = new AssociateToAssociateModel();
+            _mapperLayoutToLayoutModel = new LayoutToLayoutModel();
         }
 
         //
@@ -113,6 +117,12 @@ namespace GameObserver.Controllers
                 int idvisitor, DateTime datevisitor, int idagainst, DateTime dateagainst
             )
         {
+
+            //LayoutModel layoutModel = _mapperLayoutToLayoutModel.Map(_repo.GetLayout(Convert.ToInt32(idstadium),
+            //    Convert.ToDateTime(date),Convert.ToInt32(idvisitor),Convert.ToDateTime(datevisitor),
+            //    Convert.ToInt32(idagainst),Convert.ToDateTime(dateagainst)));
+
+
             MatchModel matchModel = new MatchModel()
             {
                 Date = date,
@@ -129,6 +139,9 @@ namespace GameObserver.Controllers
             ClubModel visitor = _mapperClubToClubModel.Map(_repo.GetClub(idvisitor));
             ClubModel against = _mapperClubToClubModel.Map(_repo.GetClub(idagainst));
 
+
+            
+
             GameDetails details = new GameDetails()
             {
                 matchModel = matchModel,
@@ -140,13 +153,13 @@ namespace GameObserver.Controllers
         }
 
 
-        public ActionResult GetPlayers(String id,String dateq)
-        {
-            var Players = _mapperActorToActorModel.MapAll(
-                    _repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime(dateq), Convert.ToInt32(id))));
+        //public ActionResult GetPlayers(String id,String dateq)
+        //{
+        //    var Players = _mapperActorToActorModel.MapAll(
+        //            _repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime(dateq), Convert.ToInt32(id))));
             
-            return Json(Players, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(Players, JsonRequestBehavior.AllowGet);
+        //}
 
         public ActionResult GetFormation(String id, String dateq)
         {
@@ -158,6 +171,12 @@ namespace GameObserver.Controllers
         {
             PositionModel model = _mapperPositionToPositionModel.Map(_repo.GetPosition(Convert.ToInt32(id)));
             return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetReferee(String id)
+        {
+            ActorModel actorModel = _mapperActorToActorModel.Map(_repo.GetReferee(Convert.ToInt32(id)));
+            return Json(actorModel, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetPlayer(String id)
@@ -172,11 +191,13 @@ namespace GameObserver.Controllers
             return Json(evens , JsonRequestBehavior.AllowGet);
         }
 
-        public void CreateOpinion(
+        public void CreateOpinion(String datenow,
             String idstadium, String datahora, String datavisitor, String idvisitante, String datadefronta,
             String iddefronta, String idcausador , int idevento)
         {
-            _repo.CreateOpinion(DateTime.Now , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitante),Convert.ToDateTime(datadefronta),
+            DateTime d = DateTime.Parse(datenow.Substring(0,25));
+            //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
+            _repo.CreateOpinion(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitante),Convert.ToDateTime(datadefronta),
                 Convert.ToInt32(iddefronta),1,Convert.ToInt32(idcausador), null,DateTime.Now,1,Convert.ToInt32(idevento));
         }
 
@@ -204,7 +225,7 @@ namespace GameObserver.Controllers
                     {
                         yield return new TimeLineModel()
                         {
-                            date = opinion.Date,
+                            date = allInstantModel.MinuteSeconds,
                             eventId = allAssociateModel.IdEvent,
                             causeId = allInstantModel.IdCause,
                             executeId = allInstantModel.IdExecute
@@ -226,16 +247,33 @@ namespace GameObserver.Controllers
         {
             EventModel ev = _mapperEventToEventModel.Map(_repo.GetEvent(Convert.ToInt32(idevent)));
             ActorModel ac = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(idcause)));
-            ActorModel ae = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(idexecute)));
-
+            ActorModel ae = null;
+            if (!idexecute.Equals("null"))
+            {
+                ae = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(idexecute)));
+            }
             TimeLineNameModel tm = new TimeLineNameModel()
             {
                 eventName = ev.Type,
                 causeName = ac.Name,
-                executeName = ae.Name
+                executeName = (ae != null) ? ae.Name : null
             };
             return Json(tm, JsonRequestBehavior.AllowGet);
         }
+
+
+       [ValidateInput(false)]
+        public void InsertLayout(String idstadium, String datahora, String idequipav, 
+            String dataequipav, String idequipag, String dataequipag, String datenow, String svg)
+        {
+            DateTime d = DateTime.Parse(datenow.Substring(0,25));
+
+            _repo.InsertLayout(Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToInt32(idequipav),Convert.ToDateTime(dataequipav),
+                Convert.ToInt32(idequipag),Convert.ToDateTime(dataequipag),d,svg);
+        }
+
+
+        
 
 	}
 }

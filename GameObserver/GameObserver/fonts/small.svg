@@ -1,33 +1,33 @@
-<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
  <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
  <g id="all">
   <title>Layer 1</title>
-  <rect x="1" y="1" width="795.00002" height="505.99999" fill="green" id="svg_1"/>
-  <rect stroke="#007f00" x="0" id="svg_1" height="334" width="113" y="170" fill="#0ea00e"/>
-  <rect stroke="#007f00" id="svg_2" height="335" width="113" y="170" x="226" fill="#0f9e0f"/>
-  <rect stroke="#007f00" y="170" id="svg_3" height="336.00001" width="113" x="452" fill="#0f9e0f"/>
-  <rect stroke="#007f00" id="svg_4" height="336" width="113" y="170" x="678" fill="#0f9e0f"/>
+  <rect id="svg_1" fill="green" height="435" width="795.00002" y="1.99999" x="1"/>
+  <rect fill="#0ea00e" y="100" width="113" height="334" id="svg_1" x="0" stroke="#007f00"/>
+  <rect fill="#0f9e0f" x="226" y="100" width="113" height="335" id="svg_2" stroke="#007f00"/>
+  <rect fill="#0f9e0f" x="452" width="113" height="336.00001" id="svg_3" y="100" stroke="#007f00"/>
+  <rect fill="#0f9e0f" x="678" y="100" width="113" height="336" id="svg_4" stroke="#007f00"/>
   <!-- Final lines on field -->
-  <line stroke="#ffffff" id="svg_6" y2="497.00001" x2="10" y1="180" x1="10" stroke-width="5" fill="none"/>
-  <line stroke="#ffffff" id="svg_7" y2="501.00001" x2="792" y1="183" x1="792" stroke-width="5" fill="none"/>
-  <line stroke="#ffffff" fill="none" stroke-width="5" x1="7.65" y1="180" x2="789.00001" y2="180" id="svg_8"/>
-  <line stroke="#ffffff" fill="none" stroke-width="5" x1="11.32501" y1="500.5" x2="789.67498" y2="500.5" id="svg_9"/>
+  <line stroke="#ffffff" fill="none" stroke-width="5" x1="10" y1="110" x2="10" y2="427.99999" id="svg_6"/>
+  <line stroke="#ffffff" fill="none" stroke-width="5" x1="792" y1="108" x2="792" y2="433.00003" id="svg_7"/>
+  <line stroke="#ffffff" id="svg_8" y2="110" x2="793.00004" y1="110" x1="7.65" stroke-width="5" fill="none"/>
+  <line stroke="#ffffff" id="svg_9" y2="430.5" x2="790.67494" y1="430.5" x1="7.32504" stroke-width="5" fill="none"/>
   <!-- small rectangle -->
-  <path stroke="white" id="svg_10" fill-opacity="0" stroke-width="5" d="m12,285.39999l55,0l0,99.20004l-55,0l0,-99.20004z" fill="black"/>
-  <path stroke="white" d="m790,285.39999l-55,0l0,101.20004l55,0l0,-101.20004z" stroke-width="5" fill-opacity="0" id="svg_11" fill="black"/>
+  <path fill="black" d="m12,218.39999l55,0l0,99.20004l-55,0l0,-99.20004z" stroke-width="5" fill-opacity="0" id="svg_10" stroke="white"/>
+  <path fill="black" id="svg_11" fill-opacity="0" stroke-width="5" d="m790,215.39999l-55,0l0,101.20004l55,0l0,-101.20004z" stroke="white"/>
   <!-- rectangle -->
-  <path stroke="white" fill="#ffffff" id="svg_12" fill-opacity="0" stroke-width="5" d="m11,252.39999l90,0l0,158.19998l-90,0l0,-158.19998z"/>
-  <path stroke="white" fill="#ffffff" id="svg_13" fill-opacity="0" stroke-width="5" d="m707,261.39996l84,0l0,152.20007l-84,0l0,-152.20007z"/>
+  <path d="m11,188.39999l90,0l0,158.19998l-90,0l0,-158.19998z" stroke-width="5" fill-opacity="0" id="svg_12" fill="#ffffff" stroke="white"/>
+  <path d="m707,191.39996l84,0l0,152.20007l-84,0l0,-152.20007z" stroke-width="5" fill-opacity="0" id="svg_13" fill="#ffffff" stroke="white"/>
   <!-- half circle -->
-  <path stroke="white" d="m104,277.875a91.5,68.35128 0 0 1 0,109.25l0,-109.25z" stroke-width="5" fill="none" id="svg_14"/>
-  <path stroke="white" id="svg_15" fill="none" stroke-width="5" d="m704,278.875a91.5,71.47949 0 0 0 0,114.25l0,-114.25z"/>
+  <path id="svg_14" fill="none" stroke-width="5" d="m102,212.875a91.5,68.35128 0 0 1 0,109.25l0,-109.25z" stroke="white"/>
+  <path d="m707,209.875a91.5,71.47949 0 0 0 0,114.25l0,-114.25z" stroke-width="5" fill="none" id="svg_15" stroke="white"/>
   <!-- corners -->
-  <path fill="black" d="m12,192a10,10 0 0 0 10,-10l-10,0l0,10z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_16"/>
-  <path id="svg_17" fill-opacity="0" stroke-width="5" stroke="white" d="m790,487a10,10 0 0 0 -10,10l10,0l0,-10z" fill="black"/>
-  <path fill="black" d="m23,497a10,10 0 0 0 -10,-10l0,10l10,0z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_18"/>
-  <path id="svg_19" fill-opacity="0" stroke-width="5" stroke="white" d="m783,182a10,10 0 0 0 10,10l0,-10l-10,0z" fill="black"/>
+  <path id="svg_16" fill-opacity="0" stroke-width="5" stroke="white" d="m12,122a10,10 0 0 0 10,-10l-10,0l0,10z" fill="black"/>
+  <path fill="black" d="m791,419a10,10 0 0 0 -10,10l10,0l0,-10z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_17"/>
+  <path id="svg_18" fill-opacity="0" stroke-width="5" stroke="white" d="m21,430a10,10 0 0 0 -10,-10l0,10l10,0z" fill="black"/>
+  <path fill="black" d="m780,112a10,10 0 0 0 10,10l0,-10l-10,0z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_19"/>
   <!-- middle circle -->
-  <circle fill="black" id="svg_3" fill-opacity="0" stroke-width="5" stroke="white" r="91.5" cy="332" cx="402"/>
-  <line stroke="white" id="svg_20" y2="499.00002" x2="401" y1="178" x1="401" fill-opacity="0" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" fill="none"/>
+  <circle cx="402" cy="262" r="91.5" stroke="white" stroke-width="5" fill-opacity="0" id="svg_3" fill="black"/>
+  <line fill="none" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" fill-opacity="0" x1="401" y1="108" x2="401" y2="429.00002" id="svg_20" stroke="white"/>
  </g>
 </svg>

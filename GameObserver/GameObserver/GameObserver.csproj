@@ -16,7 +16,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44302</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -28,7 +28,7 @@
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -162,6 +162,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SetUpController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -173,13 +174,19 @@
     <Compile Include="Mappers\FormationToFormationModel.cs" />
     <Compile Include="Mappers\IMapper.cs" />
     <Compile Include="Mappers\InstantToInstantModel.cs" />
+    <Compile Include="Mappers\IntegrateToIntegrateModel.cs" />
+    <Compile Include="Mappers\LayoutToLayoutModel.cs" />
     <Compile Include="Mappers\MatchModelToMatch.cs" />
     <Compile Include="Mappers\MatchToMatchModel.cs" />
     <Compile Include="Mappers\OpinionToOpinionModel.cs" />
+    <Compile Include="Mappers\PlayerToPlayerModel.cs" />
     <Compile Include="Mappers\PositionToPositionModel.cs" />
     <Compile Include="Mappers\StadiumToStadiumModel.cs" />
     <Compile Include="Mappers\TeamModelToTeam.cs" />
     <Compile Include="Mappers\TeamToTeamModel.cs" />
+    <Compile Include="Models\IntegrateModel.cs" />
+    <Compile Include="Models\LayoutModel.cs" />
+    <Compile Include="Models\TeamAdjustModel.cs" />
     <Compile Include="Models\TimeLineModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActorModel.cs" />
@@ -227,6 +234,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\Move.js" />
+    <Content Include="Scripts\MoveTeam.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\search.js" />
@@ -258,11 +266,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Team\Create.cshtml" />
     <Content Include="Views\Team\Index.cshtml" />
-    <Content Include="Views\Team\Details.cshtml" />
     <Content Include="Views\Team\AdjustTeam.cshtml" />
     <Content Include="Views\Setup\Create.cshtml" />
     <Content Include="Views\Setup\Index.cshtml" />
     <Content Include="Views\Setup\Details.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -302,7 +310,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2051</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2051/</IISUrl>
+          <IISUrl>https://localhost:44302/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -15,9 +15,9 @@
    
     
         
-        <p style="left:20%;position:absolute"> @Html.DisplayFor(model => model.clubvisitor.Name) </p>
+        @*<p style="left:20%;position:absolute"> @Html.DisplayFor(model => model.clubvisitor.Name) </p>
         <p style="left:60%;position: absolute">@Html.DisplayFor(model => model.clubagainst.Name)</p>
-        <p style="left:40%;position: absolute"> @Html.DisplayFor(model => model.matchModel.Date)</p>
+        <p style="left:40%;position: absolute"> @Html.DisplayFor(model => model.matchModel.Date)</p>*@
 @*<dt>
             @Html.DisplayNameFor(model => model.matchModel.IdVisitor)
         </dt>*@
@@ -58,16 +58,52 @@
             @Html.DisplayFor(model => model.matchModel.DateAgainst)
         </p>
 
+<p hidden id="idref1">
+    @Html.DisplayFor(model => model.matchModel.IdFirstReferee)
+</p>
+<p hidden id="idref2">
+    @Html.DisplayFor(model => model.matchModel.IdSecondReferee)
+</p>
+<p hidden id="idref3">
+    @Html.DisplayFor(model => model.matchModel.IdThirdReferee)
+</p>
+<p hidden id="idref4">
+    @Html.DisplayFor(model => model.matchModel.IdFourReferee)
+</p>
+<p hidden id="idnameclubvisitor">
+    @Html.DisplayFor(model => model.clubvisitor.Name)
+</p>
+<p hidden id="idnameclubagainst">
+    @Html.DisplayFor(model => model.clubagainst.Name)
+</p>
+<p hidden id="idclubvisitorphoto">
+    @Html.DisplayFor(model => model.clubvisitor.Symbol)
+</p>
+<p hidden id="idclubagainstphoto">
+    @Html.DisplayFor(model => model.clubagainst.Symbol)
+</p>
+
+@*@Html.DisplayFor(model=>model.svg)*@
     
 
-<button id="idbuttonauto">Auto</button>
+@*<button id="idbuttonauto">Auto</button>
 <button id="idbuttonreset">Reset</button>
+<button id="idbuttonsave">Save</button>*@
 
-<div class="row">
-    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/big.svg")  height="682" width="1018"/>
-    @*height="682" width="1018"*@
+<div class="row" >
+    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/small_match.svg") width="796" height="480" />
+    @*@if (@Model.svg == null)
+    {
+        <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/big.svg")  height="682" width="1018"/>
+    }
+    else
+    {*@
+        @*height="682" width="1018"*@
     @*width="796" height="507"*@
-
+    @*<svg id ="svgmain" height="682" width="1018" xmlns="http://www.w3.org/2000/svg">
+            @Html.DisplayTextFor(model => model.svg)
+        </svg>*@
+    @*}*@
 </div>
 
 

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Xml;
-using System.Xml.Linq;
 using GameObserver.Data;
 using GameObserver.DomainModel;
-using GameObserver.DomainModel.Entities;
 using GameObserver.Mappers;
 using GameObserver.Models;
 
@@ -17,58 +13,88 @@ namespace GameObserver.Controllers
     {
 
         private IRepositoryGameObserver _repo;
-        private TeamModelToTeam _mapperTeamModelToTeam;
         private TeamToTeamModel _mapperTeamToTeamModel;
-        private ActorModelToActor _mapperActorModelToActor;
         private ActorToActorModel _mapperActorToActorModel;
         private ClubToClubModel _mapperClubToClubModel;
         private FormationToFormationModel _mapperFormationToFormationModel;
+        private IntegrateToIntegrateModel _mapperIntegrateToIntegrateModel;
 
         public TeamController()
         {
             _repo = new RepositoryGameObserver();
-            _mapperTeamModelToTeam = new TeamModelToTeam();
             _mapperTeamToTeamModel = new TeamToTeamModel();
-            _mapperActorModelToActor = new ActorModelToActor();
             _mapperActorToActorModel = new ActorToActorModel();
             _mapperClubToClubModel = new ClubToClubModel();
             _mapperFormationToFormationModel = new FormationToFormationModel();
+            _mapperIntegrateToIntegrateModel = new IntegrateToIntegrateModel();
         }
 
-        public ActionResult AdjustTeam()
+
+        public void UpdateIntegrate(String idclub, String date, String idplayer, String idposition)
         {
-            return View();
+            if (!idposition.Equals("null"))
+            {
+                _repo.UpdateIntegrate(Convert.ToInt32(idclub), Convert.ToDateTime(date), Convert.ToInt32(idplayer),
+                    Convert.ToInt32(idposition));
+            }
+            else
+            {
+                _repo.UpdateIntegrate(Convert.ToInt32(idclub), Convert.ToDateTime(date), Convert.ToInt32(idplayer),
+                    0);
+            }
+        }
+
+        public ActionResult GetPlayer(String id)
+        {
+            ActorModel actor = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(id)));
+            return Json(actor, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetFormation(String id)
+        {
+            FormationModel formationModel = _mapperFormationToFormationModel.Map(_repo.GetFormation(Convert.ToInt32(id)));
+            return Json(formationModel, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetPlayerByClub(int idclub)
+        {
+            IEnumerable<ActorModel> integrateModelByTeam = _mapperActorToActorModel.MapAll(
+                _repo.GetPlayersByClub(idclub)
+                );
+            return Json(integrateModelByTeam, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AdjustTeam(DateTime date, int idclub, int idformation)
+        {
+           
+            ClubModel clubModel = _mapperClubToClubModel.Map(_repo.GetClub(idclub));
+            
+            TeamModel t = new TeamModel()
+            {
+                IdClub = idclub,
+                Data = date,
+                IdFormation = idformation,
+                NameClub = clubModel.Name
+            };
+
+            return View(t);
         }
 
         //
         // GET: /Team/
         public ActionResult Index()
         {
-            return View(_mapperTeamToTeamModel.MapAll(_repo.GetAllTeams()));
-        }
-
-        //
-        // GET: /Team/Details/5
-        public ActionResult Details(DateTime date, int idclub, int idformation)
-        {
-            TeamModel teamModel = _mapperTeamToTeamModel.Map(_repo.GetTeam(date, idclub));
-            IEnumerable<ActorModel> actorModelByTeam = _mapperActorToActorModel.MapAll(_repo.GetPlayersByTeam(_mapperTeamModelToTeam.Map(teamModel)));
-            IEnumerable<ActorModel> actorModelAll = _mapperActorToActorModel.MapAll(_repo.GetAllPlayers());
-
-            ClubModel clubModel = _mapperClubToClubModel.Map(_repo.GetClub(idclub));
-            FormationModel formationModel = _mapperFormationToFormationModel.Map(_repo.GetFormation(idformation));
-
-            TeamDetailsModel detailsModel = new TeamDetailsModel()
+            IEnumerable<TeamModel> allteams = _mapperTeamToTeamModel.MapAll(_repo.GetAllTeams()).ToList();
+            foreach (var teamModel in allteams)
             {
-                Formation = formationModel,
-                Club = clubModel,
-                Team = teamModel,
-                PlayersByTeam = actorModelByTeam,
-                AllPlayers = actorModelAll
-            };
-            return View(detailsModel);
+                teamModel.NameClub = _repo.GetClub(teamModel.IdClub).Name;
+                teamModel.Data = teamModel.Data;
+                teamModel.Formation = _repo.GetFormation(teamModel.IdFormation).Designation;
+            }
+            return View(allteams);
         }
 
+       
         //
         // GET: /Team/Create
         public ActionResult Create()
@@ -90,13 +116,16 @@ namespace GameObserver.Controllers
         {
             try
             {
-                TeamModel teamModel = new TeamModel()
+                int idclub = Convert.ToInt32(selectedclub);
+                int idformation = Convert.ToInt32(selectformation);
+                DateTime data = DateTime.Now;
+                
+                _repo.CreateTeam(idformation,idclub,data);
+                IEnumerable<ActorModel> playersModel = _mapperActorToActorModel.MapAll(_repo.GetPlayersByClub(Convert.ToInt32(selectedclub)));
+                foreach (var playerModel in playersModel)
                 {
-                    IdClub = Convert.ToInt32(selectedclub),
-                    IdFormation = Convert.ToInt32(selectformation),
-                    Data = DateTime.Now
-                };
-                _repo.CreateTeam(_mapperTeamModelToTeam.Map(teamModel));
+                    _repo.InsertPlayersOnTeam(playerModel.Id,idclub,data,0);
+                }
                 return RedirectToAction("Index");
             }
             catch
@@ -105,24 +134,12 @@ namespace GameObserver.Controllers
             }
         }
 
-       
-
-        public ActionResult Search(String q)
+        public ActionResult GetPlayersByTeam(String date, String idclub)
         {
-            var pla = _mapperActorToActorModel.MapAll(_repo.GetPlayers(q));
-
-            return Json(pla, JsonRequestBehavior.AllowGet);
+            IEnumerable<IntegrateModel> integrateModel = _mapperIntegrateToIntegrateModel.MapAll(
+                _repo.GetPlayersByTeam(Convert.ToInt32(idclub),Convert.ToDateTime(date)));
+            return Json(integrateModel, JsonRequestBehavior.AllowGet);
+            
         }
-
-        public void InserirPlayerOnTeam(String idclub, String idplayer, String date, String onstarteam)
-        {
-            _repo.InsertPlayersOnTeam(Convert.ToInt32(idplayer),Convert.ToInt32(idclub),Convert.ToDateTime(date),Convert.ToInt32(onstarteam));
-        }
-        public void RemovePlayerOnTeam(int idclub, int idplayer, DateTime date)
-        {
-            _repo.RemovePlayersOnTeam(Convert.ToInt32(idplayer), Convert.ToInt32(idclub), Convert.ToDateTime(date));
-        }
-
-        
     }
 }

@@ -1,0 +1,38 @@
+public IEnumerable<Actor> GetPlayersByTeam(DateTime date, int idclub, int idformation)
+        {
+            //string data = team.Data.Date.ToString("yyyy-MM-dd");
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select Actor.* from Equipa inner join conter on(Equipa.id=conter.idclube and Equipa.data=conter.dataequipa) inner join Jogador on(Jogador.id=conter.idjogador)inner join Actor on(Jogador.id=Actor.id) where Equipa.id=" + idclub + " and Equipa.data='" + date.ToString("yyyy-MM-dd") + "' and Equipa.idformacao="+idformation;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Actor()
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                Born = reader.GetDateTime(2),
+                                Height = reader.GetDecimal(3),
+                                Photo = reader.GetString(4),
+                                Weight = reader.GetInt32(5),
+                                Referee = reader.GetInt32(6),
+                                Player = reader.GetInt32(7)
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }

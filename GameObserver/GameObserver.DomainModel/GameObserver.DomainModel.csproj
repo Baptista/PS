@@ -45,10 +45,11 @@
     <Compile Include="Entities\Associate.cs" />
     <Compile Include="Entities\Belong.cs" />
     <Compile Include="Entities\Club.cs" />
-    <Compile Include="Entities\Contain.cs" />
+    <Compile Include="Entities\Integrate.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Formation.cs" />
     <Compile Include="Entities\Instant.cs" />
+    <Compile Include="Entities\Layout.cs" />
     <Compile Include="Entities\Match.cs" />
     <Compile Include="Entities\Opinion.cs" />
     <Compile Include="Entities\Play.cs" />

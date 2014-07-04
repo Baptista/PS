@@ -1,20 +1,13 @@
-﻿window.onload = function() {
+﻿window.onload = function () {
 
     var savepositions;
-    var movey = 50;
-    var a = document.getElementById("svgobject");
-    var svg = a.contentDocument;
-    svg.oncontextmenu = function (ev) {
-        ev.preventDefault();
-        return false;
-    }
-
-    var svgheight = a.getBoundingClientRect().height;
-    var svgwidth = a.getBoundingClientRect().width;
-    console.log("with", svgwidth);
-    console.log("height", svgheight);
-    var allplayereshome = [];
-    
+    var movey = 0;
+    var SVGDocument = null;
+    var SVGRoot = null;
+    var TrueCoords = null;
+    var GrabPoint = null;
+    var BackDrop = null;
+    var DragTarget = null;
     var formation;
     var defense;
     var middle;
@@ -27,11 +20,6 @@
     var gk;
     var aallpostions;
     var agk;
-
-    var halfposition = (svgwidth / 2);
-    var xposdetails = (svgwidth / 2)-50;
-    var yposdetails = (svgheight / 2) - 200;
-
     var middledefensey;
     var middledefensex;
     var middlex;
@@ -49,19 +37,19 @@
     var amiddlegkx;
     var amiddlegky;
 
-    var movedowndefense=0;
-    var movedownmiddle=0;
-    var movedownstriker=0;
+    var movedowndefense = 0;
+    var movedownmiddle = 0;
+    var movedownstriker = 0;
 
     var amovedowndefense = 0;
     var amovedownmiddle = 0;
     var amovedownstriker = 0;
 
-    
 
-    var ndefensehome=0;
-    var nmiddlehome=0;
-    var nstrikerhome=0;
+
+    var ndefensehome = 0;
+    var nmiddlehome = 0;
+    var nstrikerhome = 0;
 
     var ndefesefull;
     var nmiddlefull;
@@ -73,8 +61,495 @@
     var angkfull;
 
     var whereplayeres = [];
-
+    var allplayershome = [];
     var saveplayer = {};
+
+
+    var a = document.getElementById("svgobject");
+    var svg = null;
+    var svgheight = null;
+    var svgwidth = null;
+
+    svg = a.contentDocument;
+    svgheight = a.getBoundingClientRect().height;
+
+    svgwidth = a.getBoundingClientRect().width;
+    var halfposition = (svgwidth / 2);
+    SVGDocument = svg;
+    SVGRoot = SVGDocument.documentElement;
+    console.log("svgroot", SVGRoot);
+
+
+    
+    inserirnameclubs(null,"TIME", (halfposition-20), 20);
+
+    function timernow() {
+        var d = new Date();
+        var hourgame = document.getElementById("iddetailssetup_date").innerHTML.trim().split(" ")[1].split(":");
+        var newh = Math.abs(d.getHours() - hourgame[0]) * 60;
+        var newm = Math.abs(d.getMinutes() - hourgame[1]);
+        var news = Math.abs(d.getSeconds() - hourgame[2]);
+        var timemin = newh + newm + Math.round(news / 60);
+        return timemin + ":" + Math.round(news % 60);
+        //inserirnameclubs(timemin + ":" + Math.round(news % 60), halfposition - 20, 20);
+    }
+
+    var t = timernow();
+    var txtElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    txtElem.setAttributeNS(null, "x", halfposition-20);
+    txtElem.setAttributeNS(null, "y", 40);
+    txtElem.setAttributeNS(null, "font-size", 15);
+    txtElem.setAttributeNS(null, 'id', "timer");
+    var helloTxt = document.createTextNode(t);
+    txtElem.appendChild(helloTxt);
+    svg.getElementById("all").appendChild(txtElem);
+
+    setInterval(function () {
+        var oldtimer = svg.getElementById("timer");
+        oldtimer.innerHTML = timernow();
+    }, 1000);
+
+
+    var xmlhttp3 = new XMLHttpRequest();
+
+    xmlhttp3.onreadystatechange = function () {
+
+        if (xmlhttp3.readyState == 4 && xmlhttp3.status == 200) {
+            var resp = JSON.parse(xmlhttp3.response);
+
+            formation = resp.Designation.split('x');
+            defense = formation[0];
+            middle = formation[1];
+            striker = formation[2];
+            gk = 1;
+            allpostions = defense + middle + striker;
+            ndefesefull = defense;
+            nmiddlefull = middle;
+            nstrikerfull = striker;
+            ngkfull = 1;
+
+            middledefensey = (svgheight / defense) + movey;
+            middledefensex = (((svgwidth) / 4) / 2);
+
+            middlex = (svgwidth / 4);
+            middley = (svgheight / middle) + movey;
+            middlestrikery = (svgheight / striker) + movey;
+            middlestrikerx = ((svgwidth / 4) + (middledefensex));
+            console.log("middlestrikerx", middlestrikerx);
+            middlegkx = 20;
+            middlegky = (svgheight / 2) + movey;
+
+
+        }
+    };
+    console.log("forma", document.getElementById("iddetailssetup_idvisitor").innerHTML);
+    var idq = document.getElementById("iddetailssetup_idvisitor").innerHTML;
+    var dataq = document.getElementById("iddetailssetup_datevisitor").innerHTML;
+    xmlhttp3.open("GET", "/SetUp/GetFormation?id=" + idq + "&dateq=" + dataq, true);
+    xmlhttp3.send();
+
+
+
+    var xmlhttp7 = new XMLHttpRequest();
+
+    xmlhttp7.onreadystatechange = function () {
+
+        if (xmlhttp7.readyState == 4 && xmlhttp7.status == 200) {
+            var resp = JSON.parse(xmlhttp7.response);
+
+            aformation = resp.Designation.split('x');
+            adefense = parseInt(aformation[0]);
+            amiddle = parseInt(aformation[1]);
+            astriker = parseInt(aformation[2]);
+            agk = 1;
+            aallpostions = adefense + amiddle + astriker;
+            console.log("allpositions", aallpostions);
+            andefesefull = adefense;
+            anmiddlefull = amiddle;
+            anstrikerfull = astriker;
+            angkfull = 1;
+
+
+            amiddledefensey = (svgheight / adefense) + movey;
+            console.log("amiddledefensey", amiddledefensey);
+            amiddledefensex = svgwidth - (((svgwidth / 2) / adefense)) - 50;
+            console.log("amiddledefensex", amiddledefensex);
+            console.log("cenas", ((svgwidth / 4)));
+            amiddlex = (svgwidth - ((svgwidth / 4))) - 50;
+            console.log("amiddlex", amiddlex);
+            amiddley = (svgheight / amiddle) + movey;
+            console.log("amiddley", amiddley);
+            amiddlestrikery = (svgheight / astriker) + movey;
+            amiddlestrikerx = (svgwidth - ((svgwidth / 4) + (svgwidth - amiddledefensex - 50))) - 50;
+            console.log("amiddlestrikerx", amiddlestrikerx);
+            amiddlegkx = svgwidth - 60;
+            amiddlegky = (svgheight / 2) + movey;
+        }
+    };
+    var aidq = document.getElementById("iddetailssetup_idagainst").innerHTML;
+    var adataq = document.getElementById("iddetailssetup_dateagainst").innerHTML;
+    xmlhttp7.open("GET", "/SetUp/GetFormation?id=" + aidq + "&dateq=" + adataq, true);
+    xmlhttp7.send();
+
+
+    function inserirsymbolclubs(photo, posx, posy) {
+        var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        svgimg.setAttributeNS(null, 'height', '50');
+        svgimg.setAttributeNS(null, 'width', '50');
+        //svgimg.setAttributeNS(null, 'id', id);
+        svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + photo);
+        svgimg.setAttributeNS(null, 'x', posx);
+        svgimg.setAttributeNS(null, 'y', posy);
+        svgimg.setAttributeNS(null, 'visibility', 'visible');
+        svg.getElementById("all").appendChild(svgimg);
+
+    }
+
+    inserirsymbolclubs(document.getElementById("idclubvisitorphoto").innerHTML.trim(), 5, 5);
+    inserirsymbolclubs(document.getElementById("idclubagainstphoto").innerHTML.trim(), svgwidth - 60, 5);
+
+    function inserirnameclubs(id , name, xpos, ypos) {
+
+        txtElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+        txtElem.setAttributeNS(null, "x", xpos);
+        txtElem.setAttributeNS(null, "y", ypos);
+        txtElem.setAttributeNS(null, "font-size", 15);
+        txtElem.setAttributeNS(null, 'id', id);
+        var helloTxt = document.createTextNode(name);
+        txtElem.appendChild(helloTxt);
+
+        svg.getElementById("all").appendChild(txtElem);
+    }
+
+    inserirnameclubs(null,document.getElementById("idnameclubvisitor").innerHTML.trim(), svgwidth / 4 / 2, 30);
+    inserirnameclubs(null,document.getElementById("idnameclubagainst").innerHTML.trim(), (svgwidth - (svgwidth / 4)), 30);
+
+    function callreferee() {
+
+    }
+
+    var xmlhttp9 = new XMLHttpRequest();
+
+    xmlhttp9.onreadystatechange = function () {
+
+        if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
+            var resp = JSON.parse(xmlhttp9.response);
+            PhotoonSvg(resp.Id, resp.Photo, (svgwidth / 2) - 25, svgheight / 2);
+        }
+    };
+    var referee = document.getElementById("idref1").innerHTML.trim();
+    xmlhttp9.open("GET", "/SetUp/GetReferee?id=" + referee, true);
+    xmlhttp9.send();
+
+
+
+    //var allplayereshome = [];
+    loadpostions();
+    loadpostions2();
+
+    function loadpostions() {
+        var rect = svg.getElementById("all");
+        var pos = rect.getBoundingClientRect();
+        var x = pos.left + 10;
+        var y = pos.bottom - 50;
+
+        var xmlhttp5 = new XMLHttpRequest();
+
+        xmlhttp5.onreadystatechange = function () {
+
+            if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
+                var resp = JSON.parse(xmlhttp5.response);
+
+                resp.forEach(function (entry) {
+                    var xmlhttp8 = new XMLHttpRequest();
+                    var img = null;
+                    xmlhttp8.onreadystatechange = function () {
+
+                        if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
+
+                            var resp2 = JSON.parse(xmlhttp8.response);
+
+                            if (entry.IdPosition == 0) {
+                                img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                x = x + 50;
+                                if (x >= svgwidth - 50) {
+                                    y = y + 50;
+                                    x = pos.left + 10;
+                                }
+
+                            } else if (entry.IdPosition == 2) {
+                                if (ndefesefull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = pos.left + 10;
+                                    }
+                                } else {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middledefensex, middledefensey + movedowndefense);
+
+                                    --ndefesefull;
+                                    movedowndefense += (svgheight / defense) / 2;
+                                }
+
+                            } else if (entry.IdPosition == 3) {
+
+                                if (nmiddlefull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = pos.left + 10;
+                                    }
+                                } else {
+
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middlex, middley + movedownmiddle);
+
+                                    --nmiddlefull;
+                                    movedownmiddle += (svgheight / middle) / 2;
+                                }
+                            } else if (entry.IdPosition == 4) {
+                                if (nstrikerfull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = pos.left + 10;
+                                    }
+                                } else {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middlestrikerx, middlestrikery + movedownstriker);
+
+                                    --nstrikerfull;
+                                    movedownstriker += (svgheight / striker) / 2;
+                                }
+                            } else {
+                                if (ngkfull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = pos.left + 10;
+                                    }
+                                } else {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middlegkx, middlegky);
+                                    --ngkfull;
+                                }
+                            }
+                            allplayershome[allplayershome.length] = img;
+                        }
+                    };
+                    xmlhttp8.open("GET", "/Team/GetPlayer?id=" + entry.IdPlayer, true);
+                    xmlhttp8.send();
+                });
+            }
+        };
+        var idq = document.getElementById("iddetailssetup_idvisitor").innerHTML;
+        var dataq = document.getElementById("iddetailssetup_datevisitor").innerHTML;
+        xmlhttp5.open("GET", "/Team/GetPlayersByTeam?date=" + dataq + "&idclub=" + idq, true);
+        xmlhttp5.send();
+    }
+
+
+
+    function loadpostions2() {
+        var rect = svg.getElementById("all");
+        var pos = rect.getBoundingClientRect();
+        var x = ((pos.right - pos.left) / 2) + 25;
+        var y = pos.bottom - 50;
+
+        var xmlhttp4 = new XMLHttpRequest();
+
+        xmlhttp4.onreadystatechange = function () {
+
+            if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
+                var resp = JSON.parse(xmlhttp4.response);
+
+                resp.forEach(function (entry) {
+                    var xmlhttp8 = new XMLHttpRequest();
+                    var img = null;
+                    xmlhttp8.onreadystatechange = function () {
+
+                        if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
+
+                            var resp2 = JSON.parse(xmlhttp8.response);
+
+                            if (entry.IdPosition == 0) {
+                                img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                x = x + 50;
+                                if (x >= svgwidth - 50) {
+                                    y = y + 50;
+                                    x = ((pos.right - pos.left) / 2);
+                                }
+
+                            } else if (entry.IdPosition == 2) {
+                                if (andefesefull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = ((pos.right - pos.left) / 2);
+                                    }
+                                } else {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddledefensex, amiddledefensey + amovedowndefense);
+
+                                    --andefesefull;
+                                    amovedowndefense += (svgheight / adefense) / 2;
+                                }
+
+                            } else if (entry.IdPosition == 3) {
+
+                                if (anmiddlefull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = ((pos.right - pos.left) / 2);
+                                    }
+                                } else {
+
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlex, amiddley + amovedownmiddle);
+
+                                    --anmiddlefull;
+                                    amovedownmiddle += (svgheight / amiddle) / 2;
+                                }
+                            } else if (entry.IdPosition == 4) {
+                                if (anstrikerfull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = ((pos.right - pos.left) / 2);
+                                    }
+                                } else {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlestrikerx, amiddlestrikery + amovedownstriker);
+
+                                    --anstrikerfull;
+                                    amovedownstriker += (svgheight / astriker) / 2;
+                                }
+                            } else {
+                                if (angkfull == 0) {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                    x = x + 50;
+                                    if (x >= svgwidth - 50) {
+                                        y = y + 50;
+                                        x = ((pos.right - pos.left) / 2);
+                                    }
+                                } else {
+                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlegkx, amiddlegky);
+                                    --angkfull;
+                                }
+                            }
+                            allplayershome[allplayershome.length] = img;
+                        }
+                    };
+                    xmlhttp8.open("GET", "/Team/GetPlayer?id=" + entry.IdPlayer, true);
+                    xmlhttp8.send();
+                });
+            }
+        };
+        var aidq = document.getElementById("iddetailssetup_idagainst").innerHTML;
+        var adataq = document.getElementById("iddetailssetup_dateagainst").innerHTML;
+
+        xmlhttp4.open("GET", "/Team/GetPlayersByTeam?date=" + adataq + "&idclub=" + aidq, true);
+        xmlhttp4.send();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //console.log(document.getElementById("svgmain").appendChild(circles));
+    //var xmlhttp = new XMLHttpRequest();
+
+    //xmlhttp.onreadystatechange = function () {
+
+    //    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    //        var resp = JSON.parse(xmlhttp.response);
+    //        var rect = svg.getElementById("all");
+    //        var pos = rect.getBoundingClientRect();
+    //        var x = pos.left;
+    //        var y = pos.top;
+    //        resp.forEach(function (entry) {
+    //            var imgadd = PhotoonSvg(entry.Id, entry.Photo, x, y);
+    //            x = x + 50;
+    //            if (x >= ((pos.right - pos.left) / 2) - 50) {
+    //                y = y + 50;
+    //                x = pos.left;
+    //            }
+    //            allplayereshome[allplayereshome.length] = imgadd;
+    //        });
+    //    }
+
+    //};
+    //var idequipa = document.getElementById("iddetailssetup_idvisitor").innerHTML;
+    //var dataequipa = document.getElementById("iddetailssetup_datevisitor").innerHTML;
+    //xmlhttp.open("GET", "/SetUp/GetPlayers?id=" + idequipa + "&dateq=" + dataequipa, true);
+    //xmlhttp.send();
+
+
+    //var xmlhttp2 = new XMLHttpRequest();
+
+    //xmlhttp2.onreadystatechange = function () {
+
+    //    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+    //        var resp2 = JSON.parse(xmlhttp2.response);
+    //        var rect = svg.getElementById("all");
+    //        var pos = rect.getBoundingClientRect();
+    //        var x = ((pos.right - pos.left) / 2);
+    //        var y = pos.top;
+    //        resp2.forEach(function (entry) {
+    //            var img = PhotoonSvg(entry.Id, entry.Photo, x, y);
+    //            x = x + 50;
+    //            if (x >= svgwidth - 50) {
+    //                y = y + 50;
+    //                x = ((pos.right - pos.left) / 2);
+    //            }
+    //            allplayereshome[allplayereshome.length] = img;
+    //        });
+    //    }
+    //};
+    //idequipa = document.getElementById("iddetailssetup_idagainst").innerHTML;
+    //dataequipa = document.getElementById("iddetailssetup_dateagainst").innerHTML;
+    //xmlhttp2.open("GET", "/SetUp/GetPlayers?id=" + idequipa + "&dateq=" + dataequipa, true);
+    //xmlhttp2.send();
+
+
+    //var svg = a.contentDocument;
+    //svg = document;
+    svg.oncontextmenu = function (ev) {
+        ev.preventDefault();
+        return false;
+    }
+    //var sss = svg.documentElement + svg.documentElement.innerHTML;
+    //console.log("svg", sss);
+
+    //var svgheight = 682;// = a.getBoundingClientRect().height;
+
+    //var svgwidth = 1018;///a.getBoundingClientRect().width;
+    console.log("with", svgwidth);
+    console.log("height", svgheight);
+
+
+
+    
+    var xposdetails = (svgwidth / 2) - 50;
+    var yposdetails = (svgheight / 2) - 200;
+
+
+
 
     function IsOccupied(save, wherepla) {
         for (var i = 0; i < wherepla.length; ++i) {
@@ -86,15 +561,15 @@
     }
 
 
-    function nextposition(mx,my,formati) {
+    function nextposition(mx, my, formati) {
         savepositions = new Object();
-        
+
         savepositions.x = mx;
         savepositions.y = (my + movedowndefense);
-        movedowndefense += (svgheight / formati)/2;
-        
+        movedowndefense += (svgheight / formati) / 2;
+
         if (IsOccupied(savepositions, whereplayeres)) {
-            return nextposition(mx,my,formati);
+            return nextposition(mx, my, formati);
         }
         return savepositions;
     }
@@ -128,145 +603,17 @@
     //    }
     //}
 
-    var xmlhttp3 = new XMLHttpRequest();
-
-    xmlhttp3.onreadystatechange = function() {
-
-        if (xmlhttp3.readyState == 4 && xmlhttp3.status == 200) {
-            var resp = JSON.parse(xmlhttp3.response);
-            
-            formation = resp.Designation.split('x');
-            defense = formation[0];
-            middle = formation[1];
-            striker = formation[2];
-            gk = 1;
-            allpostions = defense + middle + striker;
-            ndefesefull = defense;
-            nmiddlefull = middle;
-            nstrikerfull = striker;
-            ngkfull = 1;
-            
-            middledefensey = (svgheight / defense) + movey;
-            middledefensex = (((svgwidth )/ 4)/2);
-            
-            middlex = (svgwidth / 4);
-            middley = (svgheight / middle) + movey;
-            middlestrikery = (svgheight / striker) + movey;
-            middlestrikerx = ((svgwidth / 4) + (middledefensex));
-            console.log("middlestrikerx", middlestrikerx);
-            middlegkx = 20;
-            middlegky = (svgheight / 2)+movey;
-            
-            
-        }
-    };
-    console.log("forma", document.getElementById("iddetailssetup_idvisitor").innerHTML);
-    var idq = document.getElementById("iddetailssetup_idvisitor").innerHTML;
-    var dataq = document.getElementById("iddetailssetup_datevisitor").innerHTML;
-    xmlhttp3.open("GET", "/SetUp/GetFormation?id=" + idq + "&dateq=" + dataq, true);
-    xmlhttp3.send();
 
 
 
-    var xmlhttp7 = new XMLHttpRequest();
-
-    xmlhttp7.onreadystatechange = function() {
-
-        if (xmlhttp7.readyState == 4 && xmlhttp7.status == 200) {
-            var resp = JSON.parse(xmlhttp7.response);
-
-            aformation = resp.Designation.split('x');
-            adefense = parseInt(aformation[0]);
-            amiddle = parseInt(aformation[1]);
-            astriker = parseInt(aformation[2]);
-            agk = 1;
-            aallpostions = adefense + amiddle + astriker;
-            console.log("allpositions", aallpostions);
-            andefesefull = adefense;
-            anmiddlefull = amiddle;
-            anstrikerfull = astriker;
-            angkfull = 1;
-
-            
-            amiddledefensey = (svgheight / adefense) + movey;
-            console.log("amiddledefensey", amiddledefensey);
-            amiddledefensex = svgwidth - (((svgwidth / 2) / adefense))-50;
-            console.log("amiddledefensex", amiddledefensex);
-            console.log("cenas", ((svgwidth / 4)));
-            amiddlex = (svgwidth - ((svgwidth / 4)))-50;
-            console.log("amiddlex", amiddlex);
-            amiddley = (svgheight / amiddle) + movey;
-            console.log("amiddley", amiddley);
-            amiddlestrikery = (svgheight / astriker) + movey;
-            amiddlestrikerx = (svgwidth - ((svgwidth / 4) + (svgwidth-amiddledefensex-50)))-50;
-            console.log("amiddlestrikerx", amiddlestrikerx);
-            amiddlegkx = svgwidth - 60;
-            amiddlegky = (svgheight / 2) +movey;
-        }
-    };
-    var aidq = document.getElementById("iddetailssetup_idagainst").innerHTML;
-    var adataq = document.getElementById("iddetailssetup_dateagainst").innerHTML;
-    xmlhttp7.open("GET", "/SetUp/GetFormation?id=" + aidq + "&dateq=" + adataq, true);
-    xmlhttp7.send();
-
-    
-
-    var xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = function () {
-
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var resp = JSON.parse(xmlhttp.response);
-            var rect = svg.getElementById("all");
-            var pos = rect.getBoundingClientRect();
-            var x = pos.left;
-            var y = pos.top;
-            resp.forEach(function (entry) {
-                var imgadd = PhotoonSvg(entry.Id,entry.Photo, x, y);
-                x = x + 50;
-                if (x >= ((pos.right - pos.left) / 2)-50) {
-                    y = y + 50;
-                    x = pos.left;
-                }
-                allplayereshome[allplayereshome.length] = imgadd;
-            });
-        }
-
-    };
-    var idequipa = document.getElementById("iddetailssetup_idvisitor").innerHTML;
-    var dataequipa = document.getElementById("iddetailssetup_datevisitor").innerHTML;
-    xmlhttp.open("GET", "/SetUp/GetPlayers?id="+idequipa+"&dateq="+dataequipa, true);
-    xmlhttp.send();
 
 
-    var xmlhttp2= new XMLHttpRequest();
 
-    xmlhttp2.onreadystatechange = function () {
+    FillTimeLine();
 
-        if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
-            var resp2 = JSON.parse(xmlhttp2.response);
-            var rect = svg.getElementById("all");
-            var pos = rect.getBoundingClientRect();
-            var x = ((pos.right - pos.left) / 2);
-            var y = pos.top;
-            resp2.forEach(function (entry) {
-                var img = PhotoonSvg(entry.Id,entry.Photo, x, y);
-                x = x + 50;
-                if (x >= svgwidth-50) {
-                    y = y + 50;
-                    x = ((pos.right - pos.left) / 2);
-                }
-                allplayereshome[allplayereshome.length] = img;
-            });
-        }
-    };
-    idequipa = document.getElementById("iddetailssetup_idagainst").innerHTML;
-    dataequipa = document.getElementById("iddetailssetup_dateagainst").innerHTML;
-    xmlhttp2.open("GET", "/SetUp/GetPlayers?id=" + idequipa + "&dateq=" + dataequipa, true);
-    xmlhttp2.send();
 
     var showdetails = [];
-    
+
     function removedetails() {
         for (var i = 0; i < showdetails.length; ++i) {
             svg.getElementById("all").removeChild(showdetails[i]);
@@ -275,25 +622,25 @@
     }
 
 
-    function PhotoonSvg(id , photo, posx, posy) {
+    function PhotoonSvg(id, photo, posx, posy) {
         var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
         svgimg.setAttributeNS(null, 'height', '50');
         svgimg.setAttributeNS(null, 'width', '50');
         svgimg.setAttributeNS(null, 'id', id);
-        svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', photo);
+        svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + photo);
         svgimg.setAttributeNS(null, 'x', posx);
         svgimg.setAttributeNS(null, 'y', posy);
         svgimg.setAttributeNS(null, 'visibility', 'visible');
         svg.getElementById("all").appendChild(svgimg);
-
+        console.log("add photo");
         svgimg.onclick = function (ev) {
 
-            
+
 
             console.log("click");
             var xmlhttp8 = new XMLHttpRequest();
 
-            xmlhttp8.onreadystatechange = function() {
+            xmlhttp8.onreadystatechange = function () {
 
                 if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
                     var resp = JSON.parse(xmlhttp8.response);
@@ -334,11 +681,11 @@
 
                     var xmlhttp9 = new XMLHttpRequest();
 
-                    xmlhttp9.onreadystatechange = function() {
+                    xmlhttp9.onreadystatechange = function () {
 
                         if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
                             var resp2 = JSON.parse(xmlhttp9.response);
-                            
+
                             var y = 170;
                             resp2.forEach(function (entry) {
                                 y = y + 20;
@@ -348,12 +695,12 @@
                                 circles.setAttribute("fill", "#ffffff");
                                 circles.setAttribute("stroke", "#000000");
                                 circles.setAttribute("r", 10);
-                                circles.setAttribute("id", "circ"+y);
+                                circles.setAttribute("id", "circ" + y);
                                 showdetails[showdetails.length] = circles;
                                 circles.onclick = function () {
                                     console.log("circles");
                                     var circlesinside = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                                    circlesinside.setAttribute("cx", parseInt(circles.getAttributeNS(null,'cx')));
+                                    circlesinside.setAttribute("cx", parseInt(circles.getAttributeNS(null, 'cx')));
                                     circlesinside.setAttribute("cy", parseInt(circles.getAttributeNS(null, 'cy')));
                                     circlesinside.setAttribute("fill", "#000000");
                                     circlesinside.setAttribute("stroke", "#000000");
@@ -377,15 +724,15 @@
                             svgbutton.setAttributeNS(null, 'width', '30');
                             svgbutton.setAttributeNS(null, 'id', '0');
                             svgbutton.setAttributeNS(null, 'style', 'fill:white;stroke:white');
-                            svgbutton.setAttributeNS(null, 'x', xposdetails+120);
-                            svgbutton.setAttributeNS(null, 'y', yposdetails+y+20);
+                            svgbutton.setAttributeNS(null, 'x', xposdetails + 120);
+                            svgbutton.setAttributeNS(null, 'y', yposdetails + y + 20);
                             svgbutton.setAttributeNS(null, 'visibility', 'visible');
                             svgbutton.setAttributeNS(null, 'cursor', 'pointer');
                             showdetails[showdetails.length] = svgbutton;
-                            svgbutton.onclick = function() {
-                                console.log("button");
-                            };
-                            
+                            //svgbutton.onclick = function() {
+                            //    console.log("button");
+                            //};
+
                             svg.getElementById("all").appendChild(svgbutton);
                             createLabels("Save", xposdetails + 120, yposdetails + y + 30);
 
@@ -407,7 +754,7 @@
         return svgimg;
     }
 
-    function createLabels(name , xpos,ypos) {
+    function createLabels(name, xpos, ypos) {
         var txtElem = document.createElementNS('http://www.w3.org/2000/svg', "text");
 
         txtElem.setAttributeNS(null, "x", xpos);
@@ -415,7 +762,7 @@
         txtElem.setAttributeNS(null, "font-size", 15);
         txtElem.setAttributeNS(null, 'cursor', 'pointer');
         var helloTxt = document.createTextNode(name);
-        
+
         txtElem.appendChild(helloTxt);
         showdetails[showdetails.length] = txtElem;
         svg.getElementById("all").appendChild(txtElem);
@@ -426,18 +773,12 @@
 
 
 
-    var SVGDocument = null;
-    var SVGRoot = null;
-    var TrueCoords = null;
-    var GrabPoint = null;
-    var BackDrop = null;
-    var DragTarget = null;
 
 
-    var OldCoor={};
+    var OldCoor = {};
     var PosToMove = [];
     var aPosToMove = [];
-    
+
 
     function IsInPositonRange(x, y) {
         console.log("postomove", PosToMove);
@@ -451,27 +792,27 @@
         return false;
     }
 
-    
-    
-    SVGDocument = svg;
-    SVGRoot = SVGDocument.documentElement;
+
+
+    //SVGDocument = svg;
+    //SVGRoot = SVGDocument.documentElement;
     TrueCoords = SVGRoot.createSVGPoint();
     GrabPoint = SVGRoot.createSVGPoint();
 
     var currpos;
 
     BackDrop = svg.getElementById('all');
-    
 
 
 
-    function PutTempImages(full , f,s,t) {
+
+    function PutTempImages(full, f, s, t) {
         var next;
-        
+
         for (var i = 0; i < full; ++i) {
-           
-           next = nextposition(f, s, t);
-           PosToMove[PosToMove.length] = next;
+
+            next = nextposition(f, s, t);
+            PosToMove[PosToMove.length] = next;
             //createcircle(next.x, next.y);
             console.log("next", next);
             tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
@@ -498,18 +839,26 @@
             console.log("idest", idequipa);
             console.log("idest", saveplayer);
             var xmlhttp10 = new XMLHttpRequest();
-
-            xmlhttp10.onreadystatechange = function() {
+            var dt = new Date();
+            //var substringedDate = dt.substring(6); //substringedDate= 1291548407008)/
+            //var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+            //var datet = new Date(parsedIntDate);
+            xmlhttp10.onreadystatechange = function () {
 
                 if (xmlhttp10.readyState == 4 && xmlhttp10.status == 200) {
-                    
+                    console.log("actualiza timeline");
+
+
+                    //console.log("resp", date.toDateString());
+                    console.log("date", dt);
+                    LineInTimeLine(saveplayer.event, saveplayer.idplayer, null, dt);
                 }
             }
             xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
             xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            
-            xmlhttp10.send("idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor="+dataequipav + "&idvisitante="+idequipav+
-                "&datadefronta=" + dataequipa+ "&iddefronta=" + idequipa+ "&idcausador=" + saveplayer.idplayer+ "&idevento=" + saveplayer.event);
+
+            xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitante=" + idequipav +
+                "&datadefronta=" + dataequipa + "&iddefronta=" + idequipa + "&idcausador=" + saveplayer.idplayer + "&idevento=" + saveplayer.event);
 
         }
         if (evt.target.nodeName == 'circle') return;
@@ -519,7 +868,7 @@
         }
         removedetails();
         if (evt.which == 3) {
-          
+
             evt.target.onclick(evt);
 
             return false;
@@ -536,7 +885,7 @@
                 isclick = true;
                 console.log("createtempimges");
                 tempimages = [];
-                
+
 
                 OldCoor.x = targetElement.getAttributeNS(null, 'x');
                 OldCoor.y = targetElement.getAttributeNS(null, 'y');
@@ -643,7 +992,7 @@
                 }
             }
             , timer);
-       
+
     };
     SVGDocument.onmousemove = function (evt) {
         GetTrueCoords(evt);
@@ -669,7 +1018,7 @@
         for (var i = 0; i < whereplayeres.length; ++i) {
             var coorx = whereplayeres[i].getAttributeNS(null, "x");
             var coory = whereplayeres[i].getAttributeNS(null, "y");
-            
+
             if (x <= parseInt(coorx) + 50 && x >= parseInt(coorx) - 50 && y <= parseInt(coory) + 50 && y >= parseInt(coory) - 50) {
                 return whereplayeres[i];
             }
@@ -678,7 +1027,7 @@
     }
 
 
-    function replace(oldimg , newimg) {
+    function replace(oldimg, newimg) {
         for (var i = 0; i < whereplayeres.length; ++i) {
             if (whereplayeres[i] == oldimg) {
                 whereplayeres[i] = newimg;
@@ -690,7 +1039,7 @@
 
     SVGDocument.onmouseup = function (evt) {
         if (evt.which == 3) {
-            
+
             return false;
         }
         //if (oldtarget == evt.target) {
@@ -699,7 +1048,7 @@
         if (functimer) {
             console.log("clickkffk");
             clearTimeout(functimer);
-            console.log("qqqq",evt.target);
+            console.log("qqqq", evt.target);
 
             return true;
             // run click-only operation here
@@ -707,10 +1056,10 @@
         if (DragTarget == null) {
             return;
         }
-            // Otherwise, if the mouse was being held, end the hold
+        // Otherwise, if the mouse was being held, end the hold
         //else if (isclick) {
-            isclick = false;
-            // end hold-only operation here, if desired
+        isclick = false;
+        // end hold-only operation here, if desired
         //}
         console.log("up");
         if (evt.target.nodeName != 'image' && evt.target.nodeName != 'circle') {
@@ -748,9 +1097,9 @@
         //    removeTempImages();
         //    return;
         //}
-        
+
         var oldimg = IsImageInPosition(evt.clientX, evt.clientY);
-        
+
         if (oldimg != null) {
             console.log("second");
 
@@ -758,7 +1107,7 @@
             DragTarget.setAttributeNS(null, 'y', oldimg.getAttributeNS(null, "y"));
             DragTarget.setAttributeNS(null, 'transform', "");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
-            
+
             oldimg.setAttributeNS(null, 'x', OldCoor.x);
             oldimg.setAttributeNS(null, 'y', OldCoor.y);
             oldimg.setAttributeNS(null, 'transform', "");
@@ -781,12 +1130,12 @@
             DragTarget.setAttributeNS(null, 'y', OldCoor.y);
             DragTarget.setAttributeNS(null, 'transform', "");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
-            
+
             DragTarget = null;
             removeTempImages();
             return;
         }
-     
+
         if (DragTarget) {
             console.log("four");
             DragTarget.setAttributeNS(null, 'pointer-events', 'all');
@@ -831,7 +1180,7 @@
             amovedowndefense = 0;
             removeTempImages();
         }
-        
+
     };
 
 
@@ -846,11 +1195,11 @@
 
 
 
-    document.getElementById("idbuttonauto").onclick = function(ev) {
-        for (var i = 0; i < allplayereshome.length; ++i) {
-            callplayer(allplayereshome[i]);
-        }
-    }
+    //document.getElementById("idbuttonauto").onclick = function (ev) {
+    //    for (var i = 0; i < allplayereshome.length; ++i) {
+    //        callplayer(allplayereshome[i]);
+    //    }
+    //}
 
     function PutInPosition(x, y, move, idpla) {
         //console.log("x", x);
@@ -866,244 +1215,322 @@
     }
 
 
-    function callplayer(idpla) {
+    //function callplayer(idpla) {
+    //    var xmlhttp5 = new XMLHttpRequest();
+
+    //    xmlhttp5.onreadystatechange = function () {
+
+    //        if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
+    //            var resp = JSON.parse(xmlhttp5.response);
+    //            var pos = resp.Designation;
+
+    //            console.log("idpla", idpla.getAttributeNS(null, 'x'));
+    //            if (pos == "Defesa") {
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+    //                    if (andefesefull == 0) return;
+    //                    if (IsImageInPosition(amiddledefensex, amiddledefensey + amovedowndefense)) {
+    //                        //--andefesefull;
+    //                        amovedowndefense += (svgheight / adefense) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddledefensex, amiddledefensey, amovedowndefense, idpla);
+
+    //                    --andefesefull;
+    //                    //idpla.setAttributeNS(null, 'x', amiddledefensex);
+    //                    //idpla.setAttributeNS(null, 'y', amiddledefensey + amovedowndefense);
+    //                    amovedowndefense += (svgheight / adefense) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    if (ndefesefull == 0) return;
+    //                    if (IsImageInPosition(middledefensex, middledefensey + movedowndefense)) {
+    //                        console.log("defesa inc");
+    //                        //--ndefesefull;
+    //                        movedowndefense += (svgheight / defense) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middledefensex, middledefensey, movedowndefense, idpla);
+
+    //                    --ndefesefull;
+    //                    //idpla.setAttributeNS(null, 'x', middledefensex);
+    //                    //idpla.setAttributeNS(null, 'y', middledefensey + movedowndefense);
+    //                    movedowndefense += (svgheight / defense) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //            if (pos == "Medio") {
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+    //                    if (anmiddlefull == 0) return;
+    //                    if (IsImageInPosition(amiddlex, amiddley + amovedownmiddle)) {
+    //                        ///--anmiddlefull;
+    //                        amovedownmiddle += (svgheight / amiddle) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddlex, amiddley, amovedownmiddle, idpla);
+
+    //                    --anmiddlefull;
+
+    //                    //idpla.setAttributeNS(null, 'x', amiddlex);
+    //                    //idpla.setAttributeNS(null, 'y', middley + amovedownmiddle);
+    //                    amovedownmiddle += (svgheight / amiddle) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    console.log("middle", nmiddlefull);
+    //                    if (nmiddlefull == 0) return;
+    //                    if (IsImageInPosition(middlex, middley + movedownmiddle)) {
+    //                        //--nmiddlefull;
+    //                        movedownmiddle += (svgheight / middle) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middlex, middley, movedownmiddle, idpla);
+
+    //                    --nmiddlefull;
+
+    //                    //idpla.setAttributeNS(null, 'x', middlex);
+    //                    //idpla.setAttributeNS(null, 'y', middley + movedownmiddle);
+    //                    movedownmiddle += (svgheight / middle) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //            if (pos == "Ataque") {
+
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+    //                    if (anstrikerfull == 0) return;
+    //                    if (IsImageInPosition(amiddlestrikerx, amiddlestrikery + amovedownstriker)) {
+    //                        //--anstrikerfull;
+    //                        amovedownstriker += (svgheight / astriker) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddlestrikerx, amiddlestrikery, amovedownstriker, idpla);
+
+    //                    --anstrikerfull;
+
+    //                    //idpla.setAttributeNS(null, 'x', amiddlestrikerx);
+    //                    //idpla.setAttributeNS(null, 'y', amiddlestrikery + amovedownstriker);
+    //                    amovedownstriker += (svgheight / astriker) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    if (nstrikerfull == 0) return;
+    //                    if (IsImageInPosition(middlestrikerx, middlestrikery + movedownstriker)) {
+    //                        //--nstrikerfull;
+    //                        movedownstriker += (svgheight / striker) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middlestrikerx, middlestrikery, movedownstriker, idpla);
+
+    //                    --nstrikerfull;
+
+    //                    //idpla.setAttributeNS(null, 'x', middlestrikerx);
+    //                    //idpla.setAttributeNS(null, 'y', middlestrikery + movedownstriker);
+    //                    movedownstriker += (svgheight / striker) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //            if (pos == "Guarda-redes") {
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+
+    //                    if (angkfull == 0) return;
+    //                    if (IsImageInPosition(amiddlegkx, amiddlegky)) {
+    //                        //--angkfull;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddlegkx, amiddlegky, 0, idpla);
+    //                    --angkfull;
+    //                    //idpla.setAttributeNS(null, 'x', amiddlegkx);
+    //                    //idpla.setAttributeNS(null, 'y', amiddlegky);
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    if (ngkfull == 0) return;
+    //                    if (IsImageInPosition(middlegkx, middlegky)) {
+    //                        //--ngkfull;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middlegkx, middlegky, 0, idpla);
+    //                    --ngkfull;
+    //                    //idpla.setAttributeNS(null, 'x', middlegkx);
+    //                    //idpla.setAttributeNS(null, 'y', middlegky);
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //        }
+    //    }
+
+
+    //    xmlhttp5.open("GET", "/SetUp/GetPlayerPosition?id=" + idpla.getAttributeNS(null, 'id'), true);
+    //    xmlhttp5.send();
+    //}
+
+
+    //document.getElementById("idbuttonreset").onclick = function (ev) {
+    //    console.log("reset");
+    //    var rect = svg.getElementById("all");
+    //    var pos = rect.getBoundingClientRect();
+    //    var x = pos.left;
+    //    var y = pos.top;
+
+    //    var ax = ((pos.right - pos.left) / 2);;
+    //    var ay = pos.top;
+
+
+
+
+    //    allplayereshome.forEach(function (entry) {
+
+    //        var oldx = entry.getAttributeNS(null, 'x');
+
+    //        if (oldx < halfposition) {
+    //            entry.setAttributeNS(null, 'x', x);
+    //            entry.setAttributeNS(null, 'y', y);
+    //            x = x + 50;
+    //            if (x >= ((pos.right - pos.left) / 2) - 50) {
+    //                y = y + 50;
+    //                x = pos.left;
+    //            }
+    //        } else {
+    //            entry.setAttributeNS(null, 'x', ax);
+    //            entry.setAttributeNS(null, 'y', ay);
+    //            ax = ax + 50;
+    //            if (ax >= svgwidth - 50) {
+    //                ay = ay + 50;
+    //                ax = ((pos.right - pos.left) / 2);
+    //            }
+    //        }
+
+
+    //    });
+    //    movedowndefense = 0;
+    //    amovedowndefense = 0;
+    //    movedownmiddle = 0;
+    //    amovedownmiddle = 0;
+    //    movedownstriker = 0;
+    //    amovedownstriker = 0;
+    //    whereplayeres = [];
+    //    andefesefull = adefense;
+    //    anmiddlefull = amiddle;
+    //    anstrikerfull = astriker;
+    //    angkfull = agk;
+    //    ndefesefull = defense;
+    //    nmiddlefull = middle;
+    //    nstrikerfull = striker;
+    //    ngkfull = gk;
+
+    //};
+
+    function FillTimeLine() {
+
         var xmlhttp5 = new XMLHttpRequest();
+        var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
+        var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
+        var idequipag = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
+        var dataequipag = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
+        var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML.trim();
+        var datahora = document.getElementById("iddetailssetup_date").innerHTML.trim();
+
 
         xmlhttp5.onreadystatechange = function () {
-            
+
             if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
                 var resp = JSON.parse(xmlhttp5.response);
-                var pos = resp.Designation;
+                console.log("resp", resp);
+                resp.forEach(function (entry) {
+                    console.log("dateeeeee", entry.date);
+                    var substringedDate = entry.date.substring(6); //substringedDate= 1291548407008)/
+                    var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+                    var datet = new Date(parsedIntDate);
 
-                console.log("idpla", idpla.getAttributeNS(null, 'x'));
-                if (pos == "Defesa") {
-                    if (idpla.getAttributeNS(null, 'x') > halfposition) {
-                        if (andefesefull == 0) return;
-                        if (IsImageInPosition(amiddledefensex, amiddledefensey + amovedowndefense)) {
-                            //--andefesefull;
-                            amovedowndefense += (svgheight / adefense) / 2;
-                            return callplayer(idpla);
-                        }
-                        PutInPosition(amiddledefensex, amiddledefensey, amovedowndefense, idpla);
-                        
-                        --andefesefull;
-                        //idpla.setAttributeNS(null, 'x', amiddledefensex);
-                        //idpla.setAttributeNS(null, 'y', amiddledefensey + amovedowndefense);
-                        amovedowndefense += (svgheight / adefense) / 2;
-                        //whereplayeres[whereplayeres.length] = idpla;
-                    } else {
-                        if (ndefesefull == 0) return;
-                        if (IsImageInPosition(middledefensex, middledefensey + movedowndefense)) {
-                            console.log("defesa inc");
-                            //--ndefesefull;
-                            movedowndefense += (svgheight / defense) / 2;
-                            return callplayer(idpla);
-                        }
-                        PutInPosition(middledefensex, middledefensey, movedowndefense, idpla);
-                        
-                        --ndefesefull;
-                        //idpla.setAttributeNS(null, 'x', middledefensex);
-                        //idpla.setAttributeNS(null, 'y', middledefensey + movedowndefense);
-                        movedowndefense += (svgheight / defense) / 2;
-                        //whereplayeres[whereplayeres.length] = idpla;
-                    }
-                }
-                if (pos == "Medio") {
-                    if (idpla.getAttributeNS(null, 'x') > halfposition) {
-                        if (anmiddlefull == 0) return;
-                        if (IsImageInPosition(amiddlex, amiddley + amovedownmiddle)) {
-                            ///--anmiddlefull;
-                            amovedownmiddle += (svgheight / amiddle) / 2;
-                            return callplayer(idpla);
-                        }
-                        PutInPosition(amiddlex, amiddley, amovedownmiddle, idpla);
-                        
-                        --anmiddlefull;
+                    console.log("datet", datet.toLocaleTimeString());
 
-                        //idpla.setAttributeNS(null, 'x', amiddlex);
-                        //idpla.setAttributeNS(null, 'y', middley + amovedownmiddle);
-                        amovedownmiddle += (svgheight / amiddle) / 2;
-                        //whereplayeres[whereplayeres.length] = idpla;
-                    } else {
-                        console.log("middle", nmiddlefull);
-                        if (nmiddlefull == 0) return;
-                        if (IsImageInPosition(middlex, middley + movedownmiddle)) {
-                            //--nmiddlefull;
-                            movedownmiddle += (svgheight / middle) / 2;
-                            return callplayer(idpla);
-                        }
-                        PutInPosition(middlex, middley, movedownmiddle, idpla);
-                        
-                        --nmiddlefull;
+                    LineInTimeLine(entry.eventId, entry.causeId, entry.executeId, datet);
 
-                        //idpla.setAttributeNS(null, 'x', middlex);
-                        //idpla.setAttributeNS(null, 'y', middley + movedownmiddle);
-                        movedownmiddle += (svgheight / middle) / 2;
-                        //whereplayeres[whereplayeres.length] = idpla;
-                    }
-                } 
-            if (pos == "Ataque") {
+                });
 
-                if (idpla.getAttributeNS(null, 'x') > halfposition) {
-                    if (anstrikerfull == 0) return;
-                    if (IsImageInPosition(amiddlestrikerx, amiddlestrikery + amovedownstriker)) {
-                        //--anstrikerfull;
-                        amovedownstriker += (svgheight / astriker) / 2;
-                        return callplayer(idpla);
-                    }
-                    PutInPosition(amiddlestrikerx, amiddlestrikery, amovedownstriker,idpla);
-                    
-                    --anstrikerfull;
-
-                    //idpla.setAttributeNS(null, 'x', amiddlestrikerx);
-                    //idpla.setAttributeNS(null, 'y', amiddlestrikery + amovedownstriker);
-                    amovedownstriker += (svgheight / astriker) / 2;
-                    //whereplayeres[whereplayeres.length] = idpla;
-                } else {
-                    if (nstrikerfull == 0) return;
-                    if (IsImageInPosition(middlestrikerx, middlestrikery + movedownstriker)) {
-                        //--nstrikerfull;
-                        movedownstriker += (svgheight / striker) / 2;
-                        return callplayer(idpla);
-                    }
-                    PutInPosition(middlestrikerx, middlestrikery, movedownstriker, idpla);
-                    
-                    --nstrikerfull;
-
-                    //idpla.setAttributeNS(null, 'x', middlestrikerx);
-                    //idpla.setAttributeNS(null, 'y', middlestrikery + movedownstriker);
-                    movedownstriker += (svgheight / striker) / 2;
-                    //whereplayeres[whereplayeres.length] = idpla;
-                }
-            } 
-            if (pos == "Guarda-redes") {
-                if (idpla.getAttributeNS(null, 'x') > halfposition) {
-
-                    if (angkfull == 0) return;
-                    if (IsImageInPosition(amiddlegkx, amiddlegky)) {
-                        //--angkfull;
-                        return callplayer(idpla);
-                    }
-                    PutInPosition(amiddlegkx, amiddlegky, 0, idpla);
-                    --angkfull;
-                    //idpla.setAttributeNS(null, 'x', amiddlegkx);
-                    //idpla.setAttributeNS(null, 'y', amiddlegky);
-                    //whereplayeres[whereplayeres.length] = idpla;
-                } else {
-                    if (ngkfull == 0) return;
-                    if (IsImageInPosition(middlegkx, middlegky)) {
-                        //--ngkfull;
-                        return callplayer(idpla);
-                    }
-                    PutInPosition(middlegkx, middlegky, 0, idpla);
-                    --ngkfull;
-                    //idpla.setAttributeNS(null, 'x', middlegkx);
-                    //idpla.setAttributeNS(null, 'y', middlegky);
-                    //whereplayeres[whereplayeres.length] = idpla;
-                }
             }
-            }
-        }
-
-        
-        xmlhttp5.open("GET", "/SetUp/GetPlayerPosition?id=" + idpla.getAttributeNS(null,'id'), true);
+        };
+        xmlhttp5.open("GET", "/SetUp/GetTimeLine?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+            "&idequipag=" + idequipag + "&dataequipag=" + dataequipag, true);
         xmlhttp5.send();
+
     }
 
+    function LineInTimeLine(eventId, causeId, executeId, date) {
+        var xmlhttp6 = new XMLHttpRequest();
+        xmlhttp6.onreadystatechange = function () {
 
-    document.getElementById("idbuttonreset").onclick = function(ev) {
-        console.log("reset");
-        var rect = svg.getElementById("all");
-        var pos = rect.getBoundingClientRect();
-        var x = pos.left;
-        var y = pos.top;
+            if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
+                var resp2 = JSON.parse(xmlhttp6.response);
+                console.log("resp2", resp2);
+                var hr = document.createElement('hr');
 
-        var ax = ((pos.right - pos.left) / 2);;
-        var ay = pos.top;
+                //var substringedDate = date.toString().substring(6); //substringedDate= 1291548407008)/
+                //var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+                //var datet = new Date(parsedIntDate);
 
-        
+                //console.log("datet", date.toLocaleTimeString());
+                var txt = document.createTextNode(date.toLocaleTimeString() + '-' + resp2.eventName + "-" + resp2.causeName + "-" + resp2.executeName);
+                hr.appendChild(txt);
 
-
-        allplayereshome.forEach(function (entry) {
-
-            var oldx = entry.getAttributeNS(null, 'x');
-            
-            if (oldx < halfposition) {
-                entry.setAttributeNS(null, 'x', x);
-                entry.setAttributeNS(null, 'y', y);
-                x = x + 50;
-                if (x >= ((pos.right - pos.left) / 2) - 50) {
-                    y = y + 50;
-                    x = pos.left;
-                }
-            } else {
-                entry.setAttributeNS(null, 'x', ax);
-                entry.setAttributeNS(null, 'y', ay);
-                ax = ax + 50;
-                if (ax >= svgwidth - 50) {
-                    ay = ay + 50;
-                    ax = ((pos.right - pos.left) / 2);
-                }
-            }
-
-            
-        });
-        movedowndefense = 0;
-        amovedowndefense = 0;
-        movedownmiddle = 0;
-        amovedownmiddle = 0;
-        movedownstriker = 0;
-        amovedownstriker = 0;
-        whereplayeres = [];
-        andefesefull = adefense;
-        anmiddlefull = amiddle;
-        anstrikerfull = astriker;
-        angkfull = agk;
-        ndefesefull = defense;
-        nmiddlefull = middle;
-        nstrikerfull = striker;
-        ngkfull = gk;
-
-    };
-
-
-
-    var xmlhttp5 = new XMLHttpRequest();
-    var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
-    var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
-    var idequipag = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
-    var dataequipag = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
-    var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML.trim();
-    var datahora = document.getElementById("iddetailssetup_date").innerHTML.trim();
-
-    
-    xmlhttp5.onreadystatechange = function() {
-
-        if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
-            var resp = JSON.parse(xmlhttp5.response);
-            console.log("resp", resp);
-            resp.forEach(function(entry) {
-            
-                var xmlhttp6 = new XMLHttpRequest();
-                xmlhttp6.onreadystatechange = function () {
-
-                    if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
-                        var resp2 = JSON.parse(xmlhttp6.response);
-                        console.log("resp2", resp2);
-
+                if (timeline.firstChild != null) {
+                    var allchilds = timeline.childNodes;
+                    console.log("frst", allchilds);
+                    console.log("frstllll", allchilds.length);
+                    for (var i = 0; i < allchilds.length; ++i) {
+                        console.log("frst", allchilds);
+                        if (allchilds[i].innerHTML.substring(0, 8) < date.toLocaleTimeString()) {
+                            console.log("entrou");
+                            timeline.insertBefore(hr, allchilds[i]);
+                            return true;
+                        }
                     }
-                };
-                //GetNamesForTimeLine(String idevent, String idcause, String idexecute)
-                xmlhttp6.open("GET", "/SetUp/GetNamesForTimeLine?idevent=" + entry.eventId + "&idcause=" + entry.causeId + "&idexecute=" + entry.executeId, true);
-                xmlhttp6.send();
+                }
+                timeline.appendChild(hr);
 
-            } );
-            
-        }
-    };
-    xmlhttp5.open("GET", "/SetUp/GetTimeLine?idstadium=" + idstadium + "&datahora="+datahora+"&idequipav="+idequipav+"&dataequipav="+dataequipav+
-        "&idequipag="+idequipag+"&dataequipag="+dataequipag, true);
-    xmlhttp5.send();
+            }
+        };
 
+        xmlhttp6.open("GET", "/SetUp/GetNamesForTimeLine?idevent=" + eventId + "&idcause=" + causeId + "&idexecute=" + executeId, true);
+        xmlhttp6.send();
+    }
+
+    //document.getElementById("idbuttonsave").onclick = function (ev) {
+
+    //    var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
+    //    var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
+    //    var idequipag = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
+    //    var dataequipag = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
+    //    var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML.trim();
+    //    var datahora = document.getElementById("iddetailssetup_date").innerHTML.trim();
+    //    var dt = new Date();
+
+    //    var aa = document.getElementById("svgobject");
+    //    var svgg = a.contentDocument;
+    //    //svgg.documentElement.innerHTML;
+    //    var xmlhttp6 = new XMLHttpRequest();
+    //    xmlhttp6.onreadystatechange = function () {
+
+    //        if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
+    //            //var resp2 = JSON.parse(xmlhttp6.response);
+    //        }
+    //    };
+    //    xmlhttp6.open("POST", "/SetUp/InsertLayout", true);
+    //    xmlhttp6.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+    //    xmlhttp6.send("idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+    //        "&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&datenow=" + dt + "&svg=" + svgg.documentElement.innerHTML);
+
+    //}
+
+
+
+    var timeline = document.createElement('div');
+    timeline.id = 'timeline';
+    timeline.style.width = '400px';
+    timeline.style.height = '400px';
+    timeline.style.overflow = 'auto';
+    timeline.style.position = 'absolute';
+    timeline.style.left = '10%';
+    timeline.style.top = '1500';
+    timeline.title = "TimeLine";
+    timeline.style.border = 'solid';
+    //timeline.style.backgroundColor = 'green';
+    document.body.appendChild(timeline);
 };
 

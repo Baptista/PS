@@ -1,0 +1,42 @@
+<svg width="796" height="480" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <g id="all">
+  <title>Layer 1</title>
+  <rect x="1" y="0.99999" width="795.00002" height="406" fill="green" id="svg_1"/>
+  <rect stroke="#007f00" x="0" id="svg_1" height="334" width="113" y="70" fill="#0ea00e"/>
+  <rect stroke="#007f00" id="svg_2" height="335" width="113" y="70" x="226" fill="#0f9e0f"/>
+  <rect stroke="#007f00" y="70" id="svg_3" height="336.00001" width="113" x="452" fill="#0f9e0f"/>
+  <rect stroke="#007f00" id="svg_4" height="336" width="113" y="70" x="678" fill="#0f9e0f"/>
+  <!-- Final lines on field -->
+  <line id="svg_6" y2="397.99999" x2="10" y1="80" x1="10" stroke-width="5" fill="none" stroke="#ffffff"/>
+  <line id="svg_7" y2="403.00003" x2="792" y1="78" x1="792" stroke-width="5" fill="none" stroke="#ffffff"/>
+  <line fill="none" stroke-width="5" x1="7.65" y1="80" x2="793.00004" y2="80" id="svg_8" stroke="#ffffff"/>
+  <line fill="none" stroke-width="5" x1="7.32504" y1="400.5" x2="790.67494" y2="400.5" id="svg_9" stroke="#ffffff"/>
+  <!-- small rectangle -->
+  <path stroke="white" id="svg_10" fill-opacity="0" stroke-width="5" d="m12,188.39999l55,0l0,99.20004l-55,0l0,-99.20004z" fill="black"/>
+  <path stroke="white" d="m790,185.39999l-55,0l0,101.20004l55,0l0,-101.20004z" stroke-width="5" fill-opacity="0" id="svg_11" fill="black"/>
+  <!-- rectangle -->
+  <path stroke="white" fill="#ffffff" id="svg_12" fill-opacity="0" stroke-width="5" d="m11,158.39999l90,0l0,158.19998l-90,0l0,-158.19998z"/>
+  <path stroke="white" fill="#ffffff" id="svg_13" fill-opacity="0" stroke-width="5" d="m707,161.39996l84,0l0,152.20007l-84,0l0,-152.20007z"/>
+  <!-- half circle -->
+  <path stroke="white" d="m102,182.875a91.5,68.35128 0 0 1 0,109.25l0,-109.25z" stroke-width="5" fill="none" id="svg_14"/>
+  <path stroke="white" id="svg_15" fill="none" stroke-width="5" d="m707,179.875a91.5,71.47949 0 0 0 0,114.25l0,-114.25z"/>
+  <!-- corners -->
+  <path fill="black" d="m12,92a10,10 0 0 0 10,-10l-10,0l0,10z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_16"/>
+  <path id="svg_17" fill-opacity="0" stroke-width="5" stroke="white" d="m791,389a10,10 0 0 0 -10,10l10,0l0,-10z" fill="black"/>
+  <path fill="black" d="m21,400a10,10 0 0 0 -10,-10l0,10l10,0z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_18"/>
+  <path id="svg_19" fill-opacity="0" stroke-width="5" stroke="white" d="m780,82a10,10 0 0 0 10,10l0,-10l-10,0z" fill="black"/>
+  <!-- middle circle -->
+  <circle fill="black" id="svg_3" fill-opacity="0" stroke-width="5" stroke="white" r="91.5" cy="232" cx="402"/>
+  <line stroke="white" id="svg_20" y2="399.00002" x2="401" y1="78" x1="401" fill-opacity="0" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" fill="none"/>
+  <rect fill="green" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="1" y="406" width="401" height="73" id="svg_5"/>
+  <rect fill="green" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="401.50001" y="406" width="393.99999" height="73" id="svg_21"/>
+  <line stroke="#ffffff" id="svg_24" y2="433" x2="365.00003" y1="433" x1="2" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" fill="none"/>
+  <line stroke="#ffffff" id="svg_26" y2="433.5" x2="793.49997" y1="433.5" x1="432.50002" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" fill="none"/>
+  <rect id="svg_29" stroke="#ffffff" height="54" width="53" y="7.5" x="443.5" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" fill="green"/>
+  <rect id="svg_30" stroke="#ffffff" height="54" width="53" y="7.5" x="306.5" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" fill="green"/>
+  <line stroke="white" id="svg_32" y2="479" x2="363" y1="432" x1="363" fill-opacity="0" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" fill="none"/>
+  <line id="svg_34" y2="226" x2="399" y1="225" x1="400" fill-opacity="0" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" stroke="white" fill="none"/>
+  <line stroke="white" id="svg_35" y2="479" x2="433" y1="431" x1="432" fill-opacity="0" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" fill="none"/>
+ </g>
+</svg>

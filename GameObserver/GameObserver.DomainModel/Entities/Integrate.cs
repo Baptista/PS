@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace GameObserver.DomainModel.Entities
 {
-    public class Player
+    public class Integrate
     {
-        public int Id { get; set; }
+        public int IdPlayer { get; set; }
         public int IdClub { get; set; }
+        public DateTime Date { get; set; }
+        public int IdPosition { get; set; }
     }
 }

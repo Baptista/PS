@@ -5,9 +5,11 @@ using System.Web;
 
 namespace GameObserver.Models
 {
-    public class PlayerModel
+    public class IntegrateModel
     {
-        public int Id { get; set; }
+        public int IdPlayer { get; set; }
         public int IdClub { get; set; }
+        public DateTime Date { get; set; }
+        public int IdPosition { get; set; }
     }
 }
