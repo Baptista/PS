@@ -27,6 +27,7 @@ namespace GameObserver.Controllers
         private OpinionToOpinionModel _mapperOpinionToOpinionModel;
         private AssociateToAssociateModel _mapperAssociateToAssociateModel;
         private LayoutToLayoutModel _mapperLayoutToLayoutModel;
+        private PlayerToPlayerModel _mapperPlayerToPlayerModel;
 
         public SetUpController()
         {
@@ -44,6 +45,7 @@ namespace GameObserver.Controllers
             _mapperOpinionToOpinionModel = new OpinionToOpinionModel();
             _mapperAssociateToAssociateModel = new AssociateToAssociateModel();
             _mapperLayoutToLayoutModel = new LayoutToLayoutModel();
+            _mapperPlayerToPlayerModel = new PlayerToPlayerModel();
         }
 
         //
@@ -273,7 +275,22 @@ namespace GameObserver.Controllers
         }
 
 
-        
+        public ActionResult GetPosition(String id)
+        {
+            PositionModel posmodel = _mapperPositionToPositionModel.Map(_repo.GetPosition(Convert.ToInt32(id)));
+            return Json(posmodel, JsonRequestBehavior.AllowGet);
+        }
 
+        public ActionResult GetEvent(String id)
+        {
+            EventModel evmodel = _mapperEventToEventModel.Map(_repo.GetEvent(Convert.ToInt32(id)));
+            return Json(evmodel, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetPlayerWithClub(String idplayer)
+        {
+            PlayerModel plmodel = _mapperPlayerToPlayerModel.Map(_repo.GetPlayerWithClub(Convert.ToInt32(idplayer)));
+            return Json(plmodel, JsonRequestBehavior.AllowGet);
+        }
 	}
 }

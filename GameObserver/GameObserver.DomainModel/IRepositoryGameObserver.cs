@@ -20,15 +20,18 @@ namespace GameObserver.DomainModel
         void CreateTeam(int idFormation, int idClub, DateTime data);
 
         Actor GetPlayer(int id);
+        Player GetPlayerWithClub(int id);
 
         IEnumerable<Actor> GetPlayersByClub(int idclub);
+        //Actor GetClubByPlayer(int idplayer);
 
         Club GetClub(int id);
         Formation GetFormation(int id);
 
         IEnumerable<Actor> GetPlayers(String sub);
 
-        Position GetPosition(int idplayer);
+        Position GetPlayerPosition(int idplayer);
+        Position GetPosition(int id);
         
 
         void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int idpos);

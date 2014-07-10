@@ -143,7 +143,77 @@ namespace GameObserver.Data
             }
         }
 
-        public Position GetPosition(int idplayer)
+
+        public Player GetPlayerWithClub(int idplayer)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Jogador where id=" + idplayer;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            return new Player()
+                            {
+                                Id = reader.GetInt32(0),
+                                IdClub = reader.GetInt32(1)
+                            };
+                        }
+                    }
+                    return null;
+
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+        public Position GetPosition(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Posicao where id=" + id;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            return new Position()
+                            {
+                                Id = reader.GetInt32(0),
+                                Designation = reader.GetString(1)
+                            };
+                        }
+                    }
+                    return null;
+
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+
+        public Position GetPlayerPosition(int idplayer)
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {

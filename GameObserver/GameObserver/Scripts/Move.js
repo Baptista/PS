@@ -47,9 +47,13 @@
 
 
 
-    var ndefensehome = 0;
-    var nmiddlehome = 0;
-    var nstrikerhome = 0;
+    var ndefensehome = 1;
+    var nmiddlehome = 1;
+    var nstrikerhome = 1;
+    var nadefensehome = 1;
+    var namiddlehome = 1;
+    var nastrikerhome = 1;
+
 
     var ndefesefull;
     var nmiddlefull;
@@ -80,8 +84,14 @@
     console.log("svgroot", SVGRoot);
 
 
-    
-    inserirnameclubs(null,"TIME", (halfposition-20), 20);
+    var yfield = svg.getElementById("field").getBoundingClientRect().height;
+    movey = svg.getElementById("uprect").getBoundingClientRect().height / 2;
+    var ydown = svg.getElementById("downrect").getBoundingClientRect().height;
+    var yhomescore = svg.getElementById("homescore").getBoundingClientRect().height;
+    var xhomescore = svg.getElementById("homescore").getBoundingClientRect().width;
+
+
+    inserirnameclubs(null, "TIME", (halfposition - 20), 20);
 
     function timernow() {
         var d = new Date();
@@ -96,7 +106,7 @@
 
     var t = timernow();
     var txtElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    txtElem.setAttributeNS(null, "x", halfposition-20);
+    txtElem.setAttributeNS(null, "x", halfposition - 20);
     txtElem.setAttributeNS(null, "y", 40);
     txtElem.setAttributeNS(null, "font-size", 15);
     txtElem.setAttributeNS(null, 'id', "timer");
@@ -128,16 +138,17 @@
             nstrikerfull = striker;
             ngkfull = 1;
 
-            middledefensey = (svgheight / defense) + movey;
+            middledefensey = (yfield / (parseInt(defense) + 1));// + movey;
             middledefensex = (((svgwidth) / 4) / 2);
-
+            console.log("middledefensey", middledefensey);
+            console.log("middledefensey", defense);
             middlex = (svgwidth / 4);
-            middley = (svgheight / middle) + movey;
-            middlestrikery = (svgheight / striker) + movey;
+            middley = (yfield / (parseInt(middle) + 1));
+            middlestrikery = (yfield / (parseInt(striker) + 1));
             middlestrikerx = ((svgwidth / 4) + (middledefensex));
             console.log("middlestrikerx", middlestrikerx);
             middlegkx = 20;
-            middlegky = (svgheight / 2) + movey;
+            middlegky = (yfield / (parseInt(gk) + 1));
 
 
         }
@@ -170,20 +181,20 @@
             angkfull = 1;
 
 
-            amiddledefensey = (svgheight / adefense) + movey;
+            amiddledefensey = (yfield / (parseInt(adefense) + 1));;
             console.log("amiddledefensey", amiddledefensey);
             amiddledefensex = svgwidth - (((svgwidth / 2) / adefense)) - 50;
             console.log("amiddledefensex", amiddledefensex);
             console.log("cenas", ((svgwidth / 4)));
             amiddlex = (svgwidth - ((svgwidth / 4))) - 50;
             console.log("amiddlex", amiddlex);
-            amiddley = (svgheight / amiddle) + movey;
+            amiddley = (yfield / (parseInt(amiddle) + 1));
             console.log("amiddley", amiddley);
-            amiddlestrikery = (svgheight / astriker) + movey;
+            amiddlestrikery = (yfield / (parseInt(astriker) + 1));
             amiddlestrikerx = (svgwidth - ((svgwidth / 4) + (svgwidth - amiddledefensex - 50))) - 50;
             console.log("amiddlestrikerx", amiddlestrikerx);
             amiddlegkx = svgwidth - 60;
-            amiddlegky = (svgheight / 2) + movey;
+            amiddlegky = (yfield / (parseInt(agk) + 1));
         }
     };
     var aidq = document.getElementById("iddetailssetup_idagainst").innerHTML;
@@ -208,7 +219,7 @@
     inserirsymbolclubs(document.getElementById("idclubvisitorphoto").innerHTML.trim(), 5, 5);
     inserirsymbolclubs(document.getElementById("idclubagainstphoto").innerHTML.trim(), svgwidth - 60, 5);
 
-    function inserirnameclubs(id , name, xpos, ypos) {
+    function inserirnameclubs(id, name, xpos, ypos) {
 
         txtElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
 
@@ -222,27 +233,34 @@
         svg.getElementById("all").appendChild(txtElem);
     }
 
-    inserirnameclubs(null,document.getElementById("idnameclubvisitor").innerHTML.trim(), svgwidth / 4 / 2, 30);
-    inserirnameclubs(null,document.getElementById("idnameclubagainst").innerHTML.trim(), (svgwidth - (svgwidth / 4)), 30);
+    inserirnameclubs(null, document.getElementById("idnameclubvisitor").innerHTML.trim(), svgwidth / 4 / 2, 30);
+    inserirnameclubs(null, document.getElementById("idnameclubagainst").innerHTML.trim(), (svgwidth - (svgwidth / 4)), 30);
 
-    function callreferee() {
+    var ref1 = document.getElementById("idref1").innerHTML.trim();
+    var ref2 = document.getElementById("idref2").innerHTML.trim();
+    var ref3 = document.getElementById("idref3").innerHTML.trim();
+    var ref4 = document.getElementById("idref4").innerHTML.trim();
+    
+    referees(ref1, (svgwidth / 2) - 25, yfield / 2 + movey);
+    referees(ref2, (svgwidth / 2) - 25, svg.getElementById("uprect").getBoundingClientRect().height);
+    referees(ref3, (svgwidth / 2) - 25, yfield + movey / 2);
+    referees(ref4, (svgwidth / 2) - 25, yfield + svg.getElementById("uprect").getBoundingClientRect().height+20);
 
+
+    function referees(referee , x , y) {
+        var xmlhttp9 = new XMLHttpRequest();
+
+        xmlhttp9.onreadystatechange = function() {
+
+            if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
+                var resp = JSON.parse(xmlhttp9.response);
+                PhotoonSvg(resp.Id, resp.Photo, x, y);
+            }
+        };
+        xmlhttp9.open("GET", "/SetUp/GetReferee?id=" + referee, true);
+        xmlhttp9.send();
     }
-
-    var xmlhttp9 = new XMLHttpRequest();
-
-    xmlhttp9.onreadystatechange = function () {
-
-        if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
-            var resp = JSON.parse(xmlhttp9.response);
-            PhotoonSvg(resp.Id, resp.Photo, (svgwidth / 2) - 25, svgheight / 2);
-        }
-    };
-    var referee = document.getElementById("idref1").innerHTML.trim();
-    xmlhttp9.open("GET", "/SetUp/GetReferee?id=" + referee, true);
-    xmlhttp9.send();
-
-
+    
 
     //var allplayereshome = [];
     loadpostions();
@@ -270,6 +288,76 @@
 
                             var resp2 = JSON.parse(xmlhttp8.response);
 
+                            var xmlhttp1 = new XMLHttpRequest();
+
+                            xmlhttp1.onreadystatechange = function () {
+
+                                if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                    var resp3 = JSON.parse(xmlhttp1.response);
+                                    console.log("pos", resp3);
+
+                                    if (resp3.Designation == 'Defesa') {
+                                        if (ndefesefull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = pos.left + 10;
+                                            }
+                                        } else {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, middledefensex, middledefensey * ndefensehome + movey);
+
+                                            --ndefesefull;
+                                            ++ndefensehome;
+                                            // movedowndefense += (svgheight / defense) / 2;
+                                        }
+
+                                    } else if (resp3.Designation == 'Medio') {
+
+                                        if (nmiddlefull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = pos.left + 10;
+                                            }
+                                        } else {
+
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, middlex, middley * nmiddlehome + movey);
+                                            ++nmiddlehome;
+                                            --nmiddlefull;
+                                            //movedownmiddle += (svgheight / middle) / 2;
+                                        }
+                                    } else if (resp3.Designation == 'Ataque') {
+                                        if (nstrikerfull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = pos.left + 10;
+                                            }
+                                        } else {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, middlestrikerx, middlestrikery * nstrikerhome + movey);
+                                            ++nstrikerhome;
+                                            --nstrikerfull;
+                                            //movedownstriker += (svgheight / striker) / 2;
+                                        }
+                                    } else {
+                                        if (ngkfull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = pos.left + 10;
+                                            }
+                                        } else {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, middlegkx, middlegky + movey);
+                                            --ngkfull;
+                                        }
+                                    }
+                                    allplayershome[allplayershome.length] = img;
+                                }
+                            }
                             if (entry.IdPosition == 0) {
                                 img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
                                 x = x + 50;
@@ -278,66 +366,12 @@
                                     x = pos.left + 10;
                                 }
 
-                            } else if (entry.IdPosition == 2) {
-                                if (ndefesefull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = pos.left + 10;
-                                    }
-                                } else {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middledefensex, middledefensey + movedowndefense);
-
-                                    --ndefesefull;
-                                    movedowndefense += (svgheight / defense) / 2;
-                                }
-
-                            } else if (entry.IdPosition == 3) {
-
-                                if (nmiddlefull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = pos.left + 10;
-                                    }
-                                } else {
-
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middlex, middley + movedownmiddle);
-
-                                    --nmiddlefull;
-                                    movedownmiddle += (svgheight / middle) / 2;
-                                }
-                            } else if (entry.IdPosition == 4) {
-                                if (nstrikerfull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = pos.left + 10;
-                                    }
-                                } else {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middlestrikerx, middlestrikery + movedownstriker);
-
-                                    --nstrikerfull;
-                                    movedownstriker += (svgheight / striker) / 2;
-                                }
                             } else {
-                                if (ngkfull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = pos.left + 10;
-                                    }
-                                } else {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, middlegkx, middlegky);
-                                    --ngkfull;
-                                }
+                                xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
+                                xmlhttp1.send();
                             }
-                            allplayershome[allplayershome.length] = img;
                         }
+
                     };
                     xmlhttp8.open("GET", "/Team/GetPlayer?id=" + entry.IdPlayer, true);
                     xmlhttp8.send();
@@ -374,73 +408,87 @@
 
                             var resp2 = JSON.parse(xmlhttp8.response);
 
+                            var xmlhttp1 = new XMLHttpRequest();
+
+                            xmlhttp1.onreadystatechange = function() {
+
+                                if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                    var resp3 = JSON.parse(xmlhttp1.response);
+
+
+                                    if (resp3.Designation == 'Defesa') {
+                                        if (andefesefull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = ((pos.right - pos.left) / 2);
+                                            }
+                                        } else {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, amiddledefensex, amiddledefensey * nadefensehome + movey);
+
+                                            --andefesefull;
+                                            ++nadefensehome;
+
+                                        }
+
+                                    } else if (resp3.Designation == 'Medio') {
+
+                                        if (anmiddlefull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = ((pos.right - pos.left) / 2);
+                                            }
+                                        } else {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlex, amiddley * namiddlehome + movey);
+                                            ++namiddlehome;
+                                            --anmiddlefull;
+
+                                        }
+                                    } else if (resp3.Designation == 'Ataque') {
+                                        if (anstrikerfull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = ((pos.right - pos.left) / 2);
+                                            }
+                                        } else {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlestrikerx, amiddlestrikery * nastrikerhome + movey);
+                                            ++nastrikerhome;
+                                            --anstrikerfull;
+
+                                        }
+                                    } else {
+                                        if (angkfull == 0) {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
+                                            x = x + 50;
+                                            if (x >= svgwidth - 50) {
+                                                y = y + 50;
+                                                x = ((pos.right - pos.left) / 2);
+                                            }
+                                        } else {
+                                            img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlegkx, amiddlegky + movey);
+                                            --angkfull;
+                                        }
+                                    }
+                                    allplayershome[allplayershome.length] = img;
+                                }
+                            }
                             if (entry.IdPosition == 0) {
                                 img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
                                 x = x + 50;
                                 if (x >= svgwidth - 50) {
                                     y = y + 50;
-                                    x = ((pos.right - pos.left) / 2);
+                                    x = pos.left + 10;
                                 }
 
-                            } else if (entry.IdPosition == 2) {
-                                if (andefesefull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = ((pos.right - pos.left) / 2);
-                                    }
-                                } else {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddledefensex, amiddledefensey + amovedowndefense);
-
-                                    --andefesefull;
-                                    amovedowndefense += (svgheight / adefense) / 2;
-                                }
-
-                            } else if (entry.IdPosition == 3) {
-
-                                if (anmiddlefull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = ((pos.right - pos.left) / 2);
-                                    }
-                                } else {
-
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlex, amiddley + amovedownmiddle);
-
-                                    --anmiddlefull;
-                                    amovedownmiddle += (svgheight / amiddle) / 2;
-                                }
-                            } else if (entry.IdPosition == 4) {
-                                if (anstrikerfull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = ((pos.right - pos.left) / 2);
-                                    }
-                                } else {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlestrikerx, amiddlestrikery + amovedownstriker);
-
-                                    --anstrikerfull;
-                                    amovedownstriker += (svgheight / astriker) / 2;
-                                }
                             } else {
-                                if (angkfull == 0) {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                    x = x + 50;
-                                    if (x >= svgwidth - 50) {
-                                        y = y + 50;
-                                        x = ((pos.right - pos.left) / 2);
-                                    }
-                                } else {
-                                    img = PhotoonSvg(resp2.Id, resp2.Photo, amiddlegkx, amiddlegky);
-                                    --angkfull;
-                                }
+                                xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
+                                xmlhttp1.send();
                             }
-                            allplayershome[allplayershome.length] = img;
                         }
                     };
                     xmlhttp8.open("GET", "/Team/GetPlayer?id=" + entry.IdPlayer, true);
@@ -544,7 +592,7 @@
 
 
 
-    
+
     var xposdetails = (svgwidth / 2) - 50;
     var yposdetails = (svgheight / 2) - 200;
 
@@ -917,7 +965,7 @@
                             //    //createcircle(next.x, next.y);
                             //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
                             //}
-                            ndefensehome = 0;
+                            //ndefensehome = 0;
                         } else if (pos == "Medio") {
 
                             if (evt.clientX >= halfposition) {
@@ -937,7 +985,7 @@
                             //    //createcircle(next.x, next.y);
                             //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
                             //}
-                            ndefensehome = 0;
+                            //ndefensehome = 0;
                         } else if (pos == "Ataque") {
 
                             if (evt.clientX >= halfposition) {
@@ -960,7 +1008,7 @@
                             //    //createcircle(next.x, next.y);
                             //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
                             //}
-                            ndefensehome = 0;
+                            //ndefensehome = 0;
                         } else if (pos == "Guarda-redes") {
                             //allcircles = [];
                             if (evt.clientX >= middlex) {
@@ -973,7 +1021,7 @@
                             //createcircle(next.x, next.y);
                             tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
                         }
-                        movedowndefense = 0;
+                        //movedowndefense = 0;
                     }
                 }
 
@@ -1440,6 +1488,18 @@
                     console.log("datet", datet.toLocaleTimeString());
 
                     LineInTimeLine(entry.eventId, entry.causeId, entry.executeId, datet);
+                    //var xmlhttp = new XMLHttpRequest();
+                    //xmlhttp.onreadystatechange = function() {
+
+                    //    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    //        var resp1 = JSON.parse(xmlhttp.response);
+                    //        if (resp1.Type == 'Golo') {
+                                
+                    //        }
+                    //    }
+                    //};
+                    //xmlhttp.open("GET", "/SetUp/GetEvent?id=" + entry.eventId, true);
+                    //xmlhttp.send();
 
                 });
 
@@ -1451,13 +1511,44 @@
 
     }
 
+    inserirnameclubs("hometeam", '0', svgwidth / 2 - 75, 40);
+    inserirnameclubs("awayteam", '0', svgwidth / 2 + 75, 40);
+
+    //console.log("xhomescore", xhomescore);
+    //console.log("xhomescore", yhomescore);
     function LineInTimeLine(eventId, causeId, executeId, date) {
         var xmlhttp6 = new XMLHttpRequest();
         xmlhttp6.onreadystatechange = function () {
 
             if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
                 var resp2 = JSON.parse(xmlhttp6.response);
-                console.log("resp2", resp2);
+                console.log("resp23131", resp2);
+
+                if (resp2.eventName == 'Golo') {
+                    
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function() {
+
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            var resp = JSON.parse(xmlhttp.response);
+                            var idclub = resp.IdClub;
+                            console.log("ddddddd");
+                            if (idclub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
+                                svg.getElementById("hometeam").innerHTML = parseInt(svg.getElementById("hometeam").innerHTML.trim()) + 1;
+                            } else {
+                                svg.getElementById("awayteam").innerHTML = parseInt(svg.getElementById("awayteam").innerHTML.trim()) + 1;
+                            }
+                        }
+                    };
+
+                    xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + causeId, true);
+                    xmlhttp.send();
+                }
+
+
+
+
+
                 var hr = document.createElement('hr');
 
                 //var substringedDate = date.toString().substring(6); //substringedDate= 1291548407008)/

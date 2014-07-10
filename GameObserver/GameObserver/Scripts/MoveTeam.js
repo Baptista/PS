@@ -653,6 +653,7 @@
                         movedowndefense += (svgheight / defense) / 2;
                         return callplayer(idpla);
                     }
+
                     PutInPosition(middledefensex, middledefensey, movedowndefense, idpla);
 
                     --ndefesefull;
