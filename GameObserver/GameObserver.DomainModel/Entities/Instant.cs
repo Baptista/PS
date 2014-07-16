@@ -17,7 +17,7 @@ namespace GameObserver.DomainModel.Entities
         public int IdAgainst { get; set; }
         public int IdUser { get; set; }
         public int IdCause { get; set; }
-        public int IdExecute { get; set; }
+        public int? IdExecute { get; set; }
 
 
     }

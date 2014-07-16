@@ -73,8 +73,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select Actor.* from Jogador inner join Actor on(Jogador.id=Actor.id) where idclub="+idclub;
-
+                cmd.CommandText = "select Actor.* from Jogador inner join Actor on(Jogador.id=Actor.id) where idclub= @idc";
+                cmd.Parameters.Add("@idc",SqlDbType.Int).Value = idclub;
                 try
                 {
                     conn.Open();
@@ -112,8 +112,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Estadio where id="+id;
-
+                cmd.CommandText = "select * from Estadio where id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
                 {
                     conn.Open();
@@ -149,8 +149,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Jogador where id=" + idplayer;
-
+                cmd.CommandText = "select * from Jogador where id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = idplayer;
                 try
                 {
                     conn.Open();
@@ -183,8 +183,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Posicao where id=" + id;
-
+                cmd.CommandText = "select * from Posicao where id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
                 {
                     conn.Open();
@@ -218,8 +218,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select Posicao.* from Jogador inner join jogar on(Jogador.id = jogar.idjog) inner join Posicao on(Posicao.id = jogar.idpos) where Jogador.id = " + idplayer;
-
+                cmd.CommandText = "select Posicao.* from Jogador inner join jogar on(Jogador.id = jogar.idjog) inner join Posicao on(Posicao.id = jogar.idpos) where Jogador.id = @idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = idplayer;
                 try
                 {
                     conn.Open();
@@ -270,8 +270,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Clube where id=" + id;
-
+                cmd.CommandText = "select * from Clube where id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
                 {
                     conn.Open();
@@ -305,8 +305,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Formacao where id=" + id;
-
+                cmd.CommandText = "select * from Formacao where id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
                 {
                     conn.Open();
@@ -398,7 +398,7 @@ namespace GameObserver.Data
             }
         }
 
-        public void CreateTeam(int idFormation , int idClub , DateTime data)
+        public void CreateTeam(int idFormation , int idClub , DateTime date)
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
@@ -414,7 +414,7 @@ namespace GameObserver.Data
                 p2.Direction = ParameterDirection.Input;
 
                 SqlParameter p3 = new SqlParameter("@date", SqlDbType.Date, 8);
-                p3.Value = data;
+                p3.Value = date;
                 p3.Direction = ParameterDirection.Input;
                 
 
@@ -555,8 +555,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Actor where Arbitro=1 and id="+id;
-
+                cmd.CommandText = "select * from Actor where Arbitro=1 and id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
                 {
                     conn.Open();
@@ -633,8 +633,8 @@ namespace GameObserver.Data
             {
                 SqlCommand cmd = conn.CreateCommand();
                 //adicionar Jogador=1
-                cmd.CommandText = "select * from Actor where id="+id;
-
+                cmd.CommandText = "select * from Actor where id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
                 {
                     conn.Open();
@@ -778,8 +778,9 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Equipa where data='"+data+"' and id="+idclub;
-
+                cmd.CommandText = "select * from Equipa where data=@dt and id=@idc";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = idclub;
+                cmd.Parameters.Add("@dt", SqlDbType.DateTime).Value = date;
                 try
                 {
                     conn.Open();
@@ -815,8 +816,10 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select integrar.* from Equipa inner join integrar on(Equipa.id=integrar.idclube and Equipa.data=integrar.dataequipa) where Equipa.id=" + idclub + " and Equipa.data='" + date.ToString("yyyy-MM-dd") + "'";
-                    //"select Actor.* from Equipa inner join integrar on(Equipa.id=conter.idclube and Equipa.data=conter.dataequipa) inner join Jogador on(Jogador.id=conter.idjogador)inner join Actor on(Jogador.id=Actor.id) where Equipa.id="+team.IdClub+" and Equipa.data='"+data+"'";
+                cmd.CommandText = "select integrar.* from Equipa inner join integrar on(Equipa.id=integrar.idclube and Equipa.data=integrar.dataequipa) where Equipa.id=@idc and Equipa.data=@dt";
+                cmd.Parameters.Add("@idc", SqlDbType.Int).Value = idclub;
+                cmd.Parameters.Add("@dt", SqlDbType.DateTime).Value = date.ToString("yyyy-MM-dd");  
+                //"select Actor.* from Equipa inner join integrar on(Equipa.id=conter.idclube and Equipa.data=conter.dataequipa) inner join Jogador on(Jogador.id=conter.idjogador)inner join Actor on(Jogador.id=Actor.id) where Equipa.id="+team.IdClub+" and Equipa.data='"+data+"'";
 
                 try
                 {
@@ -959,10 +962,10 @@ namespace GameObserver.Data
             }
         }
 
-        public void CreateOpinion(DateTime minutosegundo, int idestadio, DateTime datahora, DateTime datavisitante,
-            int idvisitante,
-            DateTime datadefronta, int iddefronta, int idutilizador, int causou, int? executou, DateTime datahoraopiniao,
-            int negativa, int idevento)
+        public void CreateOpinion(DateTime minutesecond, int idstadium, DateTime datehour, DateTime datevisitor,
+            int idvisitor,
+            DateTime dateagainst, int idagainst, int iduser, int cause, int? execute, DateTime datehouropinion,
+            int negative, int idevent)
         {
 
 
@@ -973,55 +976,60 @@ namespace GameObserver.Data
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter p1 = new SqlParameter("@minutosegundo", SqlDbType.DateTime, 8);
-                p1.Value = minutosegundo.ToString("HH:mm:ss");
+                p1.Value = minutesecond.ToString("HH:mm:ss");
                 p1.Direction = ParameterDirection.Input;
 
                 SqlParameter p2 = new SqlParameter("@idestadio", SqlDbType.Int, 4);
-                p2.Value = idestadio;
+                p2.Value = idstadium;
                 p2.Direction = ParameterDirection.Input;
 
                 SqlParameter p3 = new SqlParameter("@datahora", SqlDbType.DateTime, 8);
-                p3.Value = datahora.ToString("yyyy-MM-dd HH:mm:ss");
+                p3.Value = datehour.ToString("yyyy-MM-dd HH:mm:ss");
                 p3.Direction = ParameterDirection.Input;
 
                 SqlParameter p4 = new SqlParameter("@datavisitante", SqlDbType.DateTime, 8);
-                p4.Value = datavisitante.ToString("yyyy-MM-dd");
+                p4.Value = datevisitor.ToString("yyyy-MM-dd");
                 p4.Direction = ParameterDirection.Input;
 
                 SqlParameter p5 = new SqlParameter("@idvisitante", SqlDbType.Int, 4);
-                p5.Value = idvisitante;
+                p5.Value = idvisitor;
                 p5.Direction = ParameterDirection.Input;
 
                 SqlParameter p6 = new SqlParameter("@datadefronta", SqlDbType.DateTime, 8);
-                p6.Value = datadefronta.ToString("yyyy-MM-dd");
+                p6.Value = dateagainst.ToString("yyyy-MM-dd");
                 p6.Direction = ParameterDirection.Input;
 
                 SqlParameter p7 = new SqlParameter("@iddefronta", SqlDbType.Int, 4);
-                p7.Value = iddefronta;
+                p7.Value = idagainst;
                 p7.Direction = ParameterDirection.Input;
 
                 SqlParameter p8 = new SqlParameter("@idutilizador", SqlDbType.Int, 4);
-                p8.Value = idutilizador;
+                p8.Value = iduser;
                 p8.Direction = ParameterDirection.Input;
 
                 SqlParameter p9 = new SqlParameter("@causou", SqlDbType.Int, 4);
-                p9.Value = causou;
+                p9.Value = cause;
                 p9.Direction = ParameterDirection.Input;
 
                 SqlParameter p10 = new SqlParameter("@executou", SqlDbType.Int, 4);
-                p10.Value = 9;
+                if (execute == null)
+                    p10.Value = DBNull.Value;
+                else
+                {
+                    p10.Value = execute;
+                }
                 p10.Direction = ParameterDirection.Input;
 
                 SqlParameter p11 = new SqlParameter("@datahoraopiniao", SqlDbType.DateTime, 8);
-                p11.Value = datahoraopiniao.ToString("yyyy-MM-dd hh:mm:ss");
+                p11.Value = datehouropinion.ToString("yyyy-MM-dd hh:mm:ss");
                 p11.Direction = ParameterDirection.Input;
 
                 SqlParameter p12 = new SqlParameter("@negativa", SqlDbType.Int, 4);
-                p12.Value = negativa;
+                p12.Value = negative;
                 p12.Direction = ParameterDirection.Input;
 
                 SqlParameter p13 = new SqlParameter("@idevento", SqlDbType.Int, 4);
-                p13.Value = idevento;
+                p13.Value = idevent;
                 p13.Direction = ParameterDirection.Input;
 
 
@@ -1059,15 +1067,20 @@ namespace GameObserver.Data
         }
 
 
-        public IEnumerable<Instant> GetAllInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-            int idequipag, DateTime dataequipag)
+        public IEnumerable<Instant> GetAllInstant(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
+            int idteamg, DateTime datateamg)
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Instante where idestadio="+idstadium+" and datahora='"+datahora.ToString("yyy-MM-dd HH:mm:ss")+
-                    "' and datavisitante='" + dataequipav.ToString("yyyy-MM-dd") + "' and idvisitante=" + idequipav +
-                    " and datadefronta='" + dataequipag.ToString("yyyy-MM-dd") + "' and iddefronta=" + idequipag + " and idutilizador=" + 1;
+                cmd.CommandText = "select * from Instante where idestadio=@ids and datahora=@datahora and datavisitante=@datavis and idvisitante=@idvis and datadefronta=@dataaga and iddefronta=@idaga and idutilizador=" + 1;
+
+                cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datehour.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = datateamv.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idteamv;
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = datateamg.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idteamg;
 
                 try
                 {
@@ -1088,7 +1101,7 @@ namespace GameObserver.Data
                                 IdAgainst = reader.GetInt32(6),
                                 IdUser = reader.GetInt32(7),
                                 IdCause = reader.GetInt32(8),
-                                IdExecute = reader.GetInt32(9)
+                                IdExecute = reader.IsDBNull(9)? (int?)null :reader.GetInt32(9)
                                 
                             };
                         }
@@ -1112,10 +1125,17 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Opiniao where minutosegundoinstante='" + minitosegundo.ToString("yyyy-MM-dd HH:mm:ss") + "' and idestadio=" + idstadium + " and datahora='" + datahora.ToString("yyy-MM-dd HH:mm:ss") +
-                    "' and datavisitante='" + dataequipav.ToString("yyyy-MM-dd") + "' and idvisitante=" + idequipav +
-                    " and datadefronta='" + dataequipag.ToString("yyyy-MM-dd") + "' and iddefronta=" + idequipag + " and idutilizador=" + 1;
+                cmd.CommandText = "select * from Opiniao where minutosegundoinstante=@min and idestadio=@ids and datahora=@datahora and" +
+                                  " datavisitante=@datavis and idvisitante=@idvis and" +
+                                  " datadefronta=@dataaga and iddefronta=@idaga and idutilizador=" + 1;
 
+                cmd.Parameters.Add("@min", SqlDbType.DateTime).Value = minitosegundo.ToString("yyyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = dataequipav.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idequipav;
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = dataequipag.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idequipag;
                 try
                 {
                     conn.Open();
@@ -1155,8 +1175,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from associar where datahora='" + datahora.ToString("yyyy-MM-dd HH:mm:ss") + "' and idutilizador=" + 1;
-
+                cmd.CommandText = "select * from associar where datahora=@datahora and idutilizador=" + 1;
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyy-MM-dd HH:mm:ss");
                 try
                 {
                     conn.Open();
@@ -1189,8 +1209,8 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Evento where id=" + id;
-
+                cmd.CommandText = "select * from Evento where id=@ide";
+                cmd.Parameters.Add("@ide", SqlDbType.Int).Value = id;
                 try
                 {
                     conn.Open();

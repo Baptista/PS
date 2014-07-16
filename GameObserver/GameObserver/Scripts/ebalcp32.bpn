@@ -1,9 +1,5 @@
 ﻿window.onload = function () {
 
-    console.log(window.screen.availWidth);
-    console.log(window.screen.availHeight);
-
-
     var savepositions;
     var movey = 0;
     var SVGDocument = null;
@@ -78,22 +74,10 @@
     var svgheight = null;
     var svgwidth = null;
 
-    var avheight = window.screen.availHeight/2;
-    var avwidth = window.screen.availWidth/2;
-    console.log("avheight", avheight);
-    console.log("avwidth", avwidth);
-    a.setAttributeNS(null, 'height', avheight);
-    a.setAttributeNS(null, 'width', avwidth);
-
     svg = a.contentDocument;
-    a.setAttributeNS(null, 'height', avheight);
-    a.setAttributeNS(null, 'width', avwidth);
-    
     svgheight = a.getBoundingClientRect().height;
 
     svgwidth = a.getBoundingClientRect().width;
-    console.log("svgheight", svgheight);
-    console.log("svgwidth", svgwidth);
     var halfposition = (svgwidth / 2);
     SVGDocument = svg;
     SVGRoot = SVGDocument.documentElement;
@@ -107,7 +91,7 @@
     var xhomescore = svg.getElementById("homescore").getBoundingClientRect().width;
 
 
-    inserirnameclubs(null, "TIME", "48%", "6%");
+    inserirnameclubs(null, "TIME", (halfposition - 20), 20);
 
     function timernow() {
         var d = new Date();
@@ -122,9 +106,9 @@
 
     var t = timernow();
     var txtElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    txtElem.setAttributeNS(null, "x", "48%");
-    txtElem.setAttributeNS(null, "y", "10%");
-    txtElem.setAttributeNS(null, "font-size", avwidth/50);
+    txtElem.setAttributeNS(null, "x", halfposition - 20);
+    txtElem.setAttributeNS(null, "y", 40);
+    txtElem.setAttributeNS(null, "font-size", 15);
     txtElem.setAttributeNS(null, 'id', "timer");
     var helloTxt = document.createTextNode(t);
     txtElem.appendChild(helloTxt);
@@ -241,7 +225,7 @@
 
         txtElem.setAttributeNS(null, "x", xpos);
         txtElem.setAttributeNS(null, "y", ypos);
-        txtElem.setAttributeNS(null, "font-size", avwidth / 50);
+        txtElem.setAttributeNS(null, "font-size", 15);
         txtElem.setAttributeNS(null, 'id', id);
         var helloTxt = document.createTextNode(name);
         txtElem.appendChild(helloTxt);
@@ -256,17 +240,17 @@
     var ref2 = document.getElementById("idref2").innerHTML.trim();
     var ref3 = document.getElementById("idref3").innerHTML.trim();
     var ref4 = document.getElementById("idref4").innerHTML.trim();
-
+    
     referees(ref1, (svgwidth / 2) - 25, yfield / 2 + movey);
     referees(ref2, (svgwidth / 2) - 25, svg.getElementById("uprect").getBoundingClientRect().height);
     referees(ref3, (svgwidth / 2) - 25, yfield + movey / 2);
-    referees(ref4, (svgwidth / 2) - 25, yfield + svg.getElementById("uprect").getBoundingClientRect().height + 20);
+    referees(ref4, (svgwidth / 2) - 25, yfield + svg.getElementById("uprect").getBoundingClientRect().height+20);
 
 
-    function referees(referee, x, y) {
+    function referees(referee , x , y) {
         var xmlhttp9 = new XMLHttpRequest();
 
-        xmlhttp9.onreadystatechange = function () {
+        xmlhttp9.onreadystatechange = function() {
 
             if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
                 var resp = JSON.parse(xmlhttp9.response);
@@ -276,7 +260,7 @@
         xmlhttp9.open("GET", "/SetUp/GetReferee?id=" + referee, true);
         xmlhttp9.send();
     }
-
+    
 
     //var allplayereshome = [];
     loadpostions();
@@ -426,7 +410,7 @@
 
                             var xmlhttp1 = new XMLHttpRequest();
 
-                            xmlhttp1.onreadystatechange = function () {
+                            xmlhttp1.onreadystatechange = function() {
 
                                 if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
                                     var resp3 = JSON.parse(xmlhttp1.response);
@@ -673,7 +657,7 @@
 
 
 
-    //FillTimeLine();
+    FillTimeLine();
 
 
     var showdetails = [];
@@ -688,8 +672,8 @@
 
 
 
-    function createcircles(idp, ide, x, y) {
-
+    function createcircles(idp , ide , x ,y, val) {
+        
         var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circles.setAttribute("cx", x);
         circles.setAttribute("cy", y);
@@ -709,15 +693,13 @@
             circlesinside.setAttribute("id", "circcc");
             svg.getElementById("all").appendChild(circlesinside);
             showdetails[showdetails.length] = circlesinside;
-            if (ide != null) {
-                //saveplayer.idexe = null;
-                saveplayer.event = ide;
+            if (val == false)
                 saveplayer.idplayer = idp;
-            } else {
+            else
                 saveplayer.idexe = idp;
-                console.log("clickotherteam");
-            }
-            console.log("saveplayers", saveplayer);
+            saveplayer.event = ide;
+
+            
         };
         svg.getElementById("all").appendChild(circles);
     }
@@ -728,9 +710,8 @@
 
     function PhotoonSvg(id, photo, posx, posy) {
         var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-        console.log("dfa", avheight / 9);
-        svgimg.setAttributeNS(null, 'height', avheight/9 + "");
-        svgimg.setAttributeNS(null, 'width', avheight/9+"");
+        svgimg.setAttributeNS(null, 'height', '50');
+        svgimg.setAttributeNS(null, 'width', '50');
         svgimg.setAttributeNS(null, 'id', id);
         svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + photo);
         svgimg.setAttributeNS(null, 'x', posx);
@@ -813,10 +794,10 @@
                                 ////    circlesinside.setAttribute("id", "circcc");
                                 ////    svg.getElementById("all").appendChild(circlesinside);
                                 ////    showdetails[showdetails.length] = circlesinside;
-                                createcircles(resp.Id, entry.Id, xposdetails + 15, yposdetails + y);
+                                createcircles(resp.Id, entry.Id,xposdetails + 15, yposdetails + y , false);
 
-                                //saveplayer.idplayer = resp.Id;
-                                //saveplayer.event = entry.Id;
+                                    //saveplayer.idplayer = resp.Id;
+                                    //saveplayer.event = entry.Id;
 
 
                                 ////};
@@ -854,11 +835,11 @@
                             svgexecutor.setAttributeNS(null, 'visibility', 'visible');
                             showdetails[showdetails.length] = svgexecutor;
                             svg.getElementById("all").appendChild(svgexecutor);
-
+                            
 
                             console.log("sdcndsdc", xposdetails);
                             console.log("sdcndsdc", yposdetails);
-                            var executor = createLabels("executor", xposdetails + 120, yposdetails + y + 30);
+                            var executor = createLabels("executor", xposdetails + 120, yposdetails + y+30);
                             executor.setAttributeNS(null, "transform", "rotate(90 " + 550 + ",360)");
                             executor.onclick = function () {
                                 var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -870,40 +851,33 @@
                                 rectexecutor.setAttributeNS(null, 'y', yposdetails);
                                 rectexecutor.setAttributeNS(null, 'visibility', 'visible');
                                 svg.getElementById("all").appendChild(rectexecutor);
-                                showdetails[showdetails.length] = rectexecutor;
+
 
 
                                 var xmlhttp = new XMLHttpRequest();
 
-                                xmlhttp.onreadystatechange = function () {
+                                xmlhttp.onreadystatechange = function() {
 
                                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                                         var resp1 = JSON.parse(xmlhttp.response);
 
                                         var xmlhttp1 = new XMLHttpRequest();
 
-                                        xmlhttp1.onreadystatechange = function () {
+                                        xmlhttp1.onreadystatechange = function() {
 
                                             if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
                                                 var resp3 = JSON.parse(xmlhttp1.response);
-                                                y = 20;
+                                                y = 100;
                                                 resp3.forEach(function (entry) {
-
-                                                    createcircles(entry.Id, null, xposdetails + 170, yposdetails + y);
-                                                    createLabels(entry.Name, xposdetails + 190, yposdetails + y);
-                                                    y = y + 20;
-
+                                                    
+                                                    createcircles(resp1.id ,null, xposdetails + 150, yposdetails + y);
+                                                    createLabels(entry.Name, xposdetails + 160, yposdetails + y);
+                                                    y = y + 10;
+                                                    
                                                 });
                                             }
                                         };
-                                        var idc;
-                                        if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
-                                            idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
-                                        } else {
-                                            idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
-                                        }
-
-                                        xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
+                                        xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + resp1.IdClub, true);
                                         xmlhttp1.send();
 
                                     }
@@ -1004,16 +978,6 @@
     SVGDocument.onmousedown = function (evt) {
 
         if (evt.target.innerHTML == 'Save') {
-            console.log("saveplayeres_length", saveplayer);
-            if (Object.getOwnPropertyNames(saveplayer).length === 0) {
-                console.log("unsaved");
-                return;
-            } else if (!saveplayer.hasOwnProperty('event')) {
-                return;
-            } else if (!saveplayer.hasOwnProperty('idexe')) {
-                saveplayer.idexe = null;
-            }
-
             var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML;
             var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML;
             var idequipa = document.getElementById("iddetailssetup_idagainst").innerHTML;
@@ -1037,63 +1001,14 @@
 
                     //console.log("resp", date.toDateString());
                     console.log("date", dt);
-                    LineInTimeLine(saveplayer.event, saveplayer.idplayer, saveplayer.idexe, dt);
-
-                    var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.onreadystatechange = function () {
-
-                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                            var resp1 = JSON.parse(xmlhttp.response);
-                            if (resp1.Type == 'Cartao Vermelho') {
-
-                                var xmlhttp1 = new XMLHttpRequest();
-                                xmlhttp1.onreadystatechange = function () {
-
-                                    if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
-                                        var resp = JSON.parse(xmlhttp1.response);
-                                        var idclub = resp.IdClub;
-                                        var dateclub;
-                                        if (idclub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
-                                            dateclub = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
-                                        } else {
-                                            dateclub = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
-                                        }
-
-                                        var xmlhttp2 = new XMLHttpRequest();
-                                        xmlhttp2.onreadystatechange = function () {
-
-                                            if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
-
-                                            }
-                                        };
-                                        xmlhttp2.open("POST", "/Team/UpdateIntegrate", true);
-                                        xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-
-                                        xmlhttp2.send("idclub=" + idclub + "&date=" + dateclub + "&idplayer=" + saveplayer.idplayer + "&idposition=" + 0);
-                                        saveplayer = {};
-
-
-                                    }
-                                };
-                                xmlhttp1.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + saveplayer.idplayer, true);
-                                xmlhttp1.send();
-
-
-                            }
-                        }
-                    };
-                    xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
-                    xmlhttp.send();
-
+                    LineInTimeLine(saveplayer.event, saveplayer.idplayer, null, dt);
                 }
             }
             xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
             xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
-                "&dataagainst=" + dataequipa + "&idagainst=" + idequipa + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe);
 
-            removedetails();
-            return;
+            xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitante=" + idequipav +
+                "&datadefronta=" + dataequipa + "&iddefronta=" + idequipa + "&idcausador=" + saveplayer.idplayer + "&idevento=" + saveplayer.event);
 
         }
         if (evt.target.nodeName == 'circle' || evt.target.nodeName == 'text') return;
@@ -1108,7 +1023,7 @@
 
             return false;
         }
-
+        
         var targetElement = oldtarget = evt.target;
         if (targetElement.nodeName != 'image') {
             return;
@@ -1274,7 +1189,7 @@
 
 
     SVGDocument.onmouseup = function (evt) {
-
+        
         if (evt.which == 3) {
 
             return false;
@@ -1684,7 +1599,7 @@
                     //    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     //        var resp1 = JSON.parse(xmlhttp.response);
                     //        if (resp1.Type == 'Golo') {
-
+                                
                     //        }
                     //    }
                     //};
@@ -1715,9 +1630,9 @@
                 console.log("resp23131", resp2);
 
                 if (resp2.eventName == 'Golo') {
-
+                    
                     var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.onreadystatechange = function () {
+                    xmlhttp.onreadystatechange = function() {
 
                         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                             var resp = JSON.parse(xmlhttp.response);
@@ -1746,13 +1661,7 @@
                 //var datet = new Date(parsedIntDate);
 
                 //console.log("datet", date.toLocaleTimeString());
-                var txt;
-                console.log("yyyyyyypres2", resp2);
-                if (resp2.executeName == null) {
-                    txt = document.createTextNode(date.toLocaleTimeString() + '-' + resp2.eventName + "-" + resp2.causeName);
-                } else {
-                    txt = document.createTextNode(date.toLocaleTimeString() + '-' + resp2.eventName + "-" + resp2.causeName + "-" + resp2.executeName);
-                }
+                var txt = document.createTextNode(date.toLocaleTimeString() + '-' + resp2.eventName + "-" + resp2.causeName + "-" + resp2.executeName);
                 hr.appendChild(txt);
 
                 if (timeline.firstChild != null) {
@@ -1807,94 +1716,17 @@
 
 
 
-    //var timeline = document.createElement('div');
-    //timeline.id = 'timeline';
-    //timeline.style.width = '25%';
-    //timeline.style.height = '83%';
-    //timeline.style.overflow = 'auto';
-    //timeline.style.position = 'absolute';
-    //timeline.style.left = '65%';
-    //timeline.style.top = '10%';
-    //timeline.title = "TimeLine";
-    //timeline.style.border = 'ridge';
-    ////timeline.style.backgroundColor = 'green';
-    //document.body.appendChild(timeline);
-
-
-
-
-
-
-
-    function creatediv(left, top, name) {
-        console.log("left", left);
-        console.log("top", top);
-        console.log("name", name);
-        var divs = document.createElement('div');
-        //divs.id = 'timeline';
-        divs.style.width = '150px';
-        divs.style.height = '30px';
-        divs.style.position = 'absolute';
-        divs.style.left = left + "px";
-        divs.style.top = top + "px";
-        divs.style.border = 'ridge';
-        //timeline.style.backgroundColor = 'green';
-
-        var evname = document.createTextNode(name);
-        //evname.style.width = '15px';
-        //evname.style.height = '10px';
-        //evname.style.position = 'absolute';
-        //evname.style.left = left+5;
-        //evname.style.top = top;
-        divs.appendChild(evname);
-
-
-        var divcount = document.createElement('div');
-        divcount.style.width = '30px';
-        divcount.style.height = '30px';
-        divcount.style.position = 'absolute';
-        divcount.style.left = "115px";
-        divcount.style.top = "0px";
-        divcount.style.border = 'hidden';
-
-        var evcount = document.createTextNode("0");
-        divcount.appendChild(evcount);
-        //evcount.style.width = '5px';
-        //evcount.style.height = '10px';
-        //evcount.style.position = 'absolute';
-        //evcount.style.left = left+10;
-        //evcount.style.top = top;
-
-        divs.appendChild(divcount);
-
-        document.body.appendChild(divs);
-    }
-
-    function createalldivs() {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                var resp = JSON.parse(xmlhttp.response);
-                var xleft = 80;
-                var xtop = 550;
-                resp.forEach(function (entry) {
-                    creatediv(xleft, xtop, entry.Type);
-                    if (xleft >= 900) {
-                        xtop += 35;
-                        xleft = 80;
-                    } else {
-                        xleft += 155;
-                    }
-                });
-            }
-        };
-        xmlhttp.open("GET", "/SetUp/GetEvents", true);
-        xmlhttp.send();
-    }
-
-    // createalldivs();
-
-
+    var timeline = document.createElement('div');
+    timeline.id = 'timeline';
+    timeline.style.width = '350px';
+    timeline.style.height = '400px';
+    timeline.style.overflow = 'auto';
+    timeline.style.position = 'absolute';
+    timeline.style.left = '65%';
+    timeline.style.top = '10';
+    timeline.title = "TimeLine";
+    timeline.style.border = 'solid';
+    //timeline.style.backgroundColor = 'green';
+    document.body.appendChild(timeline);
 };
 

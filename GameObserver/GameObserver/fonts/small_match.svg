@@ -1,6 +1,6 @@
-<svg width="796" height="480" xmlns="http://www.w3.org/2000/svg">
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
  <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
- <g id="all">
+ <g id="all" transform="scale(1)">
   <title>Layer 1</title>
   <g id="uprect">
    <rect stroke="#007f00" fill="#007f00" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="1" y="1" width="794.00002" height="68" id="svg_22"/>

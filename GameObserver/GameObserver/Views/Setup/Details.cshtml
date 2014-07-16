@@ -90,21 +90,22 @@
 <button id="idbuttonreset">Reset</button>
 <button id="idbuttonsave">Save</button>*@
 
-<div class="row" >
-    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/small_match.svg") width="796" height="480" />
+@*<div class="row" style="position: absolute; left: 7% ">*@
+    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/newsmall.svg") />
     @*@if (@Model.svg == null)
     {
         <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/big.svg")  height="682" width="1018"/>
     }
     else
     {*@
+    @*width="796" height="480"*@
         @*height="682" width="1018"*@
     @*width="796" height="507"*@
     @*<svg id ="svgmain" height="682" width="1018" xmlns="http://www.w3.org/2000/svg">
             @Html.DisplayTextFor(model => model.svg)
         </svg>*@
     @*}*@
-</div>
+@*</div>*@
 
 
 <p>

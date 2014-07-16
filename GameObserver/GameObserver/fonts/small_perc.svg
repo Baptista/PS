@@ -1,0 +1,55 @@
+<svg width="796" height="480" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <g id="all">
+  <title>Layer 1</title>
+  <g id="uprect">
+   <rect id="svg_22" height="14.16%" width="99.74%" y="0.20%" x="0.12%" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" fill="#007f00" stroke="#007f00"/>
+  </g>
+  <g id="field">
+   <rect id="svg_1" fill="green" height="70.41%" width="99.87%" y="14.37%" x="0.12%"/>
+  </g>
+  <rect fill="#0ea00e" y="14.58%" width="14.19%" height="69.58%" id="svg_1" x="0" stroke="#007f00"/>
+  <rect fill="#0f9e0f" x="28.39%" y="14.58%" width="14.19%" height="69.58%" id="svg_2" stroke="#007f00"/>
+  <rect fill="#0f9e0f" x="56.78%" width="14.19%" height="69.58%" id="svg_3" y="14.58%" stroke="#007f00"/>
+  <rect fill="#0f9e0f" x="85.17%" y="14.58%" width="14.19%" height="69.58%" id="svg_4" stroke="#007f00"/>
+  <!-- Final lines on field -->
+  <line stroke="#ffffff" fill="none" stroke-width="5" x1="1.20%" y1="16.6%" x2="1.20%" y2="83.95%" id="svg_6"/>
+  <line stroke="#ffffff" fill="none" stroke-width="5" x1="99.49%" y1="16.6%" x2="99.49%" y2="83.95%" id="svg_7"/>
+  <line stroke="#ffffff" id="svg_8" y2="16.6%" x2="99.49%" y1="16.6%" x1="0.88%" stroke-width="5" fill="none"/>
+  <line stroke="#ffffff" id="svg_9" y2="83.3%" x2="99.49%" y1="83.3%" x1="0.88%" stroke-width="5" fill="none"/>
+  <!-- small rectangle -->
+  <g id="svg_21" transform="scale(1) ">
+   <path fill="black" d="m12,188.39999l55,0l0,99.20004l-55,0l0,-99.20004z" stroke-width="5" fill-opacity="0" id="svg_10" stroke="white"/>
+  
+  <path fill="black" id="svg_11" fill-opacity="0" stroke-width="5" d="m790,185.39999l-55,0l0,101.20004l55,0l0,-101.20004z" stroke="white"/>
+  <!-- rectangle -->
+  <path d="m11,158.39999l90,0l0,158.19998l-90,0l0,-158.19998z" stroke-width="5" fill-opacity="0" id="svg_12" fill="#ffffff" stroke="white"/>
+  <path d="m707,161.39996l84,0l0,152.20007l-84,0l0,-152.20007z" stroke-width="5" fill-opacity="0" id="svg_13" fill="#ffffff" stroke="white"/>
+  <!-- half circle -->
+  <path id="svg_14" fill="none" stroke-width="5" d="m102,182.875a91.5,68.35128 0 0 1 0,109.25l0,-109.25z" stroke="white"/>
+  <path d="m707,179.875a91.5,71.47949 0 0 0 0,114.25l0,-114.25z" stroke-width="5" fill="none" id="svg_15" stroke="white"/>
+  <!-- corners -->
+  <path id="svg_16" fill-opacity="0" stroke-width="5" stroke="white" d="m12,92a10,10 0 0 0 10,-10l-10,0l0,10z" fill="black"/>
+  <path fill="black" d="m791,389a10,10 0 0 0 -10,10l10,0l0,-10z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_17"/>
+  <path id="svg_18" fill-opacity="0" stroke-width="5" stroke="white" d="m21,400a10,10 0 0 0 -10,-10l0,10l10,0z" fill="black"/>
+  <path fill="black" d="m780,82a10,10 0 0 0 10,10l0,-10l-10,0z" stroke="white" stroke-width="5" fill-opacity="0" id="svg_19"/>
+  </g>
+  <!-- middle circle -->
+  <circle cx="50.5%" cy="48.3%" r="11.4%" stroke="white" stroke-width="5" fill-opacity="0" id="svg_3" fill="black"/>
+  <line fill="none" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" fill-opacity="0" x1="50.25%" y1="16.25%" x2="50.25%" y2="83%" id="svg_20" stroke="white"/>
+  <g id="downrect">
+   <rect id="svg_5" height="15.20%" width="99.75%" y="84.58%" x="0.12%" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" fill="green"/>
+  </g>
+  <line fill="none" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="0.12%" y1="90.20%" x2="45.85%" y2="90.20%" id="svg_24" stroke="#ffffff"/>
+  <line fill="none" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="54.27%" y1="90.20%" x2="99.62%" y2="90.20%" id="svg_26" stroke="#ffffff"/>
+  <g id="homescore">
+   <rect stroke="#ffffff" fill="#007f00" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="37.6%" y="2.08%" width="5.62%" height="10.62%" id="svg_30"/>
+  </g>
+  <line fill="none" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" fill-opacity="0" x1="45.6%" y1="90%" x2="45.6%" y2="99.8%" id="svg_32" stroke="white"/>
+  <line fill="none" stroke="white" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" fill-opacity="0" x1="50.25%" y1="46.8%" x2="50.13%" y2="47%" id="svg_34"/>
+  <line fill="none" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" fill-opacity="0" x1="54.27%" y1="89.8%" x2="54.39%" y2="99.8%" id="svg_35" stroke="white"/>
+  <g id="awayscore">
+   <rect id="svg_25" stroke="#ffffff" fill="#007f00" stroke-width="null" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="56.53%" y="2.18%" width="5.62%" height="10.62%"/>
+  </g>
+ </g>
+</svg>

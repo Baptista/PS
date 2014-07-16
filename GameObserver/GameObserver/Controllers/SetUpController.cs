@@ -194,15 +194,16 @@ namespace GameObserver.Controllers
         }
 
         public void CreateOpinion(String datenow,
-            String idstadium, String datahora, String datavisitor, String idvisitante, String datadefronta,
-            String iddefronta, String idcausador , int idevento)
+            String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
+            String idagainst, String idcause , int idevent , String idexecute)
         {
+            int intv;
             DateTime d = DateTime.Parse(datenow.Substring(0,25));
             //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
-            _repo.CreateOpinion(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitante),Convert.ToDateTime(datadefronta),
-                Convert.ToInt32(iddefronta),1,Convert.ToInt32(idcausador), null,DateTime.Now,1,Convert.ToInt32(idevento));
+            _repo.CreateOpinion(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitor),Convert.ToDateTime(dataagainst),
+                Convert.ToInt32(idagainst), 1, Convert.ToInt32(idcause), (Int32.TryParse(idexecute,out intv))?intv:(int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
         }
-
+        //idexecute.Equals("null") ? (int?)null : Convert.ToInt32(idexecute)
 
         public IEnumerable<TimeLineModel> CreateTimeLine(String idstadium, String datahora, String idequipav, String dataequipav,
             String idequipag, String dataequipag)
@@ -292,5 +293,13 @@ namespace GameObserver.Controllers
             PlayerModel plmodel = _mapperPlayerToPlayerModel.Map(_repo.GetPlayerWithClub(Convert.ToInt32(idplayer)));
             return Json(plmodel, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult GetAllPlayerFromClub(String idclub)
+        {
+            IEnumerable<ActorModel> model = _mapperActorToActorModel.MapAll(_repo.GetPlayersByClub(Convert.ToInt32(idclub)));
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        
 	}
 }

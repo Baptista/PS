@@ -25,6 +25,8 @@ namespace GameObserver.DomainModel
         IEnumerable<Actor> GetPlayersByClub(int idclub);
         //Actor GetClubByPlayer(int idplayer);
 
+        
+
         Club GetClub(int id);
         Formation GetFormation(int id);
 
