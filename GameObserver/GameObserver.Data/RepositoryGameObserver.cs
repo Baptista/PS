@@ -17,6 +17,57 @@ namespace GameObserver.Data
         private static String Stringconn = ConfigurationManager.ConnectionStrings["GameObserverConn"].ConnectionString;
 
 
+        public IEnumerable<Instant> GetInstantByCause(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
+            int idteamg, DateTime datateamg,int idcause)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Instante where causou=@idpla and idestadio=@ids and datahora=@datahora and datavisitante=@datavis and idvisitante=@idvis and datadefronta=@dataaga and iddefronta=@idaga and idutilizador=" + 1;
+
+                cmd.Parameters.Add("@idpla", SqlDbType.Int).Value = idcause;
+                cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datehour.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = datateamv.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idteamv;
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = datateamg.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idteamg;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Instant()
+                            {
+                                MinuteSeconds = reader.GetDateTime(0),
+                                IdStadium = reader.GetInt32(1),
+                                DateMatch = reader.GetDateTime(2),
+                                DateVisitor = reader.GetDateTime(3),
+                                IdVisitor = reader.GetInt32(4),
+                                DateAgainst = reader.GetDateTime(5),
+                                IdAgainst = reader.GetInt32(6),
+                                IdUser = reader.GetInt32(7),
+                                IdCause = reader.GetInt32(8),
+                                IdExecute = reader.IsDBNull(9) ? (int?)null : reader.GetInt32(9)
+
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+
         public void UpdateIntegrate(int idclub, DateTime date, int idplayer, int idposition)
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))

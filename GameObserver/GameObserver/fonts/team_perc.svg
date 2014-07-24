@@ -1,0 +1,27 @@
+<svg width="797" height="425" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <g id="all">
+  <title>Layer 1</title>
+  <rect x="0%" y="0%" width="100%" height="100%" fill="green" id="svg_1"/>
+  <rect stroke="#007f00" x="0%" id="svg_1" height="79%" width="14%" y="21%" fill="#0ea00e"/>
+  <rect stroke="#007f00" id="svg_2" height="79%" width="14%" y="21%" x="28%" fill="#0f9e0f"/>
+  <rect stroke="#007f00" y="21%" id="svg_3" height="79%" width="14%" x="57%" fill="#0f9e0f"/>
+  <rect stroke="#007f00" id="svg_4" height="79%" width="14%" y="21%" x="85%" fill="#0f9e0f"/>
+  <!-- Final lines on field -->
+  <line id="svg_6" y2="99%" x2="1.25%" y1="23%" x1="1.25%" stroke-width="5" fill="none" stroke="#ffffff"/>
+  <line id="svg_7" y2="99%" x2="99%" y1="23%" x1="99%" stroke-width="5" fill="none" stroke="#ffffff"/>
+  <line fill="none" stroke-width="5" x1="1%" y1="23.5%" x2="99%" y2="23.5%" id="svg_8" stroke="#ffffff"/>
+  <line fill="none" stroke-width="5" x1="1%" y1="99%" x2="99%" y2="99%" id="svg_9" stroke="#ffffff"/>
+  <!-- small rectangle -->
+  <path stroke="white" id="svg_10" fill-opacity="0" stroke-width="5" d="m12,208.39999l55,0l0,99.20004l-55,0l0,-99.20004z" fill="black"/>
+  <path stroke="white" d="m790,205.39999l-55,0l0,101.20004l55,0l0,-101.20004z" stroke-width="5" fill-opacity="0" id="svg_11" fill="black"/>
+  <!-- rectangle -->
+  <path stroke="white" fill="#ffffff" id="svg_12" fill-opacity="0" stroke-width="5" d="m11,178.39999l90,0l0,158.19998l-90,0l0,-158.19998z"/>
+  <path stroke="white" fill="#ffffff" id="svg_13" fill-opacity="0" stroke-width="5" d="m707,181.39996l84,0l0,152.20007l-84,0l0,-152.20007z"/>
+  <!-- half circle -->
+  <!-- corners -->
+  <!-- middle circle -->
+  <circle fill="black" id="svg_3" fill-opacity="0" stroke-width="5" stroke="white" r="11%" cy="59%" cx="50%"/>
+  <line stroke="white" id="svg_20" y2="99%" x2="50%" y1="23%" x1="50%" fill-opacity="0" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="5" fill="none"/>
+ </g>
+</svg>

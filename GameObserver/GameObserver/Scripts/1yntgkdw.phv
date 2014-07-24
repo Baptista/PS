@@ -336,7 +336,7 @@
                             }
                             if (entry.IdPosition == 0) {
                                 img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                console.log("x1", x);
+                                console.log("x", x);
                                 x = x + (svgwidth / 20);
                                 //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
                                 //x = x + 50;
@@ -938,8 +938,8 @@
             //console.log("coy", coory);
             //console.log("x", x);
             //console.log("y", y);
-            //x + (svgwidth / 20)
-            if (x <= parseInt(coorx) + (svgwidth / 20) && x >= parseInt(coorx) - (svgwidth / 20) && y <= parseInt(coory) + (svgwidth / 20) && y >= parseInt(coory) - (svgwidth / 20)) {
+
+            if (x <= parseInt(coorx) + 50 && x >= parseInt(coorx) - 50 && y <= parseInt(coory) + 50 && y >= parseInt(coory) - 50) {
                 return arr[i];
             }
         }
@@ -1260,9 +1260,6 @@
         whereplayeres[whereplayeres.length] = idpla;
     }
 
-    
-
-
 
     document.getElementById("idbuttonreset").onclick = function (ev) {
 
@@ -1273,23 +1270,18 @@
         console.log("allplayershome", allplayershome);
         allplayershome.forEach(function again(entry) {
             console.log("x", x);
-
-            var o = {};
-            o.x = x;
-            o.y = y;
-            if(IsOccupied(o , playersnotplaying)){
-            //if (IsImageInPosition(playersnotplaying, x, y)) {
+            
+            if (IsImageInPosition(playersnotplaying, x, y)) {
                 //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
 
-                x = x + (svgwidth / 20);
+                x = x + (svgwidth / 30);
                 //console.log("entry2", entry);
                 return again(entry);
             } else {
 
                 entry.setAttributeNS(null, 'x', x);
                 entry.setAttributeNS(null, 'y', y);
-                console.log("entry", entry);
-                
+                x = x + (svgwidth / 30);
                 //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
                 //if (x >= svgwidth - 50) {
                 //    y = y + 50;
@@ -1297,7 +1289,6 @@
                 //}
                 //removeElemFromArray(allplayershome, entry);
                 playersnotplaying[playersnotplaying.length] = entry;
-                x = x + (svgwidth / 20);
                 //console.log("entry", entry);
             }
         });

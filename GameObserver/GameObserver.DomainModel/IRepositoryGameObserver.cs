@@ -34,7 +34,9 @@ namespace GameObserver.DomainModel
 
         Position GetPlayerPosition(int idplayer);
         Position GetPosition(int id);
-        
+
+        IEnumerable<Instant> GetInstantByCause(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
+            int idteamg, DateTime datateamg,int id);
 
         void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int idpos);
 

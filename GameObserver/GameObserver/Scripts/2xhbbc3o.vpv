@@ -56,12 +56,6 @@
     var nadefensehome = 1;
     var namiddlehome = 1;
     var nastrikerhome = 1;
-    var ngkhome = 1;
-
-
-    var indefense = 1;
-    var inmiddle = 1;
-    var instriker = 1;
 
 
     var ndefesefull;
@@ -76,7 +70,7 @@
     var whereplayeres = [];
     var allplayershome = [];
     var saveplayer = {};
-    var playersnotplaying = [];
+
 
     var a = document.getElementById("svgobject");
     var svg = null;
@@ -106,7 +100,7 @@
 
 
     var yfield = svg.getElementById("field").getBoundingClientRect().height;
-    movey = svg.getElementById("uprect").getBoundingClientRect().height/1.3;
+    movey = svg.getElementById("uprect").getBoundingClientRect().height / 2;
    // var ydown = svg.getElementById("downrect").getBoundingClientRect().height;
     //var yhomescore = svg.getElementById("homescore").getBoundingClientRect().height;
     //var xhomescore = svg.getElementById("homescore").getBoundingClientRect().width;
@@ -225,11 +219,11 @@
     function loadpostions() {
         var rect = svg.getElementById("all");
         var pos = rect.getBoundingClientRect();
-        var x = 0;
+        var x = "0%";
         //console.log("rrrr", pos.left);
-        var y = 0;
-        //console.log("xxxxxx", parseInt(x.substring(0, x.length - 1)) + avwidth / 100 + "%");
-        //console.log("xyyyyy", y);
+        var y = "1%";
+        console.log("xxxxxx", parseInt(x.substring(0, x.length - 1)) + avwidth / 100 + "%");
+        console.log("xyyyyy", y);
 
         var xmlhttp5 = new XMLHttpRequest();
 
@@ -241,7 +235,6 @@
                 resp.forEach(function (entry) {
                     var xmlhttp8 = new XMLHttpRequest();
                     var img = null;
-                    //console.log("x", x);
                     xmlhttp8.onreadystatechange = function () {
 
                         if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
@@ -259,20 +252,17 @@
                                     if (resp3.Designation == 'Defesa') {
                                         if (ndefesefull == 0) {
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                            x = x + (svgwidth / 30);
-                                            //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
+                                            x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
                                             //console.log("xxxxxx", x);
                                             //if (x >= svgwidth - 50) {
                                             //    y = y + 50;
                                             //    x = pos.left + 10;
                                             //}
-                                            playersnotplaying[playersnotplaying.length] = img;
                                         } else {
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, middledefensex, middledefensey * ndefensehome + movey);
 
                                             --ndefesefull;
                                             ++ndefensehome;
-                                            allplayershome[allplayershome.length] = img;
                                             // movedowndefense += (svgheight / defense) / 2;
                                         }
 
@@ -280,72 +270,60 @@
 
                                         if (nmiddlefull == 0) {
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                            x = x + (svgwidth / 30);
-                                            //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
+                                            x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
                                             //x = x + 50;
                                             //if (x >= svgwidth - 50) {
                                             //    y = y + 50;
                                             //    x = pos.left + 10;
                                             //}
-                                            playersnotplaying[playersnotplaying.length] = img;
                                         } else {
 
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, middlex, middley * nmiddlehome + movey);
                                             ++nmiddlehome;
                                             --nmiddlefull;
-                                            allplayershome[allplayershome.length] = img;
                                             //movedownmiddle += (svgheight / middle) / 2;
                                         }
                                     } else if (resp3.Designation == 'Ataque') {
                                         if (nstrikerfull == 0) {
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                            x = x + (svgwidth / 30);
-                                            //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
+                                            x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
                                             //x = x + 50;
                                             //if (x >= svgwidth - 50) {
                                             //    y = y + 50;
                                             //    x = pos.left + 10;
                                             //}
-                                            playersnotplaying[playersnotplaying.length] = img;
                                         } else {
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, middlestrikerx, middlestrikery * nstrikerhome + movey);
                                             ++nstrikerhome;
                                             --nstrikerfull;
-                                            allplayershome[allplayershome.length] = img;
                                             //movedownstriker += (svgheight / striker) / 2;
                                         }
                                     } else {
                                         if (ngkfull == 0) {
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                            x = x + (svgwidth / 30);
-                                            //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
+                                            x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
                                             //x = x + 50;
                                             //if (x >= svgwidth - 50) {
                                             //    y = y + 50;
                                             //    x = pos.left + 10;
                                             //}
-                                            playersnotplaying[playersnotplaying.length] = img;
                                         } else {
                                             img = PhotoonSvg(resp2.Id, resp2.Photo, middlegkx, middlegky + movey);
                                             --ngkfull;
-                                            allplayershome[allplayershome.length] = img;
                                         }
                                     }
-                                    
+                                    allplayershome[allplayershome.length] = img;
                                 }
                             }
                             if (entry.IdPosition == 0) {
                                 img = PhotoonSvg(resp2.Id, resp2.Photo, x, y);
-                                console.log("x1", x);
-                                x = x + (svgwidth / 20);
-                                //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
+                                x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
                                 //x = x + 50;
                                 //if (x >= svgwidth - 50) {
                                 //    y = y + 50;
                                 //    x = pos.left + 10;
                                 //}
-                                //allplayershome[allplayershome.length] = img;
-                                playersnotplaying[playersnotplaying.length] = img;
+                                allplayershome[allplayershome.length] = img;
                             } else {
                                 xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
                                 xmlhttp1.send();
@@ -472,10 +450,9 @@
 
         savepositions.x = mx;
         savepositions.y = (my + movedowndefense);
-        
         movedowndefense += (svgheight / formati) / 2;
 
-        if (IsOccupied(savepositions, allplayershome)) {
+        if (IsOccupied(savepositions, whereplayeres)) {
             return nextposition(mx, my, formati);
         }
         return savepositions;
@@ -501,7 +478,6 @@
         for (var i = 0; i < tempimages.length; i++) {
             svg.getElementById("all").removeChild(tempimages[i]);
         }
-        movedowndefense = 0;
     }
 
     //function removecircles(circles) {
@@ -574,8 +550,8 @@
         var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
         console.log("dfa", svgheight / 9);
         console.log("dfa", svgwidth / 16);
-        svgimg.setAttributeNS(null, 'height', "10%");
-        svgimg.setAttributeNS(null, 'width', "10%");
+        svgimg.setAttributeNS(null, 'height', svgheight / 9);
+        svgimg.setAttributeNS(null, 'width', svgwidth / 16);
         svgimg.setAttributeNS(null, 'id', id);
         svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + photo);
         svgimg.setAttributeNS(null, 'x', posx);
@@ -695,18 +671,18 @@
 
 
 
-    function PutTempImages(full, f, s, t) {
-        var next;
+    //function PutTempImages(full, f, s, t) {
+    //    var next;
 
-        for (var i = 0; i < full; ++i) {
+    //    for (var i = 0; i < full; ++i) {
 
-            next = nextposition(f, s, t);
-            PosToMove[PosToMove.length] = next;
-            //createcircle(next.x, next.y);
-            console.log("next", next);
-            tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
-        }
-    }
+    //        next = nextposition(f, s, t);
+    //        PosToMove[PosToMove.length] = next;
+    //        //createcircle(next.x, next.y);
+    //        console.log("next", next);
+    //        tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+    //    }
+    //}
 
 
     var timer = 200;//miliseconds
@@ -726,8 +702,102 @@
 
 
     SVGDocument.onmousedown = function (evt) {
-        
-        
+        return;
+        if (evt.target.innerHTML == 'Save') {
+            console.log("saveplayeres_length", saveplayer);
+            if (Object.getOwnPropertyNames(saveplayer).length === 0) {
+                console.log("unsaved");
+                return;
+            } else if (!saveplayer.hasOwnProperty('event')) {
+                return;
+            } else if (!saveplayer.hasOwnProperty('idexe')) {
+                saveplayer.idexe = null;
+            }
+
+            var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML;
+            var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML;
+            var idequipa = document.getElementById("iddetailssetup_idagainst").innerHTML;
+            var dataequipa = document.getElementById("iddetailssetup_dateagainst").innerHTML;
+            var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML;
+            var datahora = document.getElementById("iddetailssetup_date").innerHTML;
+            console.log("idest", idstadium);
+            console.log("idest", idequipav);
+            console.log("idest", idequipa);
+            console.log("idest", saveplayer);
+            var xmlhttp10 = new XMLHttpRequest();
+            var dt = new Date();
+            //var substringedDate = dt.substring(6); //substringedDate= 1291548407008)/
+            //var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+            //var datet = new Date(parsedIntDate);
+            xmlhttp10.onreadystatechange = function () {
+
+                if (xmlhttp10.readyState == 4 && xmlhttp10.status == 200) {
+                    console.log("actualiza timeline");
+
+
+                    //console.log("resp", date.toDateString());
+                    console.log("date", dt);
+                    LineInTimeLine(saveplayer.event, saveplayer.idplayer, saveplayer.idexe, dt);
+
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            var resp1 = JSON.parse(xmlhttp.response);
+                            if (resp1.Type == 'Cartao Vermelho') {
+
+                                removePhoto(saveplayer.idplayer);
+
+                                //var xmlhttp1 = new XMLHttpRequest();
+                                //xmlhttp1.onreadystatechange = function () {
+
+                                //    if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                //        var resp = JSON.parse(xmlhttp1.response);
+                                //        var idclub = resp.IdClub;
+                                //        var dateclub;
+                                //        if (idclub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
+                                //            dateclub = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
+                                //        } else {
+                                //            dateclub = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
+                                //        }
+
+                                //        //var xmlhttp2 = new XMLHttpRequest();
+                                //        //xmlhttp2.onreadystatechange = function () {
+
+                                //        //    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+
+                                //        //    }
+                                //        //};
+                                //        //xmlhttp2.open("POST", "/Team/UpdateIntegrate", true);
+                                //        //xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+                                //        //xmlhttp2.send("idclub=" + idclub + "&date=" + dateclub + "&idplayer=" + saveplayer.idplayer + "&idposition=" + 0);
+                                //        saveplayer = {};
+
+
+                                //    }
+                                //};
+                                //xmlhttp1.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + saveplayer.idplayer, true);
+                                //xmlhttp1.send();
+
+
+                            }
+                        }
+                    };
+                    xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
+                    xmlhttp.send();
+
+                }
+            }
+            xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
+            xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
+                "&dataagainst=" + dataequipa + "&idagainst=" + idequipa + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe);
+
+            removedetails();
+            return;
+
+        }
         if (evt.target.nodeName == 'circle' || evt.target.nodeName == 'text') return;
         if (evt.target.nodeName == 'rect') {
             removedetails();
@@ -751,147 +821,107 @@
         OldCoor.y = targetElement.getAttributeNS(null, 'y');
         OldCoor.id = targetElement.getAttributeNS(null, 'id');
         console.log("oldcoor", OldCoor);
-        functimer = setTimeout(
-            function CreateTempImages() {
-                console.log("evttt", evt);
-                functimer = null;
-                isclick = true;
-                console.log("createtempimges");
-                tempimages = [];
+        //functimer = setTimeout(
+        //    function CreateTempImages() {
+        //        console.log("evttt", evt);
+        //        functimer = null;
+        //        isclick = true;
+        //        console.log("createtempimges");
+        //        tempimages = [];
 
 
-                OldCoor.x = targetElement.getAttributeNS(null, 'x');
-                OldCoor.y = targetElement.getAttributeNS(null, 'y');
-                OldCoor.id = targetElement.getAttributeNS(null, 'id');
-                var xmlhttp4 = new XMLHttpRequest();
+        //        OldCoor.x = targetElement.getAttributeNS(null, 'x');
+        //        OldCoor.y = targetElement.getAttributeNS(null, 'y');
+        //        OldCoor.id = targetElement.getAttributeNS(null, 'id');
+        //        var xmlhttp4 = new XMLHttpRequest();
 
-                xmlhttp4.onreadystatechange = function () {
+        //        xmlhttp4.onreadystatechange = function () {
 
-                    if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
-                        var resp = JSON.parse(xmlhttp4.response);
-                        var pos = resp.Designation;
-                        var next;
-                        currpos = pos;
-                        if (pos == "Defesa") {
-                            console.log("defesa");
+        //            if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
+        //                var resp = JSON.parse(xmlhttp4.response);
+        //                var pos = resp.Designation;
+        //                var next;
+        //                currpos = pos;
+        //                if (pos == "Defesa") {
+        //                    console.log("defesa");
 
-                            //if (evt.clientX >= halfposition) {
-                            //    PutTempImages(andefesefull, amiddledefensex, amiddledefensey, adefense);
-                            //} else {
-                            //PutTempImages(ndefesefull, middledefensex, middledefensey, defense);
+        //                    if (evt.clientX >= halfposition) {
+        //                        PutTempImages(andefesefull, amiddledefensex, amiddledefensey, adefense);
+        //                    } else {
+        //                        PutTempImages(ndefesefull, middledefensex, middledefensey, defense);
+        //                    }
+        //                    //for (var i = 0; i < ndefesefull; ++i) {
+        //                    //    if (evt.clientX >= halfposition) {
+        //                    //        next = nextposition(amiddledefensex, amiddledefensey, adefense);
+        //                    //    } else {
+        //                    //        next = nextposition(middledefensex, middledefensey, defense);
+        //                    //    }
+        //                    //    PosToMove[PosToMove.length] = next;
+        //                    //    //createcircle(next.x, next.y);
+        //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+        //                    //}
+        //                    //ndefensehome = 0;
+        //                } else if (pos == "Medio") {
 
-                            //}
-                            //ndefensehome = indefense;
-                            for (var i = 0; i < ndefesefull; ++i) {
-                                //if (evt.clientX >= halfposition) {
-                                //    next = nextposition(amiddledefensex, amiddledefensey, adefense);
-                                //} else {
-                                    //next = nextposition(middledefensex, middledefensey, defense);
-                                //}
-                                if (!IsImageInPosition(allplayershome,middledefensex, middledefensey * ndefensehome + movey)) {
+        //                    if (evt.clientX >= halfposition) {
+        //                        PutTempImages(anmiddlefull, amiddlex, amiddley, amiddle);
+        //                    } else {
+        //                        PutTempImages(nmiddlefull, middlex, middley, middle);
+        //                    }
 
+        //                    //for (var i = 0; i < nmiddlefull; ++i) {
+        //                    //    if (evt.clientX >= halfposition) {
+        //                    //        next = nextposition(amiddlex, amiddley, amiddle);
+        //                    //    } else {
+        //                    //        next = nextposition(middlex, middley, middle);
+        //                    //    }
+        //                    //    //next = nextposition(middlex, middley, middle);
+        //                    //    PosToMove[PosToMove.length] = next;
+        //                    //    //createcircle(next.x, next.y);
+        //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+        //                    //}
+        //                    //ndefensehome = 0;
+        //                } else if (pos == "Ataque") {
 
-                                    var o = {};
-                                    o.x = middledefensex;
-                                    o.y = middledefensey * ndefensehome + movey;
-                                    //++ndefensehome;
-                                    PosToMove[PosToMove.length] = o;
-                                    //createcircle(next.x, next.y);
-                                    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", o.x, o.y);
-                                } else {
-                                    --i;
-                                }
-                                ++ndefensehome;
-                            }
-                            //ndefensehome = 0;
-                            
-                        } else if (pos == "Medio") {
+        //                    if (evt.clientX >= halfposition) {
+        //                        PutTempImages(anstrikerfull, amiddlestrikerx, amiddlestrikery, astriker);
+        //                    } else {
+        //                        PutTempImages(nstrikerfull, middlestrikerx, middlestrikery, striker);
+        //                    }
 
-                            //if (evt.clientX >= halfposition) {
-                            //    PutTempImages(anmiddlefull, amiddlex, amiddley, amiddle);
-                            //} else {
-                                //PutTempImages(nmiddlefull, middlex, middley, middle);
-                            //}
-                            nmiddlehome = inmiddle;
-                            for (var i = 0; i < nmiddlefull; ++i) {
-                                //if (evt.clientX >= halfposition) {
-                                //    next = nextposition(amiddlex, amiddley, amiddle);
-                                //} else {
-                                    //next = nextposition(middlex, middley, middle);
-                                //}
-                                //next = nextposition(middlex, middley, middle);
-                                if (!IsImageInPosition(allplayershome,middlex, middley * nmiddlehome + movey)) {
-                                    var o = {};
-                                    o.x = middlex;
-                                    o.y = middley * nmiddlehome + movey;
-                                    //++nmiddlehome;
-                                    PosToMove[PosToMove.length] = o;
-                                    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", o.x, o.y);
-                                } else {
-                                    --i;
-                                }
-                                ++nmiddlehome;
-                            }
-                            //ndefensehome = 0;
-                        } else if (pos == "Ataque") {
-                            nstrikerhome = instriker;
-                            for (var i = 0; i < nstrikerfull; ++i) {
-                                if (!IsImageInPosition(allplayershome,middlestrikerx, middlestrikery * nstrikerhome + movey)) {
-                                    var o = {};
-                                    o.x = middlestrikerx;
-                                    o.y = middlestrikery * nstrikerhome + movey;
-                                    //++nstrikerhome;
-                                    PosToMove[PosToMove.length] = o;
-                                    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", o.x, o.y);
-                                } else {
-                                    --i;
-                                }
-                                ++nstrikerhome;
-                            }
-                            //if (evt.clientX >= halfposition) {
-                            //    PutTempImages(anstrikerfull, amiddlestrikerx, amiddlestrikery, astriker);
-                            //} else {
-                                //PutTempImages(nstrikerfull, middlestrikerx, middlestrikery, striker);
-                            //}
+        //                    //for (var i = 0; i < nstrikerfull; ++i) {
 
-                            //for (var i = 0; i < nstrikerfull; ++i) {
+        //                    //    if (evt.clientX >= halfposition) {
+        //                    //        next = nextposition(amiddlestrikerx, amiddlestrikery, astriker);
+        //                    //    } else {
+        //                    //        console.log("middlestrikerx", middlestrikerx);
+        //                    //        next = nextposition(middlestrikerx, middlestrikery, striker);
+        //                    //    }
 
-                            //    if (evt.clientX >= halfposition) {
-                            //        next = nextposition(amiddlestrikerx, amiddlestrikery, astriker);
-                            //    } else {
-                            //        console.log("middlestrikerx", middlestrikerx);
-                            //        next = nextposition(middlestrikerx, middlestrikery, striker);
-                            //    }
+        //                    //    //next = nextposition(middlestrikerx, middledefensey, striker);
+        //                    //    PosToMove[PosToMove.length] = next;
+        //                    //    //createcircle(next.x, next.y);
+        //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+        //                    //}
+        //                    //ndefensehome = 0;
+        //                } else if (pos == "Guarda-redes") {
+        //                    //allcircles = [];
+        //                    if (evt.clientX >= middlex) {
+        //                        next = nextposition(amiddlegkx, amiddlegky, agk);
+        //                    } else {
+        //                        next = nextposition(middlegkx, middlegky, gk);
+        //                    }
+        //                    //next = nextposition(middlegkx, middlegky, 1);
+        //                    PosToMove[PosToMove.length] = next;
+        //                    //createcircle(next.x, next.y);
+        //                    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+        //                }
+        //                //movedowndefense = 0;
+        //            }
+        //        }
 
-                            //    //next = nextposition(middlestrikerx, middledefensey, striker);
-                            //    PosToMove[PosToMove.length] = next;
-                            //    //createcircle(next.x, next.y);
-                            //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
-                            //}
-                            //ndefensehome = 0;
-                        } else if (pos == "Guarda-redes") {
-                            //allcircles = [];
-                            //if (evt.clientX >= middlex) {
-                            //    next = nextposition(amiddlegkx, amiddlegky, agk);
-                            //} else {
-                                //next = nextposition(middlegkx, middlegky, gk);
-                            //}
-                            //next = nextposition(middlegkx, middlegky, 1);
-                            //PosToMove[PosToMove.length] = next;
-                            //createcircle(next.x, next.y);
-                            var o = {};
-                            o.x = middlegkx;
-                            o.y = middlegky + movey;
-                            //++ngkhome;
-                            PosToMove[PosToMove.length] = o;
-                            tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", o.x, o.y);
-                        }
-                        //movedowndefense = 0;
-                    }
-                }
-
-                xmlhttp4.open("GET", "/SetUp/GetPlayerPosition?id=" + targetElement.id, true);
-                xmlhttp4.send();
+        //        xmlhttp4.open("GET", "/SetUp/GetPlayerPosition?id=" + targetElement.id, true);
+        //        xmlhttp4.send();
 
         if (BackDrop != targetElement) {
 
@@ -903,8 +933,8 @@
             GrabPoint.x = TrueCoords.x - Number(transMatrix.e);
             GrabPoint.y = TrueCoords.y - Number(transMatrix.f);
         }
-            }
-            , timer);
+        //    }
+        //    , timer);
 
     };
     SVGDocument.onmousemove = function (evt) {
@@ -916,31 +946,31 @@
         }
     };
 
-    function whitchcircle(ev) {
-        for (var i = 0; i < tempimages.length; ++i) {
-            var circx = tempimages[i].getAttributeNS(null, 'x');
-            var circy = tempimages[i].getAttributeNS(null, 'y');
-            if ((ev.clientX < parseInt(circx) + 50) && (ev.clientX > parseInt(circx) - 50) && (ev.clientY < parseInt(circy) + 50) && (ev.clientY > parseInt(circy) - 50)) {
-                return tempimages[i];
-            }
-        }
-        return null;
-    }
+    //function whitchcircle(ev) {
+    //    for (var i = 0; i < tempimages.length; ++i) {
+    //        var circx = tempimages[i].getAttributeNS(null, 'x');
+    //        var circy = tempimages[i].getAttributeNS(null, 'y');
+    //        if ((ev.clientX < parseInt(circx) + 50) && (ev.clientX > parseInt(circx) - 50) && (ev.clientY < parseInt(circy) + 50) && (ev.clientY > parseInt(circy) - 50)) {
+    //            return tempimages[i];
+    //        }
+    //    }
+    //    return null;
+    //}
 
-    function IsImageInPosition(arr , x, y) {
-        //console.log("isimage", allplayershome);
-        //console.log("isimagex", x);
-        //console.log("isimagey", y);
-        for (var i = 0; i < arr.length; ++i) {
-            var coorx = arr[i].getAttributeNS(null, "x");
-            var coory = arr[i].getAttributeNS(null, "y");
-            //console.log("cox", coorx);
-            //console.log("coy", coory);
-            //console.log("x", x);
-            //console.log("y", y);
-            //x + (svgwidth / 20)
-            if (x <= parseInt(coorx) + (svgwidth / 20) && x >= parseInt(coorx) - (svgwidth / 20) && y <= parseInt(coory) + (svgwidth / 20) && y >= parseInt(coory) - (svgwidth / 20)) {
-                return arr[i];
+    function IsImageInPosition(x, y) {
+        console.log("isimage", allplayershome);
+        console.log("isimagex", x);
+        console.log("isimagey", y);
+        for (var i = 0; i < allplayershome.length; ++i) {
+            var coorx = allplayershome[i].getAttributeNS(null, "x");
+            var coory = allplayershome[i].getAttributeNS(null, "y");
+            console.log("cox", coorx);
+            console.log("coy", coory);
+            console.log("x", x);
+            console.log("y", y);
+
+            if (x <= parseInt(coorx) + 50 && x >= parseInt(coorx) - 50 && y <= parseInt(coory) + 50 && y >= parseInt(coory) - 50) {
+                return allplayershome[i];
             }
         }
         return null;
@@ -948,9 +978,9 @@
 
 
     function replace(oldimg, newimg) {
-        for (var i = 0; i < allplayershome.length; ++i) {
-            if (allplayershome[i] == oldimg) {
-                allplayershome[i] = newimg;
+        for (var i = 0; i < whereplayeres.length; ++i) {
+            if (whereplayeres[i] == oldimg) {
+                whereplayeres[i] = newimg;
             }
         }
     }
@@ -984,19 +1014,17 @@
         // end hold-only operation here, if desired
         //}
         console.log("up", evt.target.nodeName);
-        if (evt.target.nodeName != 'image' && evt.target.nodeName != 'circle' && evt.target.nodeName != 'text') {
-            console.log("up");
-            DragTarget.setAttributeNS(null, 'x', OldCoor.x);
-            DragTarget.setAttributeNS(null, 'y', OldCoor.y);
-            DragTarget.setAttributeNS(null, 'transform', "");
-            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
-            nmiddlehome = 1;
-            ndefensehome = 1;
-            nstrikerhome = 1;
-            DragTarget = null;
-            removeTempImages();
-            return;
-        }
+        //if (evt.target.nodeName != 'image' && evt.target.nodeName != 'circle' && evt.target.nodeName != 'text') {
+        //    console.log("up");
+        //    DragTarget.setAttributeNS(null, 'x', OldCoor.x);
+        //    DragTarget.setAttributeNS(null, 'y', OldCoor.y);
+        //    DragTarget.setAttributeNS(null, 'transform', "");
+        //    DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+
+        //    DragTarget = null;
+        //    removeTempImages();
+        //    return;
+        //}
         if (evt.target.nodeName == 'circle') {
             console.log("aaaaa");
             return;
@@ -1006,23 +1034,23 @@
         //        || GrabPoint.x < halfposition && DragTarget.getAttributeNS(null, 'x') > halfposition
         //    ||evt.clientY<150
 
-        if (evt.target.nodeName != 'image') {
+        //if (evt.target.nodeName != 'image') {
 
-            console.log("first");
-            console.log("GrabPoint.x", GrabPoint.x);
-            console.log("middlex", middlex);
-            console.log("DragTarget.getAttributeNS(null, 'x')", DragTarget.getAttributeNS(null, 'x'));
-            DragTarget.setAttributeNS(null, 'x', OldCoor.x);
-            DragTarget.setAttributeNS(null, 'y', OldCoor.y);
-            DragTarget.setAttributeNS(null, 'transform', "");
-            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+        //    console.log("first");
+        //    console.log("GrabPoint.x", GrabPoint.x);
+        //    console.log("middlex", middlex);
+        //    console.log("DragTarget.getAttributeNS(null, 'x')", DragTarget.getAttributeNS(null, 'x'));
+        //    DragTarget.setAttributeNS(null, 'x', OldCoor.x);
+        //    DragTarget.setAttributeNS(null, 'y', OldCoor.y);
+        //    DragTarget.setAttributeNS(null, 'transform', "");
+        //    DragTarget.setAttributeNS(null, 'pointer-events', 'all');
 
-            DragTarget = null;
-            removeTempImages();
-            return;
-        }
+        //    DragTarget = null;
+        //    removeTempImages();
+        //    return;
+        //}
 
-        var oldimg = IsImageInPosition(allplayershome,evt.clientX, evt.clientY);
+        var oldimg = IsImageInPosition(evt.clientX, evt.clientY);
 
         if (oldimg != null) {
             console.log("second");
@@ -1039,17 +1067,9 @@
             oldimg.setAttributeNS(null, 'transform', "");
             oldimg.setAttributeNS(null, 'pointer-events', 'all');
 
-            
-            removeElemFromArray(allplayershome, oldimg);
-            removeElemFromArray(playersnotplaying, oldimg);
-            allplayershome[allplayershome.length] = DragTarget;
-            playersnotplaying[playersnotplaying.length] = DragTarget;
-            //replace(oldimg, DragTarget);
+            replace(oldimg, DragTarget);
             //whereplayeres[whereplayeres.length] = DragTarget;
-            removeTempImages();
-            nmiddlehome = 1;
-            ndefensehome = 1;
-            nstrikerhome = 1;
+            //removeTempImages();
             DragTarget = null;
             return;
         }
@@ -1067,75 +1087,55 @@
 
             DragTarget = null;
             removeTempImages();
-            
             return;
         }
 
-        if (DragTarget) {
-            console.log("four");
-            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
-            var upcircle = whitchcircle(evt);
+        //if (DragTarget) {
+        //    console.log("four");
+        //    DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+        //    var upcircle = whitchcircle(evt);
 
-            DragTarget.setAttributeNS(null, 'x', upcircle.getAttributeNS(null, "x"));
-            DragTarget.setAttributeNS(null, 'y', upcircle.getAttributeNS(null, "y"));
-            DragTarget.setAttributeNS(null, 'transform', "");
+        //    DragTarget.setAttributeNS(null, 'x', upcircle.getAttributeNS(null, "x"));
+        //    DragTarget.setAttributeNS(null, 'y', upcircle.getAttributeNS(null, "y"));
+        //    DragTarget.setAttributeNS(null, 'transform', "");
 
-            allplayershome[allplayershome.length] = DragTarget;
-            removeElemFromArray(playersnotplaying, DragTarget);
+        //    whereplayeres[whereplayeres.length] = DragTarget;
 
-            console.log("atribute", DragTarget.getAttributeNS(null, 'x'));
-            if (currpos == "Defesa") {
-                //if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
-                //    console.log("ndefesefull", ndefesefull);
-                ndefesefull--;
-                //ndefensehome ++;
-                indefense++;
-                //} else {
-                //    console.log("andefesefull", ndefesefull);
-                //    andefesefull--;
-                //}
-            } else if (currpos == "Medio") {
-                //if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
-                nmiddlefull--;
-                inmiddle++;
-                //nmiddlehome++;
-                //} else {
-                //    anmiddlefull--;
-                //}
-            } else if (currpos == "Ataque") {
-                //if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
-                nstrikerfull--;
-                instriker++;
-                //nstrikerhome++;
-                //} else {
-                //    anstrikerfull--;
-                //}
-            } else if (currpos == "Guarda-redes") {
-                //if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
-                ngkfull--;
-                
-                //} else {
-                //    angkfull--;
-                //}
-            }
-            DragTarget = null;
-            movedowndefense = 0;
-            amovedowndefense = 0;
-            nmiddlehome = 1;
-            ndefensehome = 1;
-            nstrikerhome = 1;
-            removeTempImages();
-        }
+        //    console.log("atribute", DragTarget.getAttributeNS(null, 'x'));
+        //    if (currpos == "Defesa") {
+        //        if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
+        //            console.log("ndefesefull", ndefesefull);
+        //            ndefesefull--;
+        //        } else {
+        //            console.log("andefesefull", ndefesefull);
+        //            andefesefull--;
+        //        }
+        //    } else if (currpos == "Medio") {
+        //        if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
+        //            nmiddlefull--;
+        //        } else {
+        //            anmiddlefull--;
+        //        }
+        //    } else if (currpos == "Ataque") {
+        //        if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
+        //            nstrikerfull--;
+        //        } else {
+        //            anstrikerfull--;
+        //        }
+        //    } else if (currpos == "Guarda-redes") {
+        //        if (DragTarget.getAttributeNS(null, 'x') < halfposition) {
+        //            ngkfull--;
+        //        } else {
+        //            angkfull--;
+        //        }
+        //    }
+        //    DragTarget = null;
+        //    movedowndefense = 0;
+        //    amovedowndefense = 0;
+        //    removeTempImages();
+        //}
 
     };
-
-    function removeElemFromArray(arr , elem) {
-        for (var i = 0; i < arr.length ; i++) {
-            if (arr[i] == elem) {
-                arr.splice(i, 1);
-            }
-        }
-    }
 
 
     function GetTrueCoords(evt) {
@@ -1150,8 +1150,8 @@
 
 
     document.getElementById("idbuttonauto").onclick = function (ev) {
-        for (var i = 0; i < playersnotplaying.length; ++i) {
-            callplayer(playersnotplaying[i]);
+        for (var i = 0; i < allplayershome.length; ++i) {
+            callplayer(allplayershome[i]);
         }
     }
     function callplayer(idpla) {
@@ -1166,22 +1166,17 @@
 
                 if (pos == "Defesa") {
                     if (ndefesefull == 0) return;
-                    if (IsImageInPosition(allplayershome,middledefensex, middledefensey * ndefensehome + movey)) {
+                    if (IsImageInPosition(middledefensex, middledefensey + movedowndefense)) {
                         movedowndefense += (svgheight / defense) / 6;
-                        ++ndefensehome;
                         return callplayer(idpla);
                     }
                     //img = PhotoonSvg(resp2.Id, resp2.Photo, middledefensex, middledefensey * ndefensehome + movey);
 
                     //--ndefesefull;
                     //PutInPosition(middledefensex, middledefensey, movedowndefense, idpla);
-                    console.log("vvvvv", middledefensey);
-                    console.log("vvvvvvvv", movey);
-                    console.log("vvvvvvvvvvv", ndefensehome);
+
                     idpla.setAttributeNS(null, 'x', middledefensex);
                     idpla.setAttributeNS(null, 'y', middledefensey * ndefensehome + movey);
-                    allplayershome[allplayershome.length] = idpla;
-                    removeElemFromArray(playersnotplaying, idpla);
                     ++ndefensehome;
                     --ndefesefull;
                     movedowndefense += (svgheight / defense) / 6;
@@ -1190,16 +1185,14 @@
                 if (pos == "Medio") {
 
                     if (nmiddlefull == 0) return;
-                    if (IsImageInPosition(allplayershome,middlex, middley * nmiddlehome + movey)) {
+                    if (IsImageInPosition(middlex, middley + movedownmiddle)) {
                         movedownmiddle += (svgheight / middle) / 6;
-                        ++nmiddlehome;
                         return callplayer(idpla);
                     }
                     idpla.setAttributeNS(null, 'x', middlex);
                     idpla.setAttributeNS(null, 'y', middley * nmiddlehome + movey);
                     ++nmiddlehome;
-                    allplayershome[allplayershome.length] = idpla;
-                    removeElemFromArray(playersnotplaying, idpla);
+
                     //PutInPosition(middlex, middley, movedownmiddle, idpla);
 
                     --nmiddlefull;
@@ -1211,17 +1204,15 @@
 
 
                     if (nstrikerfull == 0) return;
-                    if (IsImageInPosition(allplayershome,middlestrikerx, middlestrikery * nstrikerhome + movey)) {
+                    if (IsImageInPosition(middlestrikerx, middlestrikery + movedownstriker)) {
                         movedownstriker += (svgheight / striker) / 6;
-                        ++nstrikerhome;
                         return callplayer(idpla);
                     }
                     idpla.setAttributeNS(null, 'x', middlestrikerx);
                     idpla.setAttributeNS(null, 'y', middlestrikery * nstrikerhome + movey);
                     ++nstrikerhome;
                     //PutInPosition(middlestrikerx, middlestrikery, movedownstriker, idpla);
-                    allplayershome[allplayershome.length] = idpla;
-                    removeElemFromArray(playersnotplaying, idpla);
+
                     --nstrikerfull;
                     movedownstriker += (svgheight / striker) / 6;
 
@@ -1229,14 +1220,12 @@
                 if (pos == "Guarda-redes") {
 
                     if (ngkfull == 0) return;
-                    if (IsImageInPosition(allplayershome,middlegkx, middlegky + movey)) {
+                    if (IsImageInPosition(middlegkx, middlegky)) {
                         return callplayer(idpla);
                     }
                     idpla.setAttributeNS(null, 'x', middlegkx);
                     idpla.setAttributeNS(null, 'y', middlegky + movey);
                     //PutInPosition(middlegkx, middlegky, 0, idpla);
-                    allplayershome[allplayershome.length] = idpla;
-                    removeElemFromArray(playersnotplaying, idpla);
                     --ngkfull;
                 }
             }
@@ -1246,7 +1235,6 @@
         xmlhttp5.open("GET", "/SetUp/GetPlayerPosition?id=" + idpla.getAttributeNS(null, 'id'), true);
         xmlhttp5.send();
     }
-
     function PutInPosition(x, y, move, idpla) {
         //console.log("x", x);
         //console.log("y", y);
@@ -1260,46 +1248,166 @@
         whereplayeres[whereplayeres.length] = idpla;
     }
 
-    
+
+    //function callplayer(idpla) {
+    //    var xmlhttp5 = new XMLHttpRequest();
+
+    //    xmlhttp5.onreadystatechange = function () {
+
+    //        if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
+    //            var resp = JSON.parse(xmlhttp5.response);
+    //            var pos = resp.Designation;
+
+    //            console.log("idpla", idpla.getAttributeNS(null, 'x'));
+    //            if (pos == "Defesa") {
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+    //                    if (andefesefull == 0) return;
+    //                    if (IsImageInPosition(amiddledefensex, amiddledefensey + amovedowndefense)) {
+    //                        //--andefesefull;
+    //                        amovedowndefense += (svgheight / adefense) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddledefensex, amiddledefensey, amovedowndefense, idpla);
+
+    //                    --andefesefull;
+    //                    //idpla.setAttributeNS(null, 'x', amiddledefensex);
+    //                    //idpla.setAttributeNS(null, 'y', amiddledefensey + amovedowndefense);
+    //                    amovedowndefense += (svgheight / adefense) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    if (ndefesefull == 0) return;
+    //                    if (IsImageInPosition(middledefensex, middledefensey + movedowndefense)) {
+    //                        console.log("defesa inc");
+    //                        //--ndefesefull;
+    //                        movedowndefense += (svgheight / defense) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middledefensex, middledefensey, movedowndefense, idpla);
+
+    //                    --ndefesefull;
+    //                    //idpla.setAttributeNS(null, 'x', middledefensex);
+    //                    //idpla.setAttributeNS(null, 'y', middledefensey + movedowndefense);
+    //                    movedowndefense += (svgheight / defense) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //            if (pos == "Medio") {
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+    //                    if (anmiddlefull == 0) return;
+    //                    if (IsImageInPosition(amiddlex, amiddley + amovedownmiddle)) {
+    //                        ///--anmiddlefull;
+    //                        amovedownmiddle += (svgheight / amiddle) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddlex, amiddley, amovedownmiddle, idpla);
+
+    //                    --anmiddlefull;
+
+    //                    //idpla.setAttributeNS(null, 'x', amiddlex);
+    //                    //idpla.setAttributeNS(null, 'y', middley + amovedownmiddle);
+    //                    amovedownmiddle += (svgheight / amiddle) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    console.log("middle", nmiddlefull);
+    //                    if (nmiddlefull == 0) return;
+    //                    if (IsImageInPosition(middlex, middley + movedownmiddle)) {
+    //                        //--nmiddlefull;
+    //                        movedownmiddle += (svgheight / middle) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middlex, middley, movedownmiddle, idpla);
+
+    //                    --nmiddlefull;
+
+    //                    //idpla.setAttributeNS(null, 'x', middlex);
+    //                    //idpla.setAttributeNS(null, 'y', middley + movedownmiddle);
+    //                    movedownmiddle += (svgheight / middle) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //            if (pos == "Ataque") {
+
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+    //                    if (anstrikerfull == 0) return;
+    //                    if (IsImageInPosition(amiddlestrikerx, amiddlestrikery + amovedownstriker)) {
+    //                        //--anstrikerfull;
+    //                        amovedownstriker += (svgheight / astriker) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddlestrikerx, amiddlestrikery, amovedownstriker, idpla);
+
+    //                    --anstrikerfull;
+
+    //                    //idpla.setAttributeNS(null, 'x', amiddlestrikerx);
+    //                    //idpla.setAttributeNS(null, 'y', amiddlestrikery + amovedownstriker);
+    //                    amovedownstriker += (svgheight / astriker) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    if (nstrikerfull == 0) return;
+    //                    if (IsImageInPosition(middlestrikerx, middlestrikery + movedownstriker)) {
+    //                        //--nstrikerfull;
+    //                        movedownstriker += (svgheight / striker) / 2;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middlestrikerx, middlestrikery, movedownstriker, idpla);
+
+    //                    --nstrikerfull;
+
+    //                    //idpla.setAttributeNS(null, 'x', middlestrikerx);
+    //                    //idpla.setAttributeNS(null, 'y', middlestrikery + movedownstriker);
+    //                    movedownstriker += (svgheight / striker) / 2;
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //            if (pos == "Guarda-redes") {
+    //                if (idpla.getAttributeNS(null, 'x') > halfposition) {
+
+    //                    if (angkfull == 0) return;
+    //                    if (IsImageInPosition(amiddlegkx, amiddlegky)) {
+    //                        //--angkfull;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(amiddlegkx, amiddlegky, 0, idpla);
+    //                    --angkfull;
+    //                    //idpla.setAttributeNS(null, 'x', amiddlegkx);
+    //                    //idpla.setAttributeNS(null, 'y', amiddlegky);
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                } else {
+    //                    if (ngkfull == 0) return;
+    //                    if (IsImageInPosition(middlegkx, middlegky)) {
+    //                        //--ngkfull;
+    //                        return callplayer(idpla);
+    //                    }
+    //                    PutInPosition(middlegkx, middlegky, 0, idpla);
+    //                    --ngkfull;
+    //                    //idpla.setAttributeNS(null, 'x', middlegkx);
+    //                    //idpla.setAttributeNS(null, 'y', middlegky);
+    //                    //whereplayeres[whereplayeres.length] = idpla;
+    //                }
+    //            }
+    //        }
+    //    }
 
 
-
+    //    xmlhttp5.open("GET", "/SetUp/GetPlayerPosition?id=" + idpla.getAttributeNS(null, 'id'), true);
+    //    xmlhttp5.send();
+    //}
     document.getElementById("idbuttonreset").onclick = function (ev) {
 
         var rect = svg.getElementById("all");
         var pos = rect.getBoundingClientRect();
-        var x = 0;
-        var y = 0;
-        console.log("allplayershome", allplayershome);
-        allplayershome.forEach(function again(entry) {
-            console.log("x", x);
+        var x = "0%";
+        var y = "1%";
+        allplayershome.forEach(function (entry) {
 
-            var o = {};
-            o.x = x;
-            o.y = y;
-            if(IsOccupied(o , playersnotplaying)){
-            //if (IsImageInPosition(playersnotplaying, x, y)) {
-                //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
+            entry.setAttributeNS(null, 'x', x);
+            entry.setAttributeNS(null, 'y', y);
+            x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
+            //if (x >= svgwidth - 50) {
+            //    y = y + 50;
+            //    x = pos.left + 10;
+            //}
 
-                x = x + (svgwidth / 20);
-                //console.log("entry2", entry);
-                return again(entry);
-            } else {
-
-                entry.setAttributeNS(null, 'x', x);
-                entry.setAttributeNS(null, 'y', y);
-                console.log("entry", entry);
-                
-                //x = parseInt(x.substring(0, x.length - 1)) + 5 + "%";
-                //if (x >= svgwidth - 50) {
-                //    y = y + 50;
-                //    x = pos.left + 10;
-                //}
-                //removeElemFromArray(allplayershome, entry);
-                playersnotplaying[playersnotplaying.length] = entry;
-                x = x + (svgwidth / 20);
-                //console.log("entry", entry);
-            }
         });
         movedowndefense = 0;
         movedownmiddle = 0;
@@ -1309,10 +1417,9 @@
         nmiddlefull = middle;
         nstrikerfull = striker;
         ngkfull = gk;
-        ndefensehome = 1;
-        nmiddlehome = 1;
-        nstrikerhome = 1;
-        allplayershome = [];
+        ndefensehome = 0;
+        nmiddlehome = 0;
+        nstrikerhome = 0;
     };
 
   
@@ -1323,20 +1430,18 @@
 
 
         allplayershome.forEach(function (entry) {
-            
+
             var imgx = entry.getAttributeNS(null, 'x');
-            console.log("imgx", imgx);
             var pos;
             if (entry.getAttributeNS(null, 'y') > movey) {
-                if (imgx == middlegkx) {
+                if (imgx < 100) {
                     pos = 1;
-                    console.log("imgxeerrre", imgx);
                 } else {
-                    if (imgx == middledefensex) {
+                    if (imgx < parseInt(halfposition)) {
                         pos = 2;
-                    } else if (imgx == middlex) {
+                    } else if (imgx == parseInt(halfposition)) {
                         pos = 3;
-                    } else if (imgx == middlestrikerx) {
+                    } else if (imgx > parseInt(halfposition)) {
                         pos = 4;
                     }
                 }
@@ -1344,7 +1449,7 @@
             } else {
                 pos = null;
             }
-            console.log("entryyy", entry, pos);
+
             savePlayers(idclub, date, entry.getAttributeNS(null, 'id'), pos);
 
         });

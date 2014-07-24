@@ -171,7 +171,7 @@ namespace GameObserver.Controllers
 
         public ActionResult GetPlayerPosition(String id)
         {
-            PositionModel model = _mapperPositionToPositionModel.Map(_repo.GetPosition(Convert.ToInt32(id)));
+            PositionModel model = _mapperPositionToPositionModel.Map(_repo.GetPlayerPosition(Convert.ToInt32(id)));
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
@@ -300,6 +300,39 @@ namespace GameObserver.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        
+        public ActionResult HaveRedCard(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag , String idp)
+        {
+             IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetInstantByCause(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
+                Convert.ToDateTime(dataequipav),
+                Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag) , Convert.ToInt32(idp)));
+
+
+            foreach (var allInstantModel in allInstantModels)
+            {
+                IEnumerable<OpinionModel> allOpinionModels =
+                    _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
+                        Convert.ToDateTime(datahora),
+                        Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
+                        Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
+
+
+                foreach (var opinion in allOpinionModels)
+                {
+                    IEnumerable<AssociateModel> allAssociateModels =
+                        _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
+                            1));
+
+                    foreach (var allAssociateModel in allAssociateModels)
+                    {
+                        if (_repo.GetEvent(allAssociateModel.IdEvent).Type.Equals("Cartao Vermelho"))
+                        {
+                            return Json(true , JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
+        }
 	}
 }
