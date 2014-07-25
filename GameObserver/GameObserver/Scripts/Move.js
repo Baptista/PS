@@ -78,9 +78,9 @@
     var dataequipag = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
     var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML.trim();
     var datahora = document.getElementById("iddetailssetup_date").innerHTML.trim();
-
-
-
+    var isAdmin = document.getElementById("isadmin").innerHTML.trim();
+    var iduser = document.getElementById("curruserid").innerHTML.trim();
+    var isAuth = document.getElementById("havecurruser").innerHTML.trim();
 
 
     var a = document.getElementById("svgobject");
@@ -288,10 +288,31 @@
     }
 
     var count = 0;
-    function allfinish() {
+    function allfinish(all) {
         ++count;
-        if (count == 2) {
-            FillTimeLine();
+        if (count == all) {
+
+            var xmlhttp9 = new XMLHttpRequest();
+
+                xmlhttp9.onreadystatechange = function () {
+
+                    if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
+                        var resp5 = JSON.parse(xmlhttp9.response);
+                        resp5.forEach(function(entry) {
+
+                            var xmlhttp1 = new XMLHttpRequest();
+
+                            xmlhttp1.open("GET", "/SetUp/GetEvent?id=" + entry, true);
+                            xmlhttp1.send();
+                        });
+                    }
+                }
+                xmlhttp9.open("GET", "/SetUp/AllInstants=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+"&idequipag=" + idequipag + "&dataequipag=" + dataequipag , true);
+                xmlhttp9.send();
+            
+
+               
         }
     }
 
@@ -300,26 +321,26 @@
     loadpostions();
     loadpostions2();
 
-    function GetInstant(idpla) {
-        var xmlhttp6 = new XMLHttpRequest();
+    //function GetInstant(idpla) {
+    //    var xmlhttp6 = new XMLHttpRequest();
 
-        xmlhttp6.onreadystatechange = function () {
+    //    xmlhttp6.onreadystatechange = function () {
 
-            if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
-                var resp = JSON.parse(xmlhttp6.response);
-                if (resp) {
-                    console.log("ppppppppp");
-                    return true;
-                }
-                else { return false; }
-            }
-        };
+    //        if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
+    //            var resp = JSON.parse(xmlhttp6.response);
+    //            if (resp) {
+    //                console.log("ppppppppp");
+    //                return true;
+    //            }
+    //            else { return false; }
+    //        }
+    //    };
 
 
-        xmlhttp6.open("GET", "/SetUp/HaveRedCard?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
-            "&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&idp=" + idpla, true);
-        xmlhttp6.send();
-    }
+    //    xmlhttp6.open("GET", "/SetUp/HaveRedCard?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+    //        "&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&idp=" + idpla, true);
+    //    xmlhttp6.send();
+    //}
 
 
 
@@ -339,6 +360,7 @@
             if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
                 var resp = JSON.parse(xmlhttp5.response);
 
+                var totalplayers = resp.length;
                 resp.forEach(function (entry) {
                     
                     var xmlhttp6 = new XMLHttpRequest();
@@ -439,6 +461,7 @@
                                                         allplayershome[allplayershome.length] = img;
                                                     }
                                                 }
+                                                allfinish(totalplayers);
                                                 //allplayershome[allplayershome.length] = img;
                                             }
                                         }
@@ -451,6 +474,7 @@
                                             //    x = pos.left + 10;
                                             //}
                                             playersnotplaying[playersnotplaying.length] = img;
+                                            allfinish(totalplayers);
                                         } else {
                                             xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
                                             xmlhttp1.send();
@@ -501,12 +525,13 @@
 
                         if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
 
-                            var resp3 = JSON.parse(xmlhttp6.response);
-                            if (resp3) {
+                            var resp4 = JSON.parse(xmlhttp6.response);
+                            if (resp4) {
                                 console.log("ppppppppp");
                                 return true;
                             } else {
 
+        
                                 var xmlhttp8 = new XMLHttpRequest();
                                 var img = null;
                                 xmlhttp8.onreadystatechange = function () {
@@ -1228,6 +1253,7 @@
 
                 }
             }
+
             xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
             xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
@@ -1851,18 +1877,22 @@
 
                     LineInTimeLine(entry.eventId, entry.causeId, entry.executeId, datet);
 
-                    //var xmlhttp = new XMLHttpRequest();
-                    //xmlhttp.onreadystatechange = function() {
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function() {
 
-                    //    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    //        var resp1 = JSON.parse(xmlhttp.response);
-                    //        if (resp1.Type == 'Cartao Vermelho') {
-                    //            removePhoto(entry.causeId);
-                    //        }
-                    //    }
-                    //};
-                    //xmlhttp.open("GET", "/SetUp/GetEvent?id=" + entry.eventId, true);
-                    //xmlhttp.send();
+                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                            var resp1 = JSON.parse(xmlhttp.response);
+                            if (resp1.Type == 'Substituicao') {
+                                allplayershome.forEach(function(entry2) {
+                                    if (entry2.getAttributeNS(null, 'id') == entry.causeId) {
+                                        
+                                    }
+                                });
+                            }
+                        }
+                    };
+                    xmlhttp.open("GET", "/SetUp/GetEvent?id=" + entry.eventId, true);
+                    xmlhttp.send();
 
                 });
 

@@ -38,6 +38,8 @@ namespace GameObserver.DomainModel
         IEnumerable<Instant> GetInstantByCause(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
             int idteamg, DateTime datateamg,int id);
 
+        //Instant GetLastInstant();
+
         void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int idpos);
 
 

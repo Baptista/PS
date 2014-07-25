@@ -186,6 +186,7 @@
     <Compile Include="Mappers\TeamToTeamModel.cs" />
     <Compile Include="Models\IntegrateModel.cs" />
     <Compile Include="Models\LayoutModel.cs" />
+    <Compile Include="Models\ReplaceModel.cs" />
     <Compile Include="Models\TeamAdjustModel.cs" />
     <Compile Include="Models\TimeLineModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />

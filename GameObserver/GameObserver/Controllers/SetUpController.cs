@@ -197,6 +197,7 @@ namespace GameObserver.Controllers
             String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
             String idagainst, String idcause , int idevent , String idexecute)
         {
+            
             int intv;
             DateTime d = DateTime.Parse(datenow.Substring(0,25));
             //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
@@ -334,5 +335,50 @@ namespace GameObserver.Controllers
             }
             return Json(false, JsonRequestBehavior.AllowGet);
         }
-	}
+
+        public ActionResult AllInstants(String idstadium, String datahora, String idequipav, String dataequipav,
+            String idequipag, String dataequipag, String idp)
+        {
+            IEnumerable<InstantModel> allInstantModels =
+                _mapperInstantToInstantModel.MapAll(_repo.GetAllInstant(Convert.ToInt32(idstadium),
+                    Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
+                    Convert.ToDateTime(dataequipav),
+                    Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag)));
+
+            return Json(allInstantModels, JsonRequestBehavior.AllowGet);
+            //foreach (var allInstantModel in allInstantModels)
+            //{
+            //    IEnumerable<OpinionModel> allOpinionModels =
+            //        _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
+            //            Convert.ToDateTime(datahora),
+            //            Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
+            //            Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
+
+
+            //    foreach (var opinion in allOpinionModels)
+            //    {
+            //        IEnumerable<AssociateModel> allAssociateModels =
+            //            _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
+            //                1));
+
+            //        foreach (var allAssociateModel in allAssociateModels)
+            //        {
+            //            if (_repo.GetEvent(allAssociateModel.IdEvent).Type.Equals("Substituicao"))
+            //            {
+
+            //                var exec = allInstantModel.IdExecute;
+            //                var cause = allInstantModel.IdCause;
+            //                ReplaceModel rm =  new ReplaceModel()
+            //                {
+            //                    Cause = cause,
+            //                    Execute = exec
+            //                };
+            //                return Json(rm, JsonRequestBehavior.AllowGet);
+            //            }
+            //        }
+            //    }
+            //}
+            //}
+        }
+    }
 }

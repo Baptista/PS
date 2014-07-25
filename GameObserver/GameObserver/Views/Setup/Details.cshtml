@@ -1,4 +1,5 @@
-﻿@model GameObserver.Models.GameDetails
+﻿@using Microsoft.AspNet.Identity
+@model GameObserver.Models.GameDetails
 
 @section header
 {
@@ -82,6 +83,19 @@
 <p hidden id="idclubagainstphoto">
     @Html.DisplayFor(model => model.clubagainst.Symbol)
 </p>
+<p hidden id="curruserid">
+    @User.Identity.GetUserId()
+</p>
+<p hidden id="havecurruser">
+    @User.Identity.IsAuthenticated
+</p>
+<p hidden id="isadmin">
+    @User.IsInRole("admin")
+</p>
+
+
+
+
 
 @*@Html.DisplayFor(model=>model.svg)*@
     

@@ -9,6 +9,7 @@ using GameObserver.Models;
 
 namespace GameObserver.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class TeamController : Controller
     {
 
