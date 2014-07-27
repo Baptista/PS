@@ -106,21 +106,11 @@
 
 <div class="row" style="position: absolute; left: 4% ">
     <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/newsmall.svg") />
-    @*@if (@Model.svg == null)
-    {
-        <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/big.svg")  height="682" width="1018"/>
-    }
-    else
-    {*@
-    @*width="796" height="480"*@
-        @*height="682" width="1018"*@
-    @*width="796" height="507"*@
-    @*<svg id ="svgmain" height="682" width="1018" xmlns="http://www.w3.org/2000/svg">
-            @Html.DisplayTextFor(model => model.svg)
-        </svg>*@
-    @*}*@
+   
 </div>
-
+@*<div id="timeline" style="position: fixed; width: 25%; height: 60%; overflow: auto; position: fixed; left: 70%; top: 10%; border:ridge; ">
+    
+</div>*@
 
 <p>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |

@@ -88,8 +88,8 @@
     var svgheight = null;
     var svgwidth = null;
 
-    var avheight = window.screen.availHeight/1.5;
-    var avwidth = window.screen.availWidth/1.5;
+    var avheight = window.innerHeight/1.5;
+    var avwidth = window.innerWidth/1.5;
     console.log("avheight", avheight);
     console.log("avwidth", avwidth);
     a.setAttributeNS(null, 'height', avheight);
@@ -291,25 +291,25 @@
     function allfinish(all) {
         ++count;
         if (count == all) {
+            FillTimeLine();
+//            var xmlhttp9 = new XMLHttpRequest();
 
-            var xmlhttp9 = new XMLHttpRequest();
+//                xmlhttp9.onreadystatechange = function () {
 
-                xmlhttp9.onreadystatechange = function () {
+//                    if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
+//                        var resp5 = JSON.parse(xmlhttp9.response);
+//                        resp5.forEach(function(entry) {
 
-                    if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
-                        var resp5 = JSON.parse(xmlhttp9.response);
-                        resp5.forEach(function(entry) {
+//                            var xmlhttp1 = new XMLHttpRequest();
 
-                            var xmlhttp1 = new XMLHttpRequest();
-
-                            xmlhttp1.open("GET", "/SetUp/GetEvent?id=" + entry, true);
-                            xmlhttp1.send();
-                        });
-                    }
-                }
-                xmlhttp9.open("GET", "/SetUp/AllInstants=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
-"&idequipag=" + idequipag + "&dataequipag=" + dataequipag , true);
-                xmlhttp9.send();
+//                            xmlhttp1.open("GET", "/SetUp/GetEvent?id=" + entry, true);
+//                            xmlhttp1.send();
+//                        });
+//                    }
+//                }
+//                xmlhttp9.open("GET", "/SetUp/AllInstants=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+//"&idequipag=" + idequipag + "&dataequipag=" + dataequipag , true);
+//                xmlhttp9.send();
             
 
                
@@ -850,6 +850,73 @@
                 saveplayer.idexe = idp;
                 console.log("clickotherteam");
             }
+            if (ide != null) {
+
+                var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rectexecutor.setAttributeNS(null, 'height', '80%');
+                rectexecutor.setAttributeNS(null, 'width', '20%');
+                rectexecutor.setAttributeNS(null, 'id', '0');
+                rectexecutor.setAttributeNS(null, 'style', 'fill:green;stroke:white');
+                rectexecutor.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 20 + "%");
+                rectexecutor.setAttributeNS(null, 'y', yposdetails);
+                rectexecutor.setAttributeNS(null, 'visibility', 'visible');
+                svg.getElementById("all").appendChild(rectexecutor);
+                showdetails[showdetails.length] = rectexecutor;
+
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.onreadystatechange = function() {
+
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var resp1 = JSON.parse(xmlhttp.response);
+
+                        var xmlhttp1 = new XMLHttpRequest();
+
+                        xmlhttp1.onreadystatechange = function() {
+
+                            if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
+                                var resp3 = JSON.parse(xmlhttp1.response);
+                                y = "8%";
+                                resp3.forEach(function(entry) {
+
+                                    createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                    createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                    y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+
+                                });
+                            }
+                        };
+
+                        var xmlhttp9 = new XMLHttpRequest();
+
+                        xmlhttp9.onreadystatechange = function() {
+
+                            if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
+                                var resp2 = JSON.parse(xmlhttp9.response);
+                                var idc;
+                                if (resp2.Type == "Substituição") {
+                                    idc = resp1.IdClub;
+
+                                } else {
+                                    if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
+                                        idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
+                                    } else {
+                                        idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
+                                    }
+                                }
+                                xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
+                                xmlhttp1.send();
+                            }
+                        }
+                        xmlhttp9.open("GET", "/SetUp/GetEvent?id=" + ide, true);
+                        xmlhttp9.send();
+
+                    }
+                };
+                xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + idp, true);
+                xmlhttp.send();
+
+            }
             console.log("saveplayers", saveplayer);
         };
         svg.getElementById("all").appendChild(circles);
@@ -872,23 +939,11 @@
 
 
     function PhotoonSvg(id, photo, posx, posy) {
-        //var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-        //console.log("dfa", svgheight /9);
-        //console.log("dfa", svgwidth / 16);
-        //svgimg.setAttributeNS(null, 'height', svgheight/9);
-        //svgimg.setAttributeNS(null, 'width', svgwidth /16);
-        //svgimg.setAttributeNS(null, 'id', id);
-        //svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + photo);
-        //svgimg.setAttributeNS(null, 'x', posx);
-        //svgimg.setAttributeNS(null, 'y', posy);
-        //svgimg.setAttributeNS(null, 'visibility', 'visible');
-        //svg.getElementById("all").appendChild(svgimg);
+        
         var svgimg = PutBaseInfoPlayer(id, photo, posx, posy);
         console.log("add photo");
         svgimg.onclick = function (ev) {
-
-
-
+            
             console.log("click");
             var xmlhttp8 = new XMLHttpRequest();
 
@@ -978,8 +1033,8 @@
                             svgbutton.setAttributeNS(null, 'id', '0');
                             //svgbutton.setAttributeNS(null, 'style', 'fill:white;stroke:white');
                             svgbutton.setAttributeNS(null, 'fill', 'white');
-                            svgbutton.setAttributeNS(null, 'x', "55%");
-                            svgbutton.setAttributeNS(null, 'y', "83%");
+                            svgbutton.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 15 + "%");
+                            svgbutton.setAttributeNS(null, 'y', parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+ "%");
                             svgbutton.setAttributeNS(null, 'visibility', 'visible');
                             svgbutton.setAttributeNS(null, 'cursor', 'pointer');
                             showdetails[showdetails.length] = svgbutton;
@@ -988,7 +1043,7 @@
                             //};
 
                             svg.getElementById("all").appendChild(svgbutton);
-                            createLabels("Save", parseInt(xposdetails.substring(0, xposdetails.length - 1))+15 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 5 + "%");
+                            createLabels("Save", parseInt(xposdetails.substring(0, xposdetails.length - 1))+15 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+3 + "%");
 
 
                             //var svgexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
@@ -1010,55 +1065,55 @@
                             //var executor = createLabels("executor", "5%" , "5%");
                             //executor.setAttributeNS(null, "transform", "rotate(90 " + svgheight + ",+"+svgwidth+")");
                             //executor.onclick = function () {
-                                var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                                rectexecutor.setAttributeNS(null, 'height', '80%');
-                                rectexecutor.setAttributeNS(null, 'width', '20%');
-                                rectexecutor.setAttributeNS(null, 'id', '0');
-                                rectexecutor.setAttributeNS(null, 'style', 'fill:green;stroke:white');
-                                rectexecutor.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1))+20+"%");
-                                rectexecutor.setAttributeNS(null, 'y', yposdetails);
-                                rectexecutor.setAttributeNS(null, 'visibility', 'visible');
-                                svg.getElementById("all").appendChild(rectexecutor);
-                                showdetails[showdetails.length] = rectexecutor;
+                                //var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                                //rectexecutor.setAttributeNS(null, 'height', '80%');
+                                //rectexecutor.setAttributeNS(null, 'width', '20%');
+                                //rectexecutor.setAttributeNS(null, 'id', '0');
+                                //rectexecutor.setAttributeNS(null, 'style', 'fill:green;stroke:white');
+                                //rectexecutor.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1))+20+"%");
+                                //rectexecutor.setAttributeNS(null, 'y', yposdetails);
+                                //rectexecutor.setAttributeNS(null, 'visibility', 'visible');
+                                //svg.getElementById("all").appendChild(rectexecutor);
+                                //showdetails[showdetails.length] = rectexecutor;
 
 
-                                var xmlhttp = new XMLHttpRequest();
+                                //var xmlhttp = new XMLHttpRequest();
 
-                                xmlhttp.onreadystatechange = function () {
+                                //xmlhttp.onreadystatechange = function () {
 
-                                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                        var resp1 = JSON.parse(xmlhttp.response);
+                                //    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                                //        var resp1 = JSON.parse(xmlhttp.response);
 
-                                        var xmlhttp1 = new XMLHttpRequest();
+                                //        var xmlhttp1 = new XMLHttpRequest();
 
-                                        xmlhttp1.onreadystatechange = function () {
+                                //        xmlhttp1.onreadystatechange = function () {
 
-                                            if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
-                                                var resp3 = JSON.parse(xmlhttp1.response);
-                                                y = "8%";
-                                                resp3.forEach(function (entry) {
+                                //            if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
+                                //                var resp3 = JSON.parse(xmlhttp1.response);
+                                //                y = "8%";
+                                //                resp3.forEach(function (entry) {
 
-                                                    createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) +23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
-                                                    createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
-                                                    y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+                                //                    createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) +23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
+                                //                    createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
+                                //                    y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
 
-                                                });
-                                            }
-                                        };
-                                        var idc;
-                                        if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
-                                            idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
-                                        } else {
-                                            idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
-                                        }
+                                //                });
+                                //            }
+                                //        };
+                                //        var idc;
+                                //            if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
+                                //                idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
+                                //            } else {
+                                //                idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
+                                //            }
+                                        
+                                //        xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
+                                //        xmlhttp1.send();
 
-                                        xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
-                                        xmlhttp1.send();
-
-                                    }
-                                };
-                                xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + resp.Id, true);
-                                xmlhttp.send();
+                                //    }
+                                //};
+                                //xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + resp.Id, true);
+                                //xmlhttp.send();
 
                             //};
 
@@ -1151,16 +1206,22 @@
     var oldtarget = null;
 
 
-    function removePhoto(id) {
-        console.log("remove - whereplayeres", allplayershome, id);
-        var arr = allplayershome;
-        arr.concat(playersnotplaying);
+    function removeFromArr(arr, id) {
         arr.forEach(function(entry) {
             if (id == entry.getAttributeNS(null, 'id')) {
                 console.log("hhhhhhhh", entry);
                 svg.getElementById("all").removeChild(entry);
+                return true;
             }
         });
+    }
+
+    function removePhoto(id) {
+        console.log("remove - whereplayeres", allplayershome, id);
+
+        if (!removeFromArr(allplayershome, id)) {
+            removeFromArr(playersnotplaying, id);
+        }
     }
 
 
@@ -1245,6 +1306,9 @@
                                 //xmlhttp1.send();
 
 
+                            }
+                            else if (resp1.Type == 'Substituição') {
+                                replacePlayer(saveplayer.idplayer, saveplayer.idexe);
                             }
                         }
                     };
@@ -1847,9 +1911,35 @@
 
     //};
 
-    
+    function replace(arr , elem , newelem) {
+       for (var i = 0; i < arr.length; ++i) {
+           if (arr[i] == elem)
+               arr[i] = newelem;
+       }
+    }
 
-    FillTimeLine();
+    
+    function replacePlayer(causeId , executeId) {
+        allplayershome.forEach(function (entry2) {
+            if (entry2.getAttributeNS(null, 'id') == causeId) {
+                playersnotplaying.forEach(function (entry3) {
+                    if (entry3.getAttributeNS(null, 'id') == executeId) {
+                        var secposx = entry3.getAttributeNS(null, 'x');
+                        var secposy = entry3.getAttributeNS(null, 'y');
+                        entry3.setAttributeNS(null, 'x', entry2.getAttributeNS(null, 'x'));
+                        entry3.setAttributeNS(null, 'y', entry2.getAttributeNS(null, 'y'));
+                        entry2.setAttributeNS(null, 'x', secposx);
+                        entry2.setAttributeNS(null, 'y', secposy);
+                        replace(allplayershome, entry2, entry3);
+                        replace(playersnotplaying, entry3, entry2);
+                    }
+                });
+            }
+        });
+    }
+
+
+
 
     function FillTimeLine() {
 
@@ -1882,12 +1972,13 @@
 
                         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                             var resp1 = JSON.parse(xmlhttp.response);
-                            if (resp1.Type == 'Substituicao') {
-                                allplayershome.forEach(function(entry2) {
-                                    if (entry2.getAttributeNS(null, 'id') == entry.causeId) {
-                                        
-                                    }
-                                });
+                            if (resp1.Type == 'Substituição') {
+                                replacePlayer(entry.causeId, entry.executeId);
+
+                                
+                            }
+                            else if (resp1.Type == 'Cartao Vermelho') {
+                                removePhoto(entry.causeId);
                             }
                         }
                     };
@@ -2015,7 +2106,7 @@
     timeline.style.width = '25%';
     timeline.style.height = '60%';
     timeline.style.overflow = 'auto';
-    timeline.style.position = 'absolute';
+    timeline.style.position = 'fixed';
     timeline.style.left = '70%';
     timeline.style.top = '10%';
     timeline.title = "TimeLine";

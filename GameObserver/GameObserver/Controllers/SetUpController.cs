@@ -336,8 +336,12 @@ namespace GameObserver.Controllers
             return Json(false, JsonRequestBehavior.AllowGet);
         }
 
+
+
+
+
         public ActionResult AllInstants(String idstadium, String datahora, String idequipav, String dataequipav,
-            String idequipag, String dataequipag, String idp)
+            String idequipag, String dataequipag)
         {
             IEnumerable<InstantModel> allInstantModels =
                 _mapperInstantToInstantModel.MapAll(_repo.GetAllInstant(Convert.ToInt32(idstadium),
