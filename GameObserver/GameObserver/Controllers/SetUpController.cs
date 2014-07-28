@@ -28,7 +28,7 @@ namespace GameObserver.Controllers
         private AssociateToAssociateModel _mapperAssociateToAssociateModel;
         private LayoutToLayoutModel _mapperLayoutToLayoutModel;
         private PlayerToPlayerModel _mapperPlayerToPlayerModel;
-
+        private IntegrateToIntegrateModel _mapperIntegrateToIntegrateModel;
         public SetUpController()
         {
             _repo = new RepositoryGameObserver();
@@ -46,6 +46,7 @@ namespace GameObserver.Controllers
             _mapperAssociateToAssociateModel = new AssociateToAssociateModel();
             _mapperLayoutToLayoutModel = new LayoutToLayoutModel();
             _mapperPlayerToPlayerModel = new PlayerToPlayerModel();
+            _mapperIntegrateToIntegrateModel = new IntegrateToIntegrateModel();
         }
 
         //
@@ -58,8 +59,35 @@ namespace GameObserver.Controllers
             //    PlayerHome = _mapperActorToActorModel.MapAll(_repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime("2014-05-23"), 2)))
             //};
             
-            return View(_mapperMatchToMatchModel.MapAll(_repo.GetAllMatches()));
+            return View(GetAllIndex());
         }
+
+        public IEnumerable<IndexMatch> GetAllIndex()
+        {
+            IEnumerable<MatchModel> allmatch = _mapperMatchToMatchModel.MapAll(_repo.GetAllMatches());
+            foreach (var matchModel in allmatch)
+            {
+                yield return new IndexMatch()
+                {
+                    HomePhoto = _repo.GetClub(matchModel.IdVisitor).Symbol,
+                    AwayPhoto = _repo.GetClub(matchModel.IdAgainst).Symbol,
+                    Date = matchModel.Date,
+                    HomeName = _repo.GetClub(matchModel.IdVisitor).Name,
+                    AwayName = _repo.GetClub(matchModel.IdAgainst).Name,
+                    DateAgainst = matchModel.DateAgainst,
+                    DateVisitor = matchModel.DateVisitor,
+                    IdAgainst = matchModel.IdAgainst,
+                    IdFirstReferee = matchModel.IdFirstReferee,
+                    IdFourReferee = matchModel.IdFourReferee,
+                    IdSecondReferee = matchModel.IdSecondReferee,
+                    IdStadium = matchModel.IdStadium,
+                    IdThirdReferee = matchModel.IdThirdReferee,
+                    IdVisitor = matchModel.IdVisitor
+                    
+                };
+            }
+        }
+
 
         public ActionResult Create()
         {
@@ -301,43 +329,49 @@ namespace GameObserver.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult HaveRedCard(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag , String idp)
+        //public ActionResult HaveRedCard(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag , String idp)
+        //{
+        //     IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetInstantByCause(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
+        //        Convert.ToDateTime(dataequipav),
+        //        Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag) , Convert.ToInt32(idp)));
+
+
+        //    foreach (var allInstantModel in allInstantModels)
+        //    {
+        //        IEnumerable<OpinionModel> allOpinionModels =
+        //            _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
+        //                Convert.ToDateTime(datahora),
+        //                Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
+        //                Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
+
+
+        //        foreach (var opinion in allOpinionModels)
+        //        {
+        //            IEnumerable<AssociateModel> allAssociateModels =
+        //                _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
+        //                    1));
+
+        //            foreach (var allAssociateModel in allAssociateModels)
+        //            {
+        //                if (_repo.GetEvent(allAssociateModel.IdEvent).Type.Equals("Cartao Vermelho"))
+        //                {
+        //                    return Json(true , JsonRequestBehavior.AllowGet);
+        //                }
+        //            }
+        //        }
+
+        //    }
+        //    return Json(false, JsonRequestBehavior.AllowGet);
+        //}
+
+
+        public ActionResult GetPlayersByTeam(String date, String idclub)
         {
-             IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetInstantByCause(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
-                Convert.ToDateTime(dataequipav),
-                Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag) , Convert.ToInt32(idp)));
+            IEnumerable<IntegrateModel> integrateModel = _mapperIntegrateToIntegrateModel.MapAll(
+                _repo.GetPlayersByTeam(Convert.ToInt32(idclub), Convert.ToDateTime(date)));
+            return Json(integrateModel, JsonRequestBehavior.AllowGet);
 
-
-            foreach (var allInstantModel in allInstantModels)
-            {
-                IEnumerable<OpinionModel> allOpinionModels =
-                    _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
-                        Convert.ToDateTime(datahora),
-                        Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
-                        Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
-
-
-                foreach (var opinion in allOpinionModels)
-                {
-                    IEnumerable<AssociateModel> allAssociateModels =
-                        _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
-                            1));
-
-                    foreach (var allAssociateModel in allAssociateModels)
-                    {
-                        if (_repo.GetEvent(allAssociateModel.IdEvent).Type.Equals("Cartao Vermelho"))
-                        {
-                            return Json(true , JsonRequestBehavior.AllowGet);
-                        }
-                    }
-                }
-
-            }
-            return Json(false, JsonRequestBehavior.AllowGet);
         }
-
-
-
 
 
         public ActionResult AllInstants(String idstadium, String datahora, String idequipav, String dataequipav,

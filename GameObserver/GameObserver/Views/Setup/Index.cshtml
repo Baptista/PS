@@ -1,19 +1,20 @@
-﻿@model IEnumerable<GameObserver.Models.MatchModel>
+﻿@model IEnumerable<GameObserver.Models.IndexMatch>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Partidas</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
+    @*<tr>
         <th>
             @Html.DisplayNameFor(model => model.IdStadium)
         </th>
+        
         <th>
             @Html.DisplayNameFor(model => model.Date)
         </th>
@@ -42,11 +43,28 @@
             @Html.DisplayNameFor(model => model.DateAgainst)
         </th>
         <th></th>
-    </tr>
+    </tr>*@
 
 @foreach (var item in Model) {
     <tr>
         <td>
+            <img src=@Url.Content("~/fonts/"+@item.HomePhoto) width="50" height="50" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HomeName)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AwayName)
+        </td>
+        <td>
+            <img src=@Url.Content("~/fonts/" + @item.AwayPhoto) width="50" height="50" />
+        </td>
+
+        @*<td>
             @Html.DisplayFor(modelItem => item.IdStadium)
         </td>
         <td>
@@ -75,16 +93,17 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DateAgainst)
-        </td>
+        </td>*@
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new
+            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
+            @Html.ActionLink("Ver", "Details", new
             {
                 idstadium = item.IdStadium, date = item.Date, idfirstref = item.IdFirstReferee,
                 idsecondref = item.IdSecondReferee, idthirdref = item.IdThirdReferee, idfourref=item.IdFourReferee,
                 idvisitor = item.IdVisitor, datevisitor = item.DateVisitor, idagainst = item.IdAgainst, dateagainst = item.DateAgainst
-            }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            })
+            
+            @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
         </td>
     </tr>
 }

@@ -184,6 +184,7 @@
     <Compile Include="Mappers\StadiumToStadiumModel.cs" />
     <Compile Include="Mappers\TeamModelToTeam.cs" />
     <Compile Include="Mappers\TeamToTeamModel.cs" />
+    <Compile Include="Models\IndexMatch.cs" />
     <Compile Include="Models\IntegrateModel.cs" />
     <Compile Include="Models\LayoutModel.cs" />
     <Compile Include="Models\ReplaceModel.cs" />

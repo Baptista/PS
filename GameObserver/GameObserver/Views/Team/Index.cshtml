@@ -11,7 +11,10 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
+    @*<tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PhotoClub)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Data)
         </th>
@@ -22,10 +25,13 @@
             @Html.DisplayNameFor(model => model.Formation)
         </th>
         <th></th>
-    </tr>
+    </tr>*@
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            <img src=@Url.Content("~/fonts/"+@item.PhotoClub) width="50" height="50" />
+        </td>
         <td>
             @Html.Encode(item.Data.ToString("d"))
         </td>

@@ -287,34 +287,34 @@
         xmlhttp9.send();
     }
 
-    var count = 0;
-    function allfinish(all) {
-        ++count;
-        if (count == all) {
-            FillTimeLine();
-//            var xmlhttp9 = new XMLHttpRequest();
-
-//                xmlhttp9.onreadystatechange = function () {
-
-//                    if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
-//                        var resp5 = JSON.parse(xmlhttp9.response);
-//                        resp5.forEach(function(entry) {
-
-//                            var xmlhttp1 = new XMLHttpRequest();
-
-//                            xmlhttp1.open("GET", "/SetUp/GetEvent?id=" + entry, true);
-//                            xmlhttp1.send();
-//                        });
-//                    }
-//                }
-//                xmlhttp9.open("GET", "/SetUp/AllInstants=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
-//"&idequipag=" + idequipag + "&dataequipag=" + dataequipag , true);
-//                xmlhttp9.send();
-            
-
+    var counthome = 0;
+    function allfinishome(all) {
+        ++counthome;
+        console.log("count", all, counthome);
+        if (counthome == all) {
+            allfinish();
                
         }
     }
+    var countaway = 0;
+    function allfinisaway(all) {
+        ++countaway;
+        console.log("count", all, countaway);
+        if (countaway == all) {
+            allfinish();
+            
+        }
+    }
+
+    var count = 0;
+    function allfinish() {
+        count++;
+        if (count == 2) {
+            FillTimeLine();
+        }
+    }
+
+
 
 
     //var allplayereshome = [];
@@ -363,17 +363,17 @@
                 var totalplayers = resp.length;
                 resp.forEach(function (entry) {
                     
-                    var xmlhttp6 = new XMLHttpRequest();
+                    //var xmlhttp6 = new XMLHttpRequest();
 
-                    xmlhttp6.onreadystatechange = function() {
+                    //xmlhttp6.onreadystatechange = function() {
 
-                        if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
+                    //    if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
 
-                            var resp3 = JSON.parse(xmlhttp6.response);
-                            if (resp3) {
-                                console.log("ppppppppp");
-                                return true;
-                            } else {
+                    //        var resp3 = JSON.parse(xmlhttp6.response);
+                    //        if (resp3) {
+                    //            console.log("ppppppppp");
+                    //            return true;
+                    //        } else {
                                 var xmlhttp8 = new XMLHttpRequest();
                                 var img = null;
                                 xmlhttp8.onreadystatechange = function () {
@@ -461,7 +461,7 @@
                                                         allplayershome[allplayershome.length] = img;
                                                     }
                                                 }
-                                                allfinish(totalplayers);
+                                                allfinishome(totalplayers);
                                                 //allplayershome[allplayershome.length] = img;
                                             }
                                         }
@@ -474,7 +474,7 @@
                                             //    x = pos.left + 10;
                                             //}
                                             playersnotplaying[playersnotplaying.length] = img;
-                                            allfinish(totalplayers);
+                                            allfinishome(totalplayers);
                                         } else {
                                             xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
                                             xmlhttp1.send();
@@ -482,15 +482,15 @@
                                     }
 
                                 };
-                                xmlhttp8.open("GET", "/Team/GetPlayer?id=" + entry.IdPlayer, true);
+                                xmlhttp8.open("GET", "/SetUp/GetPlayer?id=" + entry.IdPlayer, true);
                                 xmlhttp8.send();
 
-                            }
-                        }
-                    };
-                    xmlhttp6.open("GET", "/SetUp/HaveRedCard?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
-            "&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&idp=" + entry.IdPlayer, true);
-                    xmlhttp6.send();
+                            //}
+            //            }
+            //        };
+            //        xmlhttp6.open("GET", "/SetUp/HaveRedCard?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+            //"&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&idp=" + entry.IdPlayer, true);
+            //        xmlhttp6.send();
 
                     
                 });
@@ -498,7 +498,7 @@
         };
         var idq = document.getElementById("iddetailssetup_idvisitor").innerHTML;
         var dataq = document.getElementById("iddetailssetup_datevisitor").innerHTML;
-        xmlhttp5.open("GET", "/Team/GetPlayersByTeam?date=" + dataq + "&idclub=" + idq, true);
+        xmlhttp5.open("GET", "/SetUp/GetPlayersByTeam?date=" + dataq + "&idclub=" + idq, true);
         xmlhttp5.send();
     }
 
@@ -516,20 +516,20 @@
 
             if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
                 var resp = JSON.parse(xmlhttp4.response);
-
+                var totalplayers = resp.length;
                 resp.forEach(function (entry) {
                     
-                    var xmlhttp6 = new XMLHttpRequest();
+                    //var xmlhttp6 = new XMLHttpRequest();
 
-                    xmlhttp6.onreadystatechange = function() {
+                    //xmlhttp6.onreadystatechange = function() {
 
-                        if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
+                    //    if (xmlhttp6.readyState == 4 && xmlhttp6.status == 200) {
 
-                            var resp4 = JSON.parse(xmlhttp6.response);
-                            if (resp4) {
-                                console.log("ppppppppp");
-                                return true;
-                            } else {
+                    //        var resp4 = JSON.parse(xmlhttp6.response);
+                    //        if (resp4) {
+                    //            console.log("ppppppppp");
+                    //            return true;
+                    //        } else {
 
         
                                 var xmlhttp8 = new XMLHttpRequest();
@@ -615,6 +615,7 @@
                                                         allplayershome[allplayershome.length] = img;
                                                     }
                                                 }
+                                                allfinisaway(totalplayers);
                                                 console.log("allplayereshome", allplayershome);
 
                                             }
@@ -628,20 +629,21 @@
                                             //    x = pos.left + 10;
                                             //}
                                             playersnotplaying[playersnotplaying.length] = img;
+                                            allfinisaway(totalplayers);
                                         } else {
                                             xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
                                             xmlhttp1.send();
                                         }
                                     }
                                 };
-                                xmlhttp8.open("GET", "/Team/GetPlayer?id=" + entry.IdPlayer, true);
+                                xmlhttp8.open("GET", "/SetUp/GetPlayer?id=" + entry.IdPlayer, true);
                                 xmlhttp8.send();
-                            }
-                        }
-                    };
-                    xmlhttp6.open("GET", "/SetUp/HaveRedCard?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
-          "&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&idp=" + entry.IdPlayer, true);
-                    xmlhttp6.send();
+          //                  }
+          //              }
+          //          };
+          //          xmlhttp6.open("GET", "/SetUp/HaveRedCard?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+          //"&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&idp=" + entry.IdPlayer, true);
+          //          xmlhttp6.send();
 
 
                 });
@@ -650,7 +652,7 @@
         var aidq = document.getElementById("iddetailssetup_idagainst").innerHTML;
         var adataq = document.getElementById("iddetailssetup_dateagainst").innerHTML;
 
-        xmlhttp4.open("GET", "/Team/GetPlayersByTeam?date=" + adataq + "&idclub=" + aidq, true);
+        xmlhttp4.open("GET", "/SetUp/GetPlayersByTeam?date=" + adataq + "&idclub=" + aidq, true);
         xmlhttp4.send();
     }
 
@@ -813,13 +815,14 @@
 
     function removedetails() {
         for (var i = 0; i < showdetails.length; ++i) {
+            console.log("removedetails", showdetails[i]);
             svg.getElementById("all").removeChild(showdetails[i]);
         }
         showdetails = [];
     }
 
 
-
+    var lastcircle = null;
 
     function createcircles(idp, ide, x, y) {
 
@@ -832,6 +835,14 @@
         circles.setAttribute("id", "circ" + y);
         showdetails[showdetails.length] = circles;
         circles.onclick = function () {
+            
+            if (lastcircle != null) {
+
+                svg.getElementById("all").removeChild(lastcircle);
+                removeElemFromArray(showdetails, lastcircle);
+                console.log("remove circle", lastcircle);
+            }
+
             console.log("circles");
             var circlesinside = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circlesinside.setAttribute("cx", (circles.getAttributeNS(null, 'cx')));
@@ -841,6 +852,10 @@
             circlesinside.setAttribute("r", "0.8%");
             circlesinside.setAttribute("id", "circcc");
             svg.getElementById("all").appendChild(circlesinside);
+            
+            lastcircle = circlesinside;
+
+
             showdetails[showdetails.length] = circlesinside;
             if (ide != null) {
                 //saveplayer.idexe = null;
@@ -1238,7 +1253,7 @@
             } else if (!saveplayer.hasOwnProperty('idexe')) {
                 saveplayer.idexe = null;
             }
-
+            lastcircle = null;
             //var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML;
             //var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML;
             //var idequipa = document.getElementById("iddetailssetup_idagainst").innerHTML;

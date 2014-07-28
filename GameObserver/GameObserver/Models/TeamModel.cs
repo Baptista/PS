@@ -12,5 +12,6 @@ namespace GameObserver.Models
         public int IdFormation { get; set; }
         public String NameClub { get; set; }
         public String Formation { get; set; }
+        public String PhotoClub { get; set; }
     }
 }

@@ -1023,7 +1023,7 @@ namespace GameObserver.Data
 
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
-                SqlCommand cmd = new SqlCommand("InserirOpiniao", conn);
+                SqlCommand cmd = new SqlCommand("InserirInstante", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter p1 = new SqlParameter("@minutosegundo", SqlDbType.DateTime, 8);

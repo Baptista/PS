@@ -91,6 +91,7 @@ namespace GameObserver.Controllers
                 teamModel.NameClub = _repo.GetClub(teamModel.IdClub).Name;
                 teamModel.Data = teamModel.Data;
                 teamModel.Formation = _repo.GetFormation(teamModel.IdFormation).Designation;
+                teamModel.PhotoClub = _repo.GetClub(teamModel.IdClub).Symbol;
             }
             return View(allteams);
         }
