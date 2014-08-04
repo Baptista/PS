@@ -47,7 +47,7 @@ namespace GameObserver.Controllers
 
         public ActionResult GetPlayer(String id)
         {
-            ActorModel actor = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(id)));
+            ActorModel actor = _mapperActorToActorModel.Map(_repo.GetActor(Convert.ToInt32(id)));
             return Json(actor, JsonRequestBehavior.AllowGet);
         }
 

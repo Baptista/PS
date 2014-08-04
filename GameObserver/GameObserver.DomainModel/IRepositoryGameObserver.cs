@@ -19,13 +19,16 @@ namespace GameObserver.DomainModel
 
         void CreateTeam(int idFormation, int idClub, DateTime data);
 
-        Actor GetPlayer(int id);
+        Actor GetActor(int id);
         Player GetPlayerWithClub(int id);
 
         IEnumerable<Actor> GetPlayersByClub(int idclub);
         //Actor GetClubByPlayer(int idplayer);
 
+        Boolean IsPlayer(int id);
         
+
+
 
         Club GetClub(int id);
         Formation GetFormation(int id);
@@ -66,9 +69,13 @@ namespace GameObserver.DomainModel
         IEnumerable<Event> GetAllEvents();
 
         void CreateOpinion(DateTime minutosegundo , int idestadio , DateTime datahora , DateTime datavisitante , int idvisitante,
-            DateTime datadefronta , int iddefronta , int idutilizador, int causou , int? executou , DateTime datahoraopiniao , 
+            DateTime datadefronta , int iddefronta , String idutilizador, int causou , int? executou , DateTime datahoraopiniao , 
             int negativa , int idevento);
 
+
+        void CreateOpinionUser(DateTime minutosegundo, int idestadio, DateTime datahora, DateTime datavisitante,
+            int idvisitante,
+            DateTime datadefronta, int iddefronta, String idutilizador, DateTime datahoraopiniao,String opinion);
 
         //IEnumerable<Instant> GetOpinionByMatch(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
         //    int idequipag, DateTime dataequipag);
@@ -77,14 +84,18 @@ namespace GameObserver.DomainModel
             int idequipag, DateTime dataequipag);
 
 
+        IEnumerable<Instant> GetAllInstantByCause(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, int cause);
+
+
         void InsertLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag , DateTime horaminuto, String svg);
 
 
-        IEnumerable<Opinion> GetAllOpinionsByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-            int idequipag, DateTime dataequipag , DateTime minitosegundo);
+        Opinion GetAllOpinionsByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag , DateTime minitosegundo , String idutilizador);
 
-        IEnumerable<Associate> GetAllAssociatesbyOpinionEvent(DateTime datahora , int iduser);
+        Associate GetAllAssociatesbyOpinionEvent(DateTime datahora , String iduser);
 
         void InsertUser(String name, int idrole);
 

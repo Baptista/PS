@@ -9,7 +9,7 @@ namespace GameObserver.Models
     {
         public DateTime Date { get; set; }
         public Boolean Negative { get; set; }
-        public int IdUser { get; set; }
+        public String IdUser { get; set; }
         public int IdStadium { get; set; }
         public DateTime DateInstant { get; set; }
         public DateTime DataPartida { get; set; }

@@ -10,7 +10,7 @@ namespace GameObserver.DomainModel.Entities
     {
         public int IdEvent { get; set; }
         public DateTime Date { get; set; }
-        public int IdUser { get; set; }
+        public String IdUser { get; set; }
 
     }
 }

@@ -14,7 +14,7 @@ namespace GameObserver.Models
         public int IdVisitor { get; set; }
         public DateTime DateAgainst { get; set; }
         public int IdAgainst { get; set; }
-        public int IdUser { get; set; }
+        public String IdUser { get; set; }
         public int IdCause { get; set; }
         public int? IdExecute { get; set; }
 

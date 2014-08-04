@@ -16,7 +16,7 @@ namespace GameObserver
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "SetUp", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

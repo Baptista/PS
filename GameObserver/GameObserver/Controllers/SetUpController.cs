@@ -211,7 +211,7 @@ namespace GameObserver.Controllers
 
         public ActionResult GetPlayer(String id)
         {
-            ActorModel actor = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(id)));
+            ActorModel actor = _mapperActorToActorModel.Map(_repo.GetActor(Convert.ToInt32(id)));
             return Json(actor, JsonRequestBehavior.AllowGet);
         }
 
@@ -230,47 +230,57 @@ namespace GameObserver.Controllers
             DateTime d = DateTime.Parse(datenow.Substring(0,25));
             //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
             _repo.CreateOpinion(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitor),Convert.ToDateTime(dataagainst),
-                Convert.ToInt32(idagainst), 1, Convert.ToInt32(idcause), (Int32.TryParse(idexecute,out intv))?intv:(int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
+                Convert.ToInt32(idagainst), User.Identity.Name, Convert.ToInt32(idcause), (Int32.TryParse(idexecute,out intv))?intv:(int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
         }
         //idexecute.Equals("null") ? (int?)null : Convert.ToInt32(idexecute)
 
         public IEnumerable<TimeLineModel> CreateTimeLine(String idstadium, String datahora, String idequipav, String dataequipav,
-            String idequipag, String dataequipag)
+            String idequipag, String dataequipag , String username)
         {
+            
             IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
                 Convert.ToDateTime(dataequipav),
                 Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag)));
 
             foreach (var allInstantModel in allInstantModels)
             {
-                IEnumerable<OpinionModel> allOpinionModels =
-                    _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
-                        Convert.ToDateTime(datahora),
-                        Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
-                        Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
-                foreach (var opinion in allOpinionModels)
+                OpinionModel allOpinionModels = null;
+                try
                 {
-                    IEnumerable<AssociateModel> allAssociateModels = _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
-                        1));
+                    allOpinionModels =
+                        _mapperOpinionToOpinionModel.Map(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
+                            Convert.ToDateTime(datahora),
+                            Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
+                            Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds, username));
 
-                    foreach (var allAssociateModel in allAssociateModels)
+                }
+                catch (ArgumentException)
+                {
+                    
+                }
+
+                    if (allOpinionModels != null)
                     {
+                        AssociateModel allAssociateModels =
+                            _mapperAssociateToAssociateModel.Map(_repo.GetAllAssociatesbyOpinionEvent(
+                                allOpinionModels.Date, username));
+
                         yield return new TimeLineModel()
                         {
                             date = allInstantModel.MinuteSeconds,
-                            eventId = allAssociateModel.IdEvent,
+                            eventId = allAssociateModels.IdEvent,
                             causeId = allInstantModel.IdCause,
                             executeId = allInstantModel.IdExecute
                         };
                     }
-                }
+                
             }
         }
 
-        public ActionResult GetTimeLine(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag)
+        public ActionResult GetTimeLine(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag, String username)
         {
 
-            IEnumerable<TimeLineModel> allTimeLineModels = CreateTimeLine(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag);
+            IEnumerable<TimeLineModel> allTimeLineModels = CreateTimeLine(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag , username);
             return Json(allTimeLineModels, JsonRequestBehavior.AllowGet);
         }
 
@@ -278,11 +288,11 @@ namespace GameObserver.Controllers
         public ActionResult GetNamesForTimeLine(String idevent, String idcause, String idexecute)
         {
             EventModel ev = _mapperEventToEventModel.Map(_repo.GetEvent(Convert.ToInt32(idevent)));
-            ActorModel ac = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(idcause)));
+            ActorModel ac = _mapperActorToActorModel.Map(_repo.GetActor(Convert.ToInt32(idcause)));
             ActorModel ae = null;
             if (!idexecute.Equals("null"))
             {
-                ae = _mapperActorToActorModel.Map(_repo.GetPlayer(Convert.ToInt32(idexecute)));
+                ae = _mapperActorToActorModel.Map(_repo.GetActor(Convert.ToInt32(idexecute)));
             }
             TimeLineNameModel tm = new TimeLineNameModel()
             {
@@ -374,6 +384,84 @@ namespace GameObserver.Controllers
         }
 
 
+        public IEnumerable<InstantModel> AuxGetOpinionUserByInstant(String idstadium, String datahora, String idequipav,
+            String dataequipav, String idequipag, String dataequipag, String idcause)
+        {
+            IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstantByCause(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
+                Convert.ToDateTime(dataequipav),
+                Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag),Convert.ToInt32(idcause)));
+
+            foreach (var allInstantModel in allInstantModels)
+            {
+                OpinionModel opinion=null;
+                try
+                {
+                    opinion = _mapperOpinionToOpinionModel.Map(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
+                        Convert.ToDateTime(datahora),
+                        Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
+                        Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds, User.Identity.Name));
+
+
+                }
+                catch (ArgumentException)
+                {
+                    
+                }
+                if (opinion == null)
+                {
+                    yield return allInstantModel;
+                }
+            }
+        }
+
+        public IEnumerable<TimeLineModel> AuxGetOpinionAdmin(String idstadium, String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag, String idcause)
+        {
+            IEnumerable<InstantModel> allInstantModels = AuxGetOpinionUserByInstant(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag,idcause);
+
+
+            foreach (var allInstantModel in allInstantModels)
+            {
+                OpinionModel allOpinionModels = null;
+
+                allOpinionModels =
+                    _mapperOpinionToOpinionModel.Map(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
+                        Convert.ToDateTime(datahora),
+                        Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
+                        Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds, "Adminn"));
+
+                if (allOpinionModels != null)
+                {
+                    AssociateModel allAssociateModels =
+                        _mapperAssociateToAssociateModel.Map(_repo.GetAllAssociatesbyOpinionEvent(
+                            allOpinionModels.Date, "Adminn"));
+
+                    yield return new TimeLineModel()
+                    {
+                        date = allInstantModel.MinuteSeconds,
+                        eventId = allAssociateModels.IdEvent,
+                        causeId = allInstantModel.IdCause,
+                        executeId = allInstantModel.IdExecute
+                    };
+                }
+
+            }
+        }
+
+
+        public ActionResult GetOpinionUserByInstant(String idstadium, String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag , String idcause)
+        {
+            //IEnumerable<TimeLineModel> t = AuxGetOpinionAdmin(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag);
+            
+            return Json(AuxGetOpinionAdmin(idstadium,  datahora,  idequipav,  dataequipav,idequipag,dataequipag,idcause),JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult IsPlayer(String id)
+        {
+            return Json(_repo.IsPlayer(Convert.ToInt32(id)) , JsonRequestBehavior.AllowGet);
+        }
+
+
         public ActionResult AllInstants(String idstadium, String datahora, String idequipav, String dataequipav,
             String idequipag, String dataequipag)
         {
@@ -384,39 +472,23 @@ namespace GameObserver.Controllers
                     Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag)));
 
             return Json(allInstantModels, JsonRequestBehavior.AllowGet);
-            //foreach (var allInstantModel in allInstantModels)
-            //{
-            //    IEnumerable<OpinionModel> allOpinionModels =
-            //        _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
-            //            Convert.ToDateTime(datahora),
-            //            Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
-            //            Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
-
-
-            //    foreach (var opinion in allOpinionModels)
-            //    {
-            //        IEnumerable<AssociateModel> allAssociateModels =
-            //            _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
-            //                1));
-
-            //        foreach (var allAssociateModel in allAssociateModels)
-            //        {
-            //            if (_repo.GetEvent(allAssociateModel.IdEvent).Type.Equals("Substituicao"))
-            //            {
-
-            //                var exec = allInstantModel.IdExecute;
-            //                var cause = allInstantModel.IdCause;
-            //                ReplaceModel rm =  new ReplaceModel()
-            //                {
-            //                    Cause = cause,
-            //                    Execute = exec
-            //                };
-            //                return Json(rm, JsonRequestBehavior.AllowGet);
-            //            }
-            //        }
-            //    }
-            //}
-            //}
+            
         }
+
+
+
+        public void CreateOpinionUser(String dateinstant,
+            String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
+            String idagainst, String iduser, String dateop , String negative)
+        {
+
+            int intv;
+            DateTime d = DateTime.Parse(dateop.Substring(0, 25));
+            //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
+            _repo.CreateOpinionUser(Convert.ToDateTime(dateinstant), Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor), Convert.ToDateTime(dataagainst),
+                Convert.ToInt32(idagainst), User.Identity.Name , d , negative);
+        }
+
+
     }
 }

@@ -71,6 +71,9 @@
     var allplayershome = [];
     var playersnotplaying = [];
     var saveplayer = {};
+
+    var arropinions = [];    
+
     //////////////////////////////////////////////
     var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
     var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
@@ -822,9 +825,10 @@
     }
 
 
-    var lastcircle = null;
+    
 
     function createcircles(idp, ide, x, y) {
+        var lastcircle = null;
 
         var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circles.setAttribute("cx", x);
@@ -841,6 +845,7 @@
                 svg.getElementById("all").removeChild(lastcircle);
                 removeElemFromArray(showdetails, lastcircle);
                 console.log("remove circle", lastcircle);
+                lastcircle = null;
             }
 
             console.log("circles");
@@ -853,8 +858,9 @@
             circlesinside.setAttribute("id", "circcc");
             svg.getElementById("all").appendChild(circlesinside);
             
+            console.log("lastcircle", lastcircle);
             lastcircle = circlesinside;
-
+            
 
             showdetails[showdetails.length] = circlesinside;
             if (ide != null) {
@@ -952,198 +958,553 @@
     }
 
 
+    function createAdminInteract(id, photo, posx, posy) {
+
+        var xmlhttp8 = new XMLHttpRequest();
+
+        xmlhttp8.onreadystatechange = function () {
+
+            if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
+                var resp = JSON.parse(xmlhttp8.response);
+
+
+                var svgrec = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                svgrec.setAttributeNS(null, 'height', '80%');
+                svgrec.setAttributeNS(null, 'width', '20%');
+                svgrec.setAttributeNS(null, 'id', resp.Id);
+                svgrec.setAttributeNS(null, 'style', 'fill:green;stroke:white');
+                svgrec.setAttributeNS(null, 'x', xposdetails);
+                svgrec.setAttributeNS(null, 'y', yposdetails);
+                svgrec.setAttributeNS(null, 'visibility', 'visible');
+                showdetails[showdetails.length] = svgrec;
+                svg.getElementById("all").appendChild(svgrec);
+
+                var svgimgsub = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+                svgimgsub.setAttributeNS(null, 'height', "19%");
+                svgimgsub.setAttributeNS(null, 'width', "19%");
+                //svgimgsub.setAttributeNS(null, 'id', 'capel4');
+                svgimgsub.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + resp.Photo);
+                svgimgsub.setAttributeNS(null, 'x', xposdetails);
+                svgimgsub.setAttributeNS(null, 'y', yposdetails);
+                svgimgsub.setAttributeNS(null, 'visibility', 'visible');
+                showdetails[showdetails.length] = svgimgsub;
+                svg.getElementById("all").appendChild(svgimgsub);
+
+
+                var substringedDate = resp.Born.substring(6); //substringedDate= 1291548407008)/
+                var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+                var date = new Date(parsedIntDate);
+                console.log("resp", date.toDateString());
+                //var jsonText = JsonConvert.SerializeObject(resp.Born, new IsoDateTimeConverter());
+                createLabels("Name: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
+                createLabels("Born: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
+                createLabels("Height: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
+                createLabels("Weight: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
+
+                var xmlhttp9 = new XMLHttpRequest();
+
+                xmlhttp9.onreadystatechange = function () {
+
+                    if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
+                        var resp2 = JSON.parse(xmlhttp9.response);
+
+                        var y = "35%";
+                        resp2.forEach(function (entry) {
+
+                            var xmlhttp1 = new XMLHttpRequest();
+
+                            xmlhttp1.onreadystatechange = function () {
+
+                                if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                    var resp1 = JSON.parse(xmlhttp1.response);
+                                    if (resp1 == true) {
+                                        if (entry.Type == "Inicio da Partida" || entry.Type == "Fim da Partida") {
+                                            console.log("filtro de eventos");
+                                            return;
+                                        } else {
+                                            y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+                                            createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+
+                                            createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 1 + "%");
+                                        }
+                                    } else {
+                                        if (entry.Type != "Inicio da Partida" && entry.Type != "Fim da Partida") {
+                                            console.log("filtro de eventos");
+                                            return;
+                                        } else {
+                                            y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+                                            createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+
+                                            createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 1 + "%");
+                                        }
+                                    }
+                                }
+                            }
+                            xmlhttp1.open("GET", "/SetUp/IsPlayer?id=" + id, true);
+                            xmlhttp1.send();
+
+
+                        });
+
+                        var svgbutton = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        svgbutton.setAttributeNS(null, 'height', '4%');
+                        svgbutton.setAttributeNS(null, 'width', '4%');
+                        svgbutton.setAttributeNS(null, 'id', '0');
+                        //svgbutton.setAttributeNS(null, 'style', 'fill:white;stroke:white');
+                        svgbutton.setAttributeNS(null, 'fill', 'white');
+                        svgbutton.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 15 + "%");
+                        svgbutton.setAttributeNS(null, 'y', parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 75 + "%");
+                        svgbutton.setAttributeNS(null, 'visibility', 'visible');
+                        svgbutton.setAttributeNS(null, 'cursor', 'pointer');
+                        showdetails[showdetails.length] = svgbutton;
+                        //svgbutton.onclick = function() {
+                        //    console.log("button");
+                        //};
+
+                        svg.getElementById("all").appendChild(svgbutton);
+                        createLabels("Save", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 15 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 78 + "%");
+
+
+                        //var svgexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+                        //svgexecutor.setAttributeNS(null, 'height', '10%');
+                        //svgexecutor.setAttributeNS(null, 'width', '5%');
+                        //svgexecutor.setAttributeNS(null, 'id', '0');
+                        //svgexecutor.setAttributeNS(null, 'style', 'fill:white;stroke:white');
+                        //svgexecutor.setAttributeNS(null, 'cx', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 19 + "%");
+                        //svgexecutor.setAttributeNS(null, 'cy', parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) - 10 + "%");
+                        //svgexecutor.setAttributeNS(null, 'rx', "0.5%");
+                        //svgexecutor.setAttributeNS(null, 'ry', "5%");
+                        //svgexecutor.setAttributeNS(null, 'visibility', 'visible');
+                        //showdetails[showdetails.length] = svgexecutor;
+                        //svg.getElementById("all").appendChild(svgexecutor);
+
+
+                        console.log("sdcndsdc", xposdetails);
+                        console.log("sdcndsdc", yposdetails);
+                        //var executor = createLabels("executor", "5%" , "5%");
+                        //executor.setAttributeNS(null, "transform", "rotate(90 " + svgheight + ",+"+svgwidth+")");
+                        //executor.onclick = function () {
+                        //var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        //rectexecutor.setAttributeNS(null, 'height', '80%');
+                        //rectexecutor.setAttributeNS(null, 'width', '20%');
+                        //rectexecutor.setAttributeNS(null, 'id', '0');
+                        //rectexecutor.setAttributeNS(null, 'style', 'fill:green;stroke:white');
+                        //rectexecutor.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1))+20+"%");
+                        //rectexecutor.setAttributeNS(null, 'y', yposdetails);
+                        //rectexecutor.setAttributeNS(null, 'visibility', 'visible');
+                        //svg.getElementById("all").appendChild(rectexecutor);
+                        //showdetails[showdetails.length] = rectexecutor;
+
+
+                        //var xmlhttp = new XMLHttpRequest();
+
+                        //xmlhttp.onreadystatechange = function () {
+
+                        //    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        //        var resp1 = JSON.parse(xmlhttp.response);
+
+                        //        var xmlhttp1 = new XMLHttpRequest();
+
+                        //        xmlhttp1.onreadystatechange = function () {
+
+                        //            if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
+                        //                var resp3 = JSON.parse(xmlhttp1.response);
+                        //                y = "8%";
+                        //                resp3.forEach(function (entry) {
+
+                        //                    createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) +23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
+                        //                    createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
+                        //                    y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+
+                        //                });
+                        //            }
+                        //        };
+                        //        var idc;
+                        //            if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
+                        //                idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
+                        //            } else {
+                        //                idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
+                        //            }
+
+                        //        xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
+                        //        xmlhttp1.send();
+
+                        //    }
+                        //};
+                        //xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + resp.Id, true);
+                        //xmlhttp.send();
+
+                        //};
+
+                    }
+                }
+                xmlhttp9.open("GET", "/SetUp/GetEvents", true);
+                xmlhttp9.send();
+
+
+            }
+        };
+
+        xmlhttp8.open("GET", "/SetUp/GetPlayer?id=" + id, true);
+        xmlhttp8.send();
+
+    } 
+    
+
+    function createUserInteract(id, photo, posx, posy) {
+        var xmlhttp8 = new XMLHttpRequest();
+        xposdetails = "25%";
+        yposdetails = "10%";
+        
+        arropinions = [];
+        xmlhttp8.onreadystatechange = function () {
+
+            if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
+                var resp = JSON.parse(xmlhttp8.response);
+
+
+                var svgrec = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                svgrec.setAttributeNS(null, 'height', '80%');
+                svgrec.setAttributeNS(null, 'width', '50%');
+                svgrec.setAttributeNS(null, 'id', resp.Id);
+                svgrec.setAttributeNS(null, 'style', 'fill:green;stroke:white');
+                svgrec.setAttributeNS(null, 'x', xposdetails);
+                svgrec.setAttributeNS(null, 'y', yposdetails);
+                svgrec.setAttributeNS(null, 'visibility', 'visible');
+                showdetails[showdetails.length] = svgrec;
+                svg.getElementById("all").appendChild(svgrec);
+
+                xposdetails = "40%";
+                var svgimgsub = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+                svgimgsub.setAttributeNS(null, 'height', "19%");
+                svgimgsub.setAttributeNS(null, 'width', "19%");
+                //svgimgsub.setAttributeNS(null, 'id', 'capel4');
+                svgimgsub.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + resp.Photo);
+                svgimgsub.setAttributeNS(null, 'x', xposdetails);
+                svgimgsub.setAttributeNS(null, 'y', yposdetails);
+                svgimgsub.setAttributeNS(null, 'visibility', 'visible');
+                showdetails[showdetails.length] = svgimgsub;
+                svg.getElementById("all").appendChild(svgimgsub);
+
+
+                var substringedDate = resp.Born.substring(6); //substringedDate= 1291548407008)/
+                var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+                var date = new Date(parsedIntDate);
+                console.log("resp", date.toDateString());
+                //var jsonText = JsonConvert.SerializeObject(resp.Born, new IsoDateTimeConverter());
+                createLabels("Name: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
+                createLabels("Born: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
+                createLabels("Height: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
+                createLabels("Weight: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
+
+                xposdetails = "27%";
+                yposdetails = "45%";
+                if (isAuth == "False") return;
+                createLabels("Sim", xposdetails, yposdetails);
+                xposdetails = "30%";
+                createLabels("Não", xposdetails, yposdetails);
+
+                var xposcircS = "28%";
+                var xposcircN = "32%";
+                xposdetails = "35%";
+                yposdetails = "50%";
+
+                var yposdetails1 = "52%";
+
+                var xmlhttp5 = new XMLHttpRequest();
+                
+                xmlhttp5.onreadystatechange = function() {
+
+                    if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
+                        var resp1 = JSON.parse(xmlhttp5.response);
+
+
+                        var count1 = 0;
+                        resp1.forEach(function (entry) {
+                            var obj = {};
+                            
+                            
+                            console.log("dateeeeee", entry.date);
+                            console.log("ydetails", yposdetails);
+                            var substringedDate = entry.date.substring(6); //substringedDate= 1291548407008)/
+                            var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+                            var datet = new Date(parsedIntDate);
+
+                            console.log("datet", datet.toLocaleTimeString());
+
+                            var circleS = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                            circleS.setAttribute("cx", xposcircS);
+                            circleS.setAttribute("cy", yposdetails);
+                            circleS.setAttribute("fill", "#ffffff");
+                            circleS.setAttribute("stroke", "#000000");
+                            circleS.setAttribute("r", "1%");
+                            circleS.setAttribute("id", count1++);
+                            showdetails[showdetails.length] = circleS;
+                            svg.getElementById("all").appendChild(circleS);
+                            
+                            obj.dated = datet.toLocaleString();
+                            obj.lastclick = null;
+
+                            circleS.onclick = function () {
+                                if (obj.lastclick != null) {
+                                    svg.getElementById("all").removeChild(obj.lastclick);
+                                    removeElemFromArray(showdetails, obj.lastclick);
+                                    obj.lastclick = null;
+                                }
+                                    var circlesinside = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                                    circlesinside.setAttribute("cx", (circleS.getAttributeNS(null, 'cx')));
+                                    circlesinside.setAttribute("cy", (circleS.getAttributeNS(null, 'cy')));
+                                    circlesinside.setAttribute("fill", "#000000");
+                                    circlesinside.setAttribute("stroke", "#000000");
+                                    circlesinside.setAttribute("r", "0.7%");
+                                    circlesinside.setAttribute("id", "circcc");
+                                    svg.getElementById("all").appendChild(circlesinside);
+                                    showdetails[showdetails.length] = circlesinside;
+                                    obj.lastclick = circlesinside;
+                                console.log("circleS.getAttributeNS(null, 'id')", circleS.getAttributeNS(null, 'id'));
+                                arropinions[circleS.getAttributeNS(null, 'id')].opinion = "yes";
+                                console.log("arropinions", arropinions);
+                            }
+
+                            var circleN = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                            circleN.setAttribute("cx", xposcircN);
+                            circleN.setAttribute("cy", yposdetails);
+                            circleN.setAttribute("fill", "#ffffff");
+                            circleN.setAttribute("stroke", "#000000");
+                            circleN.setAttribute("r", "1%");
+                            circleN.setAttribute("id", "");
+                            showdetails[showdetails.length] = circleN;
+                            svg.getElementById("all").appendChild(circleN);
+                            circleN.onclick = function () {
+                                if (obj.lastclick != null) {
+                                    svg.getElementById("all").removeChild(obj.lastclick);
+                                    removeElemFromArray(showdetails, obj.lastclick);
+                                    obj.lastclick = null;
+                                }
+
+                                var circlesinside = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                                circlesinside.setAttribute("cx", (circleN.getAttributeNS(null, 'cx')));
+                                circlesinside.setAttribute("cy", (circleN.getAttributeNS(null, 'cy')));
+                                circlesinside.setAttribute("fill", "#000000");
+                                circlesinside.setAttribute("stroke", "#000000");
+                                circlesinside.setAttribute("r", "0.7%");
+                                circlesinside.setAttribute("id", "circcc");
+                                svg.getElementById("all").appendChild(circlesinside);
+                                showdetails[showdetails.length] = circlesinside;
+                                obj.lastclick = circlesinside;
+                                arropinions[circleS.getAttributeNS(null, 'id')].opinion = "no";
+                                console.log("arropinions", arropinions);
+                            }
+                            
+
+
+
+                            var xmlhttp = new XMLHttpRequest();
+                            xmlhttp.onreadystatechange = function () {
+
+                                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                                    var resp4 = JSON.parse(xmlhttp.response);
+                                    var namevent = resp4.Type;
+
+
+                                    var xmlhttp1 = new XMLHttpRequest();
+                                    xmlhttp1.onreadystatechange = function() {
+
+                                        if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                            var resp2 = JSON.parse(xmlhttp1.response);
+                                            var causename = resp2.Name;
+
+                                            if (entry.executeId == null) {
+                                                arropinions[arropinions.length] = obj;
+                                                createLabels(datet.toLocaleTimeString() + "-" + namevent + "-" + causename, xposdetails, yposdetails1);
+                                                console.log("ydetails", yposdetails);
+                                                yposdetails1 = parseInt(yposdetails1.substring(0, yposdetails1.length - 1)) + 5 + "%";
+                                                console.log("ydetails", yposdetails);
+                                            } else {
+                                                var xmlhttp2 = new XMLHttpRequest();
+                                                xmlhttp2.onreadystatechange = function() {
+
+                                                    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+                                                        var resp3 = JSON.parse(xmlhttp2.response);
+                                                        var executename = resp3.Name;
+
+                                                        arropinions[arropinions.length] = obj;
+                                                        createLabels(datet.toLocaleTimeString() + "-" + namevent + "-" + causename + "-" + executename, xposdetails, yposdetails1);
+                                                        console.log("ydetails", yposdetails);
+                                                        yposdetails1 = parseInt(yposdetails1.substring(0, yposdetails1.length - 1)) + 5 + "%";
+                                                        console.log("ydetails", yposdetails);
+                                                    }
+                                                };
+
+                                                xmlhttp2.open("GET", "/SetUp/GetPlayer?id=" + entry.executeId, true);
+                                                xmlhttp2.send();
+                                            }
+                                        }
+                                    };
+
+                                    xmlhttp1.open("GET", "/SetUp/GetPlayer?id=" + entry.causeId, true);
+                                    xmlhttp1.send();
+
+                                }
+                            }
+
+                            xmlhttp.open("GET", "/SetUp/GetEvent?id=" + entry.eventId, true);
+                            xmlhttp.send();
+
+                            
+                            //LineInTimeLine(entry.eventId, entry.causeId, entry.executeId, datet);
+                            yposdetails = parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 5 + "%";
+                        });
+                        var xpossave = "70%";
+                        var ypossave = "80%";
+                        var svgbutton = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        svgbutton.setAttributeNS(null, 'height', '4%');
+                        svgbutton.setAttributeNS(null, 'width', '4%');
+                        svgbutton.setAttributeNS(null, 'id', '0');
+                        //svgbutton.setAttributeNS(null, 'style', 'fill:white;stroke:white');
+                        svgbutton.setAttributeNS(null, 'fill', 'white');
+                        svgbutton.setAttributeNS(null, 'x', xpossave);
+                        svgbutton.setAttributeNS(null, 'y', ypossave);
+                        svgbutton.setAttributeNS(null, 'visibility', 'visible');
+                        svgbutton.setAttributeNS(null, 'cursor', 'pointer');
+                        showdetails[showdetails.length] = svgbutton;
+                        //svgbutton.onclick = function() {
+                        //    console.log("button");
+                        //};
+
+                        svg.getElementById("all").appendChild(svgbutton);
+                        createLabels("Save", xpossave, parseInt(xpossave.substring(0, xpossave.length - 1)) + 14 + "%");
+
+                    }
+                }
+
+                xmlhttp5.open("GET", "/SetUp/GetOpinionUserByInstant?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+           "&idequipag=" + idequipag + "&dataequipag=" + dataequipag+"&idcause="+id, true);
+                xmlhttp5.send();
+
+                //for (var i = 0; i < temp.length; ++i) {
+
+                    //var circleS = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    //circleS.setAttribute("cx", xposcircS);
+                    //circleS.setAttribute("cy", yposdetails);
+                    //circleS.setAttribute("fill", "#ffffff");
+                    //circleS.setAttribute("stroke", "#000000");
+                    //circleS.setAttribute("r", "1%");
+                    //circleS.setAttribute("id", temp[i]);
+                    //showdetails[showdetails.length] = circleS;
+                    //svg.getElementById("all").appendChild(circleS);
+                    ////circleS.onclick = function() {
+                    //    var circlesinside = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    //    circlesinside.setAttribute("cx", (circleS.getAttributeNS(null, 'cx')));
+                    //    circlesinside.setAttribute("cy", (circleS.getAttributeNS(null, 'cy')));
+                    //    circlesinside.setAttribute("fill", "#000000");
+                    //    circlesinside.setAttribute("stroke", "#000000");
+                    //    circlesinside.setAttribute("r", "0.7%");
+                    //    circlesinside.setAttribute("id", "circcc");
+                    //    svg.getElementById("all").appendChild(circlesinside);
+                    //    var obj = {};
+                    //    obj.timeline = circleS.getAttributeNS(null, 'id');
+                    //    obj.opinion = "yes";
+                    //};
+                    //var circleN = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    //circleN.setAttribute("cx", xposcircN);
+                    //circleN.setAttribute("cy", yposdetails);
+                    //circleN.setAttribute("fill", "#ffffff");
+                    //circleN.setAttribute("stroke", "#000000");
+                    //circleN.setAttribute("r", "1%");
+                    //circleN.setAttribute("id", temp[i]);
+                    //showdetails[showdetails.length] = circleN;
+                    //svg.getElementById("all").appendChild(circleN);
+                    //circleN.onclick = function () {
+                    //    var circlesinside = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    //    circlesinside.setAttribute("cx", (circleN.getAttributeNS(null, 'cx')));
+                    //    circlesinside.setAttribute("cy", (circleN.getAttributeNS(null, 'cy')));
+                    //    circlesinside.setAttribute("fill", "#000000");
+                    //    circlesinside.setAttribute("stroke", "#000000");
+                    //    circlesinside.setAttribute("r", "0.7%");
+                    //    circlesinside.setAttribute("id", "circcc");
+                    //    svg.getElementById("all").appendChild(circlesinside);
+                    //};
+
+                //    createLabels(temp[i].innerHTML, xposdetails, yposdetails);
+
+                //    yposdetails = parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 5 + "%";
+                //}
+
+//    var xmlhttp5 = new XMLHttpRequest();
+
+                //    xmlhttp5.onreadystatechange = function() {
+                //        var y = "35%";
+                //        if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
+                //            var resp1 = JSON.parse(xmlhttp5.response);
+                //            resp1.forEach(function(entry) {
+                //                CreateCircle(parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+
+                //            });
+                //        }
+                //    }
+                //    xmlhttp5.open("GET", "/SetUp/GetTimeLine?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
+                //"&idequipag=" + idequipag + "&dataequipag=" + dataequipag + "&username=Adminn", true);
+                //    xmlhttp5.send();
+
+            }
+        };
+
+        xmlhttp8.open("GET", "/SetUp/GetPlayer?id=" + id, true);
+        xmlhttp8.send();
+
+
+    }
+
+
+
+
+
+
+    function EventName(id) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var resp1 = JSON.parse(xmlhttp.response);
+                return resp1.Type;
+            }
+        }
+
+        xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
+        xmlhttp.send();
+    }
+
+
+
+    function CreateCircle(x,y) {
+        var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circles.setAttribute("cx", x);
+        circles.setAttribute("cy", y);
+        circles.setAttribute("fill", "#ffffff");
+        circles.setAttribute("stroke", "#000000");
+        circles.setAttribute("r", "1%");
+        circles.setAttribute("id", "circ" + y);
+        showdetails[showdetails.length] = circles;
+        svg.getElementById("all").appendChild(circles);
+        return circles;
+    }
+
+
 
     function PhotoonSvg(id, photo, posx, posy) {
-        
+        console.log("PhotoonSvg" , id , posx , posy);
         var svgimg = PutBaseInfoPlayer(id, photo, posx, posy);
         console.log("add photo");
         svgimg.onclick = function (ev) {
             
-            console.log("click");
-            var xmlhttp8 = new XMLHttpRequest();
+            console.log("click", document.getElementById("isadmin").innerHTML.trim());
 
-            xmlhttp8.onreadystatechange = function () {
-
-                if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
-                    var resp = JSON.parse(xmlhttp8.response);
-
-
-                    var svgrec = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    svgrec.setAttributeNS(null, 'height', '80%');
-                    svgrec.setAttributeNS(null, 'width', '20%');
-                    svgrec.setAttributeNS(null, 'id', resp.Id);
-                    svgrec.setAttributeNS(null, 'style', 'fill:green;stroke:white');
-                    svgrec.setAttributeNS(null, 'x', xposdetails);
-                    svgrec.setAttributeNS(null, 'y', yposdetails);
-                    svgrec.setAttributeNS(null, 'visibility', 'visible');
-                    showdetails[showdetails.length] = svgrec;
-                    svg.getElementById("all").appendChild(svgrec);
-
-                    var svgimgsub = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-                    svgimgsub.setAttributeNS(null, 'height', "19%");
-                    svgimgsub.setAttributeNS(null, 'width', "19%");
-                    //svgimgsub.setAttributeNS(null, 'id', 'capel4');
-                    svgimgsub.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + resp.Photo);
-                    svgimgsub.setAttributeNS(null, 'x', xposdetails);
-                    svgimgsub.setAttributeNS(null, 'y', yposdetails);
-                    svgimgsub.setAttributeNS(null, 'visibility', 'visible');
-                    showdetails[showdetails.length] = svgimgsub;
-                    svg.getElementById("all").appendChild(svgimgsub);
-
-
-                    var substringedDate = resp.Born.substring(6); //substringedDate= 1291548407008)/
-                    var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
-                    var date = new Date(parsedIntDate);
-                    console.log("resp", date.toDateString());
-                    //var jsonText = JsonConvert.SerializeObject(resp.Born, new IsoDateTimeConverter());
-                    createLabels("Name: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
-                    createLabels("Born: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
-                    createLabels("Height: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
-                    createLabels("Weight: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
-
-                    var xmlhttp9 = new XMLHttpRequest();
-
-                    xmlhttp9.onreadystatechange = function () {
-
-                        if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
-                            var resp2 = JSON.parse(xmlhttp9.response);
-
-                            var y = "35%";
-                            resp2.forEach(function (entry) {
-                                //y = y + 20;
-                                y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
-                                ////var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                                ////circles.setAttribute("cx", xposdetails + 15);
-                                ////circles.setAttribute("cy", yposdetails + y);
-                                ////circles.setAttribute("fill", "#ffffff");
-                                ////circles.setAttribute("stroke", "#000000");
-                                ////circles.setAttribute("r", 10);
-                                ////circles.setAttribute("id", "circ" + y);
-                                ////showdetails[showdetails.length] = circles;
-                                ////circles.onclick = function () {
-                                ////    console.log("circles");
-                                ////    var circlesinside = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                                ////    circlesinside.setAttribute("cx", parseInt(circles.getAttributeNS(null, 'cx')));
-                                ////    circlesinside.setAttribute("cy", parseInt(circles.getAttributeNS(null, 'cy')));
-                                ////    circlesinside.setAttribute("fill", "#000000");
-                                ////    circlesinside.setAttribute("stroke", "#000000");
-                                ////    circlesinside.setAttribute("r", 4);
-                                ////    circlesinside.setAttribute("id", "circcc");
-                                ////    svg.getElementById("all").appendChild(circlesinside);
-                                ////    showdetails[showdetails.length] = circlesinside;
-                                createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1))+parseInt(y.substring(0,y.length-1)) + "%");
-
-                                //saveplayer.idplayer = resp.Id;
-                                //saveplayer.event = entry.Id;
-
-
-                                ////};
-                                ////svg.getElementById("all").appendChild(circles);
-                                createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+1 + "%");
-                            });
-
-                            var svgbutton = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                            svgbutton.setAttributeNS(null, 'height', '4%');
-                            svgbutton.setAttributeNS(null, 'width', '5%');
-                            svgbutton.setAttributeNS(null, 'id', '0');
-                            //svgbutton.setAttributeNS(null, 'style', 'fill:white;stroke:white');
-                            svgbutton.setAttributeNS(null, 'fill', 'white');
-                            svgbutton.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 15 + "%");
-                            svgbutton.setAttributeNS(null, 'y', parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+ "%");
-                            svgbutton.setAttributeNS(null, 'visibility', 'visible');
-                            svgbutton.setAttributeNS(null, 'cursor', 'pointer');
-                            showdetails[showdetails.length] = svgbutton;
-                            //svgbutton.onclick = function() {
-                            //    console.log("button");
-                            //};
-
-                            svg.getElementById("all").appendChild(svgbutton);
-                            createLabels("Save", parseInt(xposdetails.substring(0, xposdetails.length - 1))+15 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+3 + "%");
-
-
-                            //var svgexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-                            //svgexecutor.setAttributeNS(null, 'height', '10%');
-                            //svgexecutor.setAttributeNS(null, 'width', '5%');
-                            //svgexecutor.setAttributeNS(null, 'id', '0');
-                            //svgexecutor.setAttributeNS(null, 'style', 'fill:white;stroke:white');
-                            //svgexecutor.setAttributeNS(null, 'cx', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 19 + "%");
-                            //svgexecutor.setAttributeNS(null, 'cy', parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) - 10 + "%");
-                            //svgexecutor.setAttributeNS(null, 'rx', "0.5%");
-                            //svgexecutor.setAttributeNS(null, 'ry', "5%");
-                            //svgexecutor.setAttributeNS(null, 'visibility', 'visible');
-                            //showdetails[showdetails.length] = svgexecutor;
-                            //svg.getElementById("all").appendChild(svgexecutor);
-
-
-                            console.log("sdcndsdc", xposdetails);
-                            console.log("sdcndsdc", yposdetails);
-                            //var executor = createLabels("executor", "5%" , "5%");
-                            //executor.setAttributeNS(null, "transform", "rotate(90 " + svgheight + ",+"+svgwidth+")");
-                            //executor.onclick = function () {
-                                //var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                                //rectexecutor.setAttributeNS(null, 'height', '80%');
-                                //rectexecutor.setAttributeNS(null, 'width', '20%');
-                                //rectexecutor.setAttributeNS(null, 'id', '0');
-                                //rectexecutor.setAttributeNS(null, 'style', 'fill:green;stroke:white');
-                                //rectexecutor.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1))+20+"%");
-                                //rectexecutor.setAttributeNS(null, 'y', yposdetails);
-                                //rectexecutor.setAttributeNS(null, 'visibility', 'visible');
-                                //svg.getElementById("all").appendChild(rectexecutor);
-                                //showdetails[showdetails.length] = rectexecutor;
-
-
-                                //var xmlhttp = new XMLHttpRequest();
-
-                                //xmlhttp.onreadystatechange = function () {
-
-                                //    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                //        var resp1 = JSON.parse(xmlhttp.response);
-
-                                //        var xmlhttp1 = new XMLHttpRequest();
-
-                                //        xmlhttp1.onreadystatechange = function () {
-
-                                //            if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
-                                //                var resp3 = JSON.parse(xmlhttp1.response);
-                                //                y = "8%";
-                                //                resp3.forEach(function (entry) {
-
-                                //                    createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) +23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
-                                //                    createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1))+"%");
-                                //                    y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
-
-                                //                });
-                                //            }
-                                //        };
-                                //        var idc;
-                                //            if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
-                                //                idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
-                                //            } else {
-                                //                idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
-                                //            }
-                                        
-                                //        xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
-                                //        xmlhttp1.send();
-
-                                //    }
-                                //};
-                                //xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + resp.Id, true);
-                                //xmlhttp.send();
-
-                            //};
-
-                        }
-                    }
-                    xmlhttp9.open("GET", "/SetUp/GetEvents", true);
-                    xmlhttp9.send();
-
-
-                }
-            };
-
-            xmlhttp8.open("GET", "/SetUp/GetPlayer?id=" + id, true);
-            xmlhttp8.send();
-
+            if (document.getElementById("isadmin").innerHTML.trim() == "True") {
+                createAdminInteract(id, photo, posx, posy);
+            } else {
+                createUserInteract(id, photo, posx, posy);
+            }
 
         };
         return svgimg;
@@ -1154,7 +1515,7 @@
 
         txtElem.setAttributeNS(null, "x", xpos);
         txtElem.setAttributeNS(null, "y", ypos);
-        txtElem.setAttributeNS(null, "font-size", avwidth / 8 + "%");
+        txtElem.setAttributeNS(null, "font-size", avwidth / 9 + "%");
         txtElem.setAttributeNS(null, 'cursor', 'pointer');
         var helloTxt = document.createTextNode(name);
 
@@ -1242,243 +1603,273 @@
 
 
     SVGDocument.onmousedown = function (evt) {
-
+        console.log("arrrrrraa",arropinions);
         if (evt.target.innerHTML == 'Save') {
-            console.log("saveplayeres_length", saveplayer);
-            if (Object.getOwnPropertyNames(saveplayer).length === 0) {
-                console.log("unsaved");
-                return;
-            } else if (!saveplayer.hasOwnProperty('event')) {
-                return;
-            } else if (!saveplayer.hasOwnProperty('idexe')) {
-                saveplayer.idexe = null;
-            }
-            lastcircle = null;
-            //var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML;
-            //var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML;
-            //var idequipa = document.getElementById("iddetailssetup_idagainst").innerHTML;
-            //var dataequipa = document.getElementById("iddetailssetup_dateagainst").innerHTML;
-            //var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML;
-            //var datahora = document.getElementById("iddetailssetup_date").innerHTML;
-            //console.log("idest", idstadium);
-            //console.log("idest", idequipav);
-            //console.log("idest", idequipa);
-            //console.log("idest", saveplayer);
-            var xmlhttp10 = new XMLHttpRequest();
-            var dt = new Date();
-            //var substringedDate = dt.substring(6); //substringedDate= 1291548407008)/
-            //var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
-            //var datet = new Date(parsedIntDate);
-            xmlhttp10.onreadystatechange = function () {
 
-                if (xmlhttp10.readyState == 4 && xmlhttp10.status == 200) {
-                    console.log("actualiza timeline");
+            if (document.getElementById("isadmin").innerHTML.trim() == "False") {
+                var dt = new Date();
 
+                arropinions.forEach(function(entry) {
+                    if (entry.hasOwnProperty("opinion")) {
+                        
+                        var xmlhttp1 = new XMLHttpRequest();
+                        xmlhttp1.onreadystatechange = function () {
 
-                    //console.log("resp", date.toDateString());
-                    console.log("date", dt);
-                    LineInTimeLine(saveplayer.event, saveplayer.idplayer, saveplayer.idexe, dt);
-
-                    var xmlhttp = new XMLHttpRequest();
-                    xmlhttp.onreadystatechange = function () {
-
-                        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                            var resp1 = JSON.parse(xmlhttp.response);
-                            if (resp1.Type == 'Cartao Vermelho') {
-
-                                removePhoto(saveplayer.idplayer);
-
-                                //var xmlhttp1 = new XMLHttpRequest();
-                                //xmlhttp1.onreadystatechange = function () {
-
-                                //    if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
-                                //        var resp = JSON.parse(xmlhttp1.response);
-                                //        var idclub = resp.IdClub;
-                                //        var dateclub;
-                                //        if (idclub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
-                                //            dateclub = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
-                                //        } else {
-                                //            dateclub = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
-                                //        }
-
-                                //        //var xmlhttp2 = new XMLHttpRequest();
-                                //        //xmlhttp2.onreadystatechange = function () {
-
-                                //        //    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
-
-                                //        //    }
-                                //        //};
-                                //        //xmlhttp2.open("POST", "/Team/UpdateIntegrate", true);
-                                //        //xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-
-                                //        //xmlhttp2.send("idclub=" + idclub + "&date=" + dateclub + "&idplayer=" + saveplayer.idplayer + "&idposition=" + 0);
-                                //        saveplayer = {};
-
-
-                                //    }
-                                //};
-                                //xmlhttp1.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + saveplayer.idplayer, true);
-                                //xmlhttp1.send();
-
-
+                            if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                console.log("create opiniaooo");
                             }
-                            else if (resp1.Type == 'Substituição') {
-                                replacePlayer(saveplayer.idplayer, saveplayer.idexe);
-                            }
-                        }
-                    };
-                    xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
-                    xmlhttp.send();
+                        };
 
+                        xmlhttp1.open("POST", "/SetUp/CreateOpinionUser", true);
+                        xmlhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xmlhttp1.send("dateinstant=" + entry.dated + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
+                            "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&iduser=" + document.getElementById("curruserid").innerHTML.trim() + "&dateop=" + dt + "&negative=" + entry.opinion);
+
+
+
+                    }
+                });
+                
+
+            } else
+            {
+
+                console.log("saveplayeres_length", saveplayer);
+                if (Object.getOwnPropertyNames(saveplayer).length === 0) {
+                    console.log("unsaved");
+                    return;
+                } else if (!saveplayer.hasOwnProperty('event')) {
+                    return;
+                } else if (!saveplayer.hasOwnProperty('idexe')) {
+                    saveplayer.idexe = null;
                 }
+                lastcircle = null;
+                //var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML;
+                //var dataequipav = document.getElementById("iddetailssetup_datevisitor").innerHTML;
+                //var idequipa = document.getElementById("iddetailssetup_idagainst").innerHTML;
+                //var dataequipa = document.getElementById("iddetailssetup_dateagainst").innerHTML;
+                //var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML;
+                //var datahora = document.getElementById("iddetailssetup_date").innerHTML;
+                //console.log("idest", idstadium);
+                //console.log("idest", idequipav);
+                //console.log("idest", idequipa);
+                //console.log("idest", saveplayer);
+                var xmlhttp10 = new XMLHttpRequest();
+                var dt = new Date();
+                //var substringedDate = dt.substring(6); //substringedDate= 1291548407008)/
+                //var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
+                //var datet = new Date(parsedIntDate);
+                xmlhttp10.onreadystatechange = function() {
+
+                    if (xmlhttp10.readyState == 4 && xmlhttp10.status == 200) {
+                        console.log("actualiza timeline");
+
+
+                        //console.log("resp", date.toDateString());
+                        console.log("date", dt);
+                        LineInTimeLine(saveplayer.event, saveplayer.idplayer, saveplayer.idexe, dt);
+
+                        var xmlhttp = new XMLHttpRequest();
+                        xmlhttp.onreadystatechange = function() {
+
+                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                                var resp1 = JSON.parse(xmlhttp.response);
+                                if (resp1.Type == 'Cartão Vermelho') {
+
+                                    removePhoto(saveplayer.idplayer);
+
+                                    //var xmlhttp1 = new XMLHttpRequest();
+                                    //xmlhttp1.onreadystatechange = function () {
+
+                                    //    if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                    //        var resp = JSON.parse(xmlhttp1.response);
+                                    //        var idclub = resp.IdClub;
+                                    //        var dateclub;
+                                    //        if (idclub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
+                                    //            dateclub = document.getElementById("iddetailssetup_datevisitor").innerHTML.trim();
+                                    //        } else {
+                                    //            dateclub = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
+                                    //        }
+
+                                    //        //var xmlhttp2 = new XMLHttpRequest();
+                                    //        //xmlhttp2.onreadystatechange = function () {
+
+                                    //        //    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+
+                                    //        //    }
+                                    //        //};
+                                    //        //xmlhttp2.open("POST", "/Team/UpdateIntegrate", true);
+                                    //        //xmlhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+                                    //        //xmlhttp2.send("idclub=" + idclub + "&date=" + dateclub + "&idplayer=" + saveplayer.idplayer + "&idposition=" + 0);
+                                    //        saveplayer = {};
+
+
+                                    //    }
+                                    //};
+                                    //xmlhttp1.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + saveplayer.idplayer, true);
+                                    //xmlhttp1.send();
+
+
+                                } else if (resp1.Type == 'Substituição') {
+                                    replacePlayer(saveplayer.idplayer, saveplayer.idexe);
+                                }
+                            }
+                        };
+                        xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
+                        xmlhttp.send();
+
+                    }
+                }
+
+                xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
+                xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
+                    "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe);
+
+                removedetails();
+                return;
             }
 
-            xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
-            xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
-                "&dataagainst=" +dataequipag + "&idagainst=" +idequipag + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe);
-
+        }
+            if (evt.target.nodeName == 'circle' || evt.target.nodeName == 'text') return;
+            if (evt.target.nodeName == 'rect') {
+                removedetails();
+                return true;
+            }
             removedetails();
-            return;
+            if (evt.which == 3) {
 
-        }
-        if (evt.target.nodeName == 'circle' || evt.target.nodeName == 'text') return;
-        if (evt.target.nodeName == 'rect') {
-            removedetails();
-            return true;
-        }
-        removedetails();
-        if (evt.which == 3) {
+                evt.target.onclick(evt);
 
-            evt.target.onclick(evt);
+                return false;
+            }
 
-            return false;
-        }
+            var targetElement = oldtarget = evt.target;
+            if (targetElement.nodeName != 'image') {
+                return;
+            }
+            console.log("call tempimages");
 
-        var targetElement = oldtarget = evt.target;
-        if (targetElement.nodeName != 'image') {
-            return;
-        }
-        console.log("call tempimages");
-
-        OldCoor.x = targetElement.getAttributeNS(null, 'x');
-        OldCoor.y = targetElement.getAttributeNS(null, 'y');
-        OldCoor.id = targetElement.getAttributeNS(null, 'id');
-        console.log("oldcoor", OldCoor);
-        //functimer = setTimeout(
-        //    function CreateTempImages() {
-        //        console.log("evttt", evt);
-        //        functimer = null;
-        //        isclick = true;
-        //        console.log("createtempimges");
-        //        tempimages = [];
+            OldCoor.x = targetElement.getAttributeNS(null, 'x');
+            OldCoor.y = targetElement.getAttributeNS(null, 'y');
+            OldCoor.id = targetElement.getAttributeNS(null, 'id');
+            console.log("oldcoor", OldCoor);
+            //functimer = setTimeout(
+            //    function CreateTempImages() {
+            //        console.log("evttt", evt);
+            //        functimer = null;
+            //        isclick = true;
+            //        console.log("createtempimges");
+            //        tempimages = [];
 
 
-        //        OldCoor.x = targetElement.getAttributeNS(null, 'x');
-        //        OldCoor.y = targetElement.getAttributeNS(null, 'y');
-        //        OldCoor.id = targetElement.getAttributeNS(null, 'id');
-        //        var xmlhttp4 = new XMLHttpRequest();
+            //        OldCoor.x = targetElement.getAttributeNS(null, 'x');
+            //        OldCoor.y = targetElement.getAttributeNS(null, 'y');
+            //        OldCoor.id = targetElement.getAttributeNS(null, 'id');
+            //        var xmlhttp4 = new XMLHttpRequest();
 
-        //        xmlhttp4.onreadystatechange = function () {
+            //        xmlhttp4.onreadystatechange = function () {
 
-        //            if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
-        //                var resp = JSON.parse(xmlhttp4.response);
-        //                var pos = resp.Designation;
-        //                var next;
-        //                currpos = pos;
-        //                if (pos == "Defesa") {
-        //                    console.log("defesa");
+            //            if (xmlhttp4.readyState == 4 && xmlhttp4.status == 200) {
+            //                var resp = JSON.parse(xmlhttp4.response);
+            //                var pos = resp.Designation;
+            //                var next;
+            //                currpos = pos;
+            //                if (pos == "Defesa") {
+            //                    console.log("defesa");
 
-        //                    if (evt.clientX >= halfposition) {
-        //                        PutTempImages(andefesefull, amiddledefensex, amiddledefensey, adefense);
-        //                    } else {
-        //                        PutTempImages(ndefesefull, middledefensex, middledefensey, defense);
-        //                    }
-        //                    //for (var i = 0; i < ndefesefull; ++i) {
-        //                    //    if (evt.clientX >= halfposition) {
-        //                    //        next = nextposition(amiddledefensex, amiddledefensey, adefense);
-        //                    //    } else {
-        //                    //        next = nextposition(middledefensex, middledefensey, defense);
-        //                    //    }
-        //                    //    PosToMove[PosToMove.length] = next;
-        //                    //    //createcircle(next.x, next.y);
-        //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
-        //                    //}
-        //                    //ndefensehome = 0;
-        //                } else if (pos == "Medio") {
+            //                    if (evt.clientX >= halfposition) {
+            //                        PutTempImages(andefesefull, amiddledefensex, amiddledefensey, adefense);
+            //                    } else {
+            //                        PutTempImages(ndefesefull, middledefensex, middledefensey, defense);
+            //                    }
+            //                    //for (var i = 0; i < ndefesefull; ++i) {
+            //                    //    if (evt.clientX >= halfposition) {
+            //                    //        next = nextposition(amiddledefensex, amiddledefensey, adefense);
+            //                    //    } else {
+            //                    //        next = nextposition(middledefensex, middledefensey, defense);
+            //                    //    }
+            //                    //    PosToMove[PosToMove.length] = next;
+            //                    //    //createcircle(next.x, next.y);
+            //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+            //                    //}
+            //                    //ndefensehome = 0;
+            //                } else if (pos == "Medio") {
 
-        //                    if (evt.clientX >= halfposition) {
-        //                        PutTempImages(anmiddlefull, amiddlex, amiddley, amiddle);
-        //                    } else {
-        //                        PutTempImages(nmiddlefull, middlex, middley, middle);
-        //                    }
+            //                    if (evt.clientX >= halfposition) {
+            //                        PutTempImages(anmiddlefull, amiddlex, amiddley, amiddle);
+            //                    } else {
+            //                        PutTempImages(nmiddlefull, middlex, middley, middle);
+            //                    }
 
-        //                    //for (var i = 0; i < nmiddlefull; ++i) {
-        //                    //    if (evt.clientX >= halfposition) {
-        //                    //        next = nextposition(amiddlex, amiddley, amiddle);
-        //                    //    } else {
-        //                    //        next = nextposition(middlex, middley, middle);
-        //                    //    }
-        //                    //    //next = nextposition(middlex, middley, middle);
-        //                    //    PosToMove[PosToMove.length] = next;
-        //                    //    //createcircle(next.x, next.y);
-        //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
-        //                    //}
-        //                    //ndefensehome = 0;
-        //                } else if (pos == "Ataque") {
+            //                    //for (var i = 0; i < nmiddlefull; ++i) {
+            //                    //    if (evt.clientX >= halfposition) {
+            //                    //        next = nextposition(amiddlex, amiddley, amiddle);
+            //                    //    } else {
+            //                    //        next = nextposition(middlex, middley, middle);
+            //                    //    }
+            //                    //    //next = nextposition(middlex, middley, middle);
+            //                    //    PosToMove[PosToMove.length] = next;
+            //                    //    //createcircle(next.x, next.y);
+            //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+            //                    //}
+            //                    //ndefensehome = 0;
+            //                } else if (pos == "Ataque") {
 
-        //                    if (evt.clientX >= halfposition) {
-        //                        PutTempImages(anstrikerfull, amiddlestrikerx, amiddlestrikery, astriker);
-        //                    } else {
-        //                        PutTempImages(nstrikerfull, middlestrikerx, middlestrikery, striker);
-        //                    }
+            //                    if (evt.clientX >= halfposition) {
+            //                        PutTempImages(anstrikerfull, amiddlestrikerx, amiddlestrikery, astriker);
+            //                    } else {
+            //                        PutTempImages(nstrikerfull, middlestrikerx, middlestrikery, striker);
+            //                    }
 
-        //                    //for (var i = 0; i < nstrikerfull; ++i) {
+            //                    //for (var i = 0; i < nstrikerfull; ++i) {
 
-        //                    //    if (evt.clientX >= halfposition) {
-        //                    //        next = nextposition(amiddlestrikerx, amiddlestrikery, astriker);
-        //                    //    } else {
-        //                    //        console.log("middlestrikerx", middlestrikerx);
-        //                    //        next = nextposition(middlestrikerx, middlestrikery, striker);
-        //                    //    }
+            //                    //    if (evt.clientX >= halfposition) {
+            //                    //        next = nextposition(amiddlestrikerx, amiddlestrikery, astriker);
+            //                    //    } else {
+            //                    //        console.log("middlestrikerx", middlestrikerx);
+            //                    //        next = nextposition(middlestrikerx, middlestrikery, striker);
+            //                    //    }
 
-        //                    //    //next = nextposition(middlestrikerx, middledefensey, striker);
-        //                    //    PosToMove[PosToMove.length] = next;
-        //                    //    //createcircle(next.x, next.y);
-        //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
-        //                    //}
-        //                    //ndefensehome = 0;
-        //                } else if (pos == "Guarda-redes") {
-        //                    //allcircles = [];
-        //                    if (evt.clientX >= middlex) {
-        //                        next = nextposition(amiddlegkx, amiddlegky, agk);
-        //                    } else {
-        //                        next = nextposition(middlegkx, middlegky, gk);
-        //                    }
-        //                    //next = nextposition(middlegkx, middlegky, 1);
-        //                    PosToMove[PosToMove.length] = next;
-        //                    //createcircle(next.x, next.y);
-        //                    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
-        //                }
-        //                //movedowndefense = 0;
-        //            }
-        //        }
+            //                    //    //next = nextposition(middlestrikerx, middledefensey, striker);
+            //                    //    PosToMove[PosToMove.length] = next;
+            //                    //    //createcircle(next.x, next.y);
+            //                    //    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+            //                    //}
+            //                    //ndefensehome = 0;
+            //                } else if (pos == "Guarda-redes") {
+            //                    //allcircles = [];
+            //                    if (evt.clientX >= middlex) {
+            //                        next = nextposition(amiddlegkx, amiddlegky, agk);
+            //                    } else {
+            //                        next = nextposition(middlegkx, middlegky, gk);
+            //                    }
+            //                    //next = nextposition(middlegkx, middlegky, 1);
+            //                    PosToMove[PosToMove.length] = next;
+            //                    //createcircle(next.x, next.y);
+            //                    tempimages[tempimages.length] = PhotoonSvg(null, "empty.jpg", next.x, next.y);
+            //                }
+            //                //movedowndefense = 0;
+            //            }
+            //        }
 
-        //        xmlhttp4.open("GET", "/SetUp/GetPlayerPosition?id=" + targetElement.id, true);
-        //        xmlhttp4.send();
+            //        xmlhttp4.open("GET", "/SetUp/GetPlayerPosition?id=" + targetElement.id, true);
+            //        xmlhttp4.send();
 
-                if (BackDrop != targetElement) {
+            if (BackDrop != targetElement) {
 
-                    DragTarget = targetElement;
+                DragTarget = targetElement;
 
-                    DragTarget.parentNode.appendChild(DragTarget);
-                    DragTarget.setAttributeNS(null, 'pointer-events', 'none');
-                    var transMatrix = DragTarget.getCTM();
-                    GrabPoint.x = TrueCoords.x - Number(transMatrix.e);
-                    GrabPoint.y = TrueCoords.y - Number(transMatrix.f);
-                }
-        //    }
-        //    , timer);
+                DragTarget.parentNode.appendChild(DragTarget);
+                DragTarget.setAttributeNS(null, 'pointer-events', 'none');
+                var transMatrix = DragTarget.getCTM();
+                GrabPoint.x = TrueCoords.x - Number(transMatrix.e);
+                GrabPoint.y = TrueCoords.y - Number(transMatrix.f);
+            }
+            //    }
+            //    , timer);
+        
 
     };
     SVGDocument.onmousemove = function (evt) {
@@ -1992,7 +2383,7 @@
 
                                 
                             }
-                            else if (resp1.Type == 'Cartao Vermelho') {
+                            else if (resp1.Type == 'Cartão Vermelho') {
                                 removePhoto(entry.causeId);
                             }
                         }
@@ -2005,7 +2396,7 @@
             }
         };
         xmlhttp5.open("GET", "/SetUp/GetTimeLine?idstadium=" + idstadium + "&datahora=" + datahora + "&idequipav=" + idequipav + "&dataequipav=" + dataequipav +
-            "&idequipag=" + idequipag + "&dataequipag=" + dataequipag, true);
+            "&idequipag=" + idequipag + "&dataequipag=" + dataequipag +"&username=Adminn", true);
         xmlhttp5.send();
 
     }

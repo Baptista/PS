@@ -84,7 +84,7 @@
     @Html.DisplayFor(model => model.clubagainst.Symbol)
 </p>
 <p hidden id="curruserid">
-    @User.Identity.GetUserId()
+    @User.Identity.Name
 </p>
 <p hidden id="havecurruser">
     @User.Identity.IsAuthenticated
