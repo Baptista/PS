@@ -826,9 +826,9 @@
 
 
     
-
+    var lastcircle = null;
     function createcircles(idp, ide, x, y) {
-        var lastcircle = null;
+        
 
         var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circles.setAttribute("cx", x);
@@ -863,15 +863,15 @@
             
 
             showdetails[showdetails.length] = circlesinside;
-            if (ide != null) {
+           // if (ide != null) {
                 //saveplayer.idexe = null;
                 saveplayer.event = ide;
                 saveplayer.idplayer = idp;
-            } else {
+            //} else {
                 saveplayer.idexe = idp;
                 console.log("clickotherteam");
-            }
-            if (ide != null) {
+            //}
+            //if (ide != null) {
 
                 var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                 rectexecutor.setAttributeNS(null, 'height', '80%');
@@ -898,9 +898,45 @@
                             if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
                                 var resp3 = JSON.parse(xmlhttp1.response);
                                 y = "8%";
+                                var temp = null;
                                 resp3.forEach(function(entry) {
+                                    
+                                    //createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                    var circles2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                                    circles2.setAttribute("cx", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%");
+                                    circles2.setAttribute("cy", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                    circles2.setAttribute("fill", "#ffffff");
+                                    circles2.setAttribute("stroke", "#000000");
+                                    circles2.setAttribute("r", "1%");
+                                    circles2.setAttribute("id", entry.Id);
+                                    svg.getElementById("all").appendChild(circles2);
+                                    showdetails[showdetails.length] = circles2;
+                                    circles2.onclick = function() {
 
-                                    createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                        if (temp != null) {
+
+                                            svg.getElementById("all").removeChild(temp);
+                                            removeElemFromArray(showdetails, temp);
+                                            console.log("remove circle", temp);
+                                            temp = null;
+                                        }
+
+                                        console.log("circles");
+                                        var circlesinside2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                                        circlesinside2.setAttribute("cx", (circles2.getAttributeNS(null, 'cx')));
+                                        circlesinside2.setAttribute("cy", (circles2.getAttributeNS(null, 'cy')));
+                                        circlesinside2.setAttribute("fill", "#000000");
+                                        circlesinside2.setAttribute("stroke", "#000000");
+                                        circlesinside2.setAttribute("r", "0.8%");
+                                        circlesinside2.setAttribute("id", "circcc");
+                                        svg.getElementById("all").appendChild(circlesinside2);
+                                        showdetails[showdetails.length] = circlesinside2;
+                                        console.log("lastcircle", temp);
+                                        temp = circlesinside2;
+                                        saveplayer.idexe = circles2.getAttributeNS(null,'id');
+                                        console.log("saveplayer.idexe", saveplayer.idexe);
+                                    };
+
                                     createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
                                     y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
 
@@ -937,7 +973,7 @@
                 xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + idp, true);
                 xmlhttp.send();
 
-            }
+            
             console.log("saveplayers", saveplayer);
         };
         svg.getElementById("all").appendChild(circles);
@@ -1023,6 +1059,7 @@
                                             return;
                                         } else {
                                             y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+                                            var temp = null;
                                             createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
 
                                             createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 1 + "%");
@@ -1033,6 +1070,7 @@
                                             return;
                                         } else {
                                             y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+                                            var temp = null;
                                             createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
 
                                             createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 1 + "%");
@@ -1607,9 +1645,14 @@
         if (evt.target.innerHTML == 'Save') {
 
             if (document.getElementById("isadmin").innerHTML.trim() == "False") {
-                var dt = new Date();
-
-                arropinions.forEach(function(entry) {
+                
+                var nopinions = arropinions.length;
+                arropinions.forEach(function (entry) {
+                    var dt = new Date();
+                    var n = dt.getMilliseconds();
+                    var f = dt.toString().substring(0, 24);
+                    dt = f + '.' + n;
+                    //dt.toString().substring(0, 25);
                     if (entry.hasOwnProperty("opinion")) {
                         
                         var xmlhttp1 = new XMLHttpRequest();
@@ -1721,7 +1764,7 @@
 
                     }
                 }
-
+                console.log("idexexexe", saveplayer.idexe);
                 xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
                 xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +

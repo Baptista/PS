@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using GameObserver.DomainModel;
 using GameObserver.DomainModel.Entities;
 
@@ -1149,75 +1150,80 @@ namespace GameObserver.Data
             DateTime dateagainst, int idagainst, String iduser, DateTime datehouropinion, String opinion)
         {
 
-            
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = new SqlCommand("InserirOpiniao", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter p1 = new SqlParameter("@minutosegundo", SqlDbType.DateTime, 8);
-                p1.Value = minutesecond.ToString("HH:mm:ss");
-                p1.Direction = ParameterDirection.Input;
-
-                SqlParameter p2 = new SqlParameter("@idestadio", SqlDbType.Int, 4);
-                p2.Value = idstadium;
-                p2.Direction = ParameterDirection.Input;
-
-                SqlParameter p3 = new SqlParameter("@datahora", SqlDbType.DateTime, 8);
-                p3.Value = datehour.ToString("yyyy-MM-dd HH:mm:ss");
-                p3.Direction = ParameterDirection.Input;
-
-                SqlParameter p4 = new SqlParameter("@datavisitante", SqlDbType.DateTime, 8);
-                p4.Value = datevisitor.ToString("yyyy-MM-dd");
-                p4.Direction = ParameterDirection.Input;
-
-                SqlParameter p5 = new SqlParameter("@idvisitante", SqlDbType.Int, 4);
-                p5.Value = idvisitor;
-                p5.Direction = ParameterDirection.Input;
-
-                SqlParameter p6 = new SqlParameter("@datadefronta", SqlDbType.DateTime, 8);
-                p6.Value = dateagainst.ToString("yyyy-MM-dd");
-                p6.Direction = ParameterDirection.Input;
-
-                SqlParameter p7 = new SqlParameter("@iddefronta", SqlDbType.Int, 4);
-                p7.Value = idagainst;
-                p7.Direction = ParameterDirection.Input;
-
-                SqlParameter p8 = new SqlParameter("@idutilizador", SqlDbType.VarChar, 50);
-                p8.Value = iduser;
-                p8.Direction = ParameterDirection.Input;
-
-                SqlParameter p9 = new SqlParameter("@datahoraopiniao", SqlDbType.DateTime, 8);
-                p9.Value = datehouropinion.ToString("yyyy-MM-dd hh:mm:ss");
-                p9.Direction = ParameterDirection.Input;
-
-                SqlParameter p10 = new SqlParameter("@negativa", SqlDbType.Int, 4);
-                p10.Value = (opinion=="yes")?1:0;
-                p10.Direction = ParameterDirection.Input;
-
-
-                cmd.Parameters.Add(p1);
-                cmd.Parameters.Add(p2);
-                cmd.Parameters.Add(p3);
-                cmd.Parameters.Add(p4);
-                cmd.Parameters.Add(p5);
-                cmd.Parameters.Add(p6);
-                cmd.Parameters.Add(p7);
-                cmd.Parameters.Add(p8);
-                cmd.Parameters.Add(p9);
-                cmd.Parameters.Add(p10);
-                
-                try
+                //SqlTransaction transaction;
+                using (SqlConnection conn = new SqlConnection(Stringconn))
                 {
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
+                    SqlCommand cmd = new SqlCommand("InserirOpiniao", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    SqlParameter p1 = new SqlParameter("@minutosegundo", SqlDbType.DateTime, 8);
+                    p1.Value = minutesecond.ToString("HH:mm:ss");
+                    p1.Direction = ParameterDirection.Input;
+
+                    SqlParameter p2 = new SqlParameter("@idestadio", SqlDbType.Int, 4);
+                    p2.Value = idstadium;
+                    p2.Direction = ParameterDirection.Input;
+
+                    SqlParameter p3 = new SqlParameter("@datahora", SqlDbType.DateTime, 8);
+                    p3.Value = datehour.ToString("yyyy-MM-dd HH:mm:ss");
+                    p3.Direction = ParameterDirection.Input;
+
+                    SqlParameter p4 = new SqlParameter("@datavisitante", SqlDbType.DateTime, 8);
+                    p4.Value = datevisitor.ToString("yyyy-MM-dd");
+                    p4.Direction = ParameterDirection.Input;
+
+                    SqlParameter p5 = new SqlParameter("@idvisitante", SqlDbType.Int, 4);
+                    p5.Value = idvisitor;
+                    p5.Direction = ParameterDirection.Input;
+
+                    SqlParameter p6 = new SqlParameter("@datadefronta", SqlDbType.DateTime, 8);
+                    p6.Value = dateagainst.ToString("yyyy-MM-dd");
+                    p6.Direction = ParameterDirection.Input;
+
+                    SqlParameter p7 = new SqlParameter("@iddefronta", SqlDbType.Int, 4);
+                    p7.Value = idagainst;
+                    p7.Direction = ParameterDirection.Input;
+
+                    SqlParameter p8 = new SqlParameter("@idutilizador", SqlDbType.VarChar, 50);
+                    p8.Value = iduser;
+                    p8.Direction = ParameterDirection.Input;
+
+                    SqlParameter p9 = new SqlParameter("@datahoraopiniao", SqlDbType.DateTime, 8);
+                    p9.Value = datehouropinion.ToString("yyyy-MM-dd hh:mm:ss.fff");
+                    p9.Direction = ParameterDirection.Input;
+
+                    SqlParameter p10 = new SqlParameter("@negativa", SqlDbType.Int, 4);
+                    p10.Value = (opinion == "yes") ? 1 : 0;
+                    p10.Direction = ParameterDirection.Input;
+
+
+                    cmd.Parameters.Add(p1);
+                    cmd.Parameters.Add(p2);
+                    cmd.Parameters.Add(p3);
+                    cmd.Parameters.Add(p4);
+                    cmd.Parameters.Add(p5);
+                    cmd.Parameters.Add(p6);
+                    cmd.Parameters.Add(p7);
+                    cmd.Parameters.Add(p8);
+                    cmd.Parameters.Add(p9);
+                    cmd.Parameters.Add(p10);
+
+                    
+                    //transaction = conn.BeginTransaction(datehouropinion + "");
+
+                    try
+                    {
+                        conn.Open();
+                        //cmd.Transaction = transaction;
+                        cmd.ExecuteNonQuery();
+                        //transaction.Commit();
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+           
 
         }
 

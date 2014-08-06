@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Mvc;
 using GameObserver.Data;
@@ -29,6 +30,9 @@ namespace GameObserver.Controllers
         private LayoutToLayoutModel _mapperLayoutToLayoutModel;
         private PlayerToPlayerModel _mapperPlayerToPlayerModel;
         private IntegrateToIntegrateModel _mapperIntegrateToIntegrateModel;
+
+        private static readonly object locker = new object();
+        
         public SetUpController()
         {
             _repo = new RepositoryGameObserver();
@@ -476,19 +480,21 @@ namespace GameObserver.Controllers
         }
 
 
-
+        
         public void CreateOpinionUser(String dateinstant,
             String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
             String idagainst, String iduser, String dateop , String negative)
         {
 
             int intv;
-            DateTime d = DateTime.Parse(dateop.Substring(0, 25));
-            //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
-            _repo.CreateOpinionUser(Convert.ToDateTime(dateinstant), Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor), Convert.ToDateTime(dataagainst),
-                Convert.ToInt32(idagainst), User.Identity.Name , d , negative);
-        }
+            DateTime d = DateTime.Parse(dateop);
+            
+                //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
 
-
+                _repo.CreateOpinionUser(Convert.ToDateTime(dateinstant), Convert.ToInt32(idstadium),
+                    Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor),
+                    Convert.ToDateTime(dataagainst),
+                    Convert.ToInt32(idagainst), User.Identity.Name, d, negative);
+            }
     }
 }
