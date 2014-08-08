@@ -23,7 +23,8 @@ namespace GameObserver.Mappers
                 IdStadium = source.IdStadium,
                 IdUser = source.IdUser,
                 IdVisitor = source.IdVisitor,
-                MinuteSeconds = source.MinuteSeconds
+                MinuteSeconds = source.MinuteSeconds,
+                IdEvent = source.IdEvent
             };
         }
 

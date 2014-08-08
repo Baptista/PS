@@ -248,36 +248,15 @@ namespace GameObserver.Controllers
 
             foreach (var allInstantModel in allInstantModels)
             {
-                OpinionModel allOpinionModels = null;
-                try
-                {
-                    allOpinionModels =
-                        _mapperOpinionToOpinionModel.Map(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
-                            Convert.ToDateTime(datahora),
-                            Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
-                            Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds, username));
-
-                }
-                catch (ArgumentException)
-                {
-                    
-                }
-
-                    if (allOpinionModels != null)
-                    {
-                        AssociateModel allAssociateModels =
-                            _mapperAssociateToAssociateModel.Map(_repo.GetAllAssociatesbyOpinionEvent(
-                                allOpinionModels.Date, username));
-
+                
                         yield return new TimeLineModel()
                         {
                             date = allInstantModel.MinuteSeconds,
-                            eventId = allAssociateModels.IdEvent,
+                            eventId = allInstantModel.IdEvent,
                             causeId = allInstantModel.IdCause,
                             executeId = allInstantModel.IdExecute
                         };
-                    }
-                
+                    
             }
         }
 
@@ -433,20 +412,15 @@ namespace GameObserver.Controllers
                         Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
                         Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds, "Adminn"));
 
-                if (allOpinionModels != null)
-                {
-                    AssociateModel allAssociateModels =
-                        _mapperAssociateToAssociateModel.Map(_repo.GetAllAssociatesbyOpinionEvent(
-                            allOpinionModels.Date, "Adminn"));
-
+               
                     yield return new TimeLineModel()
                     {
                         date = allInstantModel.MinuteSeconds,
-                        eventId = allAssociateModels.IdEvent,
+                        eventId = allInstantModel.IdEvent,
                         causeId = allInstantModel.IdCause,
                         executeId = allInstantModel.IdExecute
                     };
-                }
+                
 
             }
         }
@@ -494,7 +468,18 @@ namespace GameObserver.Controllers
                 _repo.CreateOpinionUser(Convert.ToDateTime(dateinstant), Convert.ToInt32(idstadium),
                     Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor),
                     Convert.ToDateTime(dataagainst),
-                    Convert.ToInt32(idagainst), User.Identity.Name, d, negative);
+                    Convert.ToInt32(idagainst), User.Identity.Name, DateTime.Now, negative);
             }
+
+        public ActionResult GetUserOpinionByEvent(String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
+            String idagainst, String iduser, String idevent, String negative)
+        {
+            return Json(_repo.GetUserOpinionByEvent(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora),
+                Convert.ToInt32(idvisitor),
+                Convert.ToDateTime(datavisitor), Convert.ToInt32(idagainst), Convert.ToDateTime(dataagainst),
+                iduser, Convert.ToInt32(idevent), negative),JsonRequestBehavior.AllowGet);
+
+            
+        }
     }
 }

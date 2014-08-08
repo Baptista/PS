@@ -18,5 +18,7 @@ namespace GameObserver.Models
         public int IdCause { get; set; }
         public int? IdExecute { get; set; }
 
+        public int IdEvent { get; set; }
+
     }
 }

@@ -51,9 +51,10 @@ namespace GameObserver.Data
                                 IdVisitor = reader.GetInt32(4),
                                 DateAgainst = reader.GetDateTime(5),
                                 IdAgainst = reader.GetInt32(6),
-                                IdUser = reader.GetString(7),
-                                IdCause = reader.GetInt32(8),
-                                IdExecute = reader.IsDBNull(9) ? (int?)null : reader.GetInt32(9)
+                                IdEvent = reader.GetInt32(7),
+                                IdUser = reader.GetString(8),
+                                IdCause = reader.GetInt32(9),
+                                IdExecute = reader.IsDBNull(10) ? (int?)null : reader.GetInt32(10)
 
                             };
                         }
@@ -894,6 +895,62 @@ namespace GameObserver.Data
 
 
 
+        public int GetUserOpinionByEvent(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, String idutilizador, int idevent,
+            String negative)
+        {
+
+
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select count(*) from Opiniao inner join Instante on (Instante.datadefronta = Opiniao.datadefronta and Instante.datahora = Opiniao.datahora"+
+" and Opiniao.iddefronta = Instante.iddefronta and Opiniao.datavisitante = Instante.datavisitante and Opiniao.idvisitante=Instante.idvisitante"+
+" and Opiniao.idestadio = Instante.idestadio and Instante.minutosegundo = Opiniao.minutosegundoinstante)" +" where "+
+                                  "Opiniao.idestadio=@ids and Opiniao.datahora=@datahora and" +
+                                  " Opiniao.datavisitante=@datavis and Opiniao.idvisitante=@idvis and" +
+                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and Opiniao.idutilizador=@iduser and Instante.idevento=@idevent and nagativa=@neg";
+
+                
+                cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = dataequipav.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idequipav;
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = dataequipag.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idequipag;
+                cmd.Parameters.Add("@iduser", SqlDbType.VarChar).Value = idutilizador;
+                cmd.Parameters.Add("@idevent", SqlDbType.Int).Value = idevent;
+                cmd.Parameters.Add("@neg", SqlDbType.Int).Value = (negative == "yes") ? 1 : 0;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        int rows = 0;
+                        if (reader.Read())
+                        {
+                            return reader.GetInt32(0);
+                            //rows++;
+                        }
+                        //return rows;
+                        //return reader.Cast<Object>().Count();
+                        return 0;
+                    }
+                    
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
+
+
+
+
         public IEnumerable<Integrate> GetPlayersByTeam(int idclub , DateTime date)
         {
             
@@ -1105,7 +1162,7 @@ namespace GameObserver.Data
                 p10.Direction = ParameterDirection.Input;
 
                 SqlParameter p11 = new SqlParameter("@datahoraopiniao", SqlDbType.DateTime, 8);
-                p11.Value = datehouropinion.ToString("yyyy-MM-dd hh:mm:ss");
+                p11.Value = datehouropinion.ToString("yyyy-MM-dd HH:mm:ss");
                 p11.Direction = ParameterDirection.Input;
 
                 SqlParameter p12 = new SqlParameter("@negativa", SqlDbType.Int, 4);
@@ -1189,7 +1246,7 @@ namespace GameObserver.Data
                     p8.Direction = ParameterDirection.Input;
 
                     SqlParameter p9 = new SqlParameter("@datahoraopiniao", SqlDbType.DateTime, 8);
-                    p9.Value = datehouropinion.ToString("yyyy-MM-dd hh:mm:ss.fff");
+                    p9.Value = datehouropinion.ToString("yyyy-MM-dd HH:mm:ss.fff");
                     p9.Direction = ParameterDirection.Input;
 
                     SqlParameter p10 = new SqlParameter("@negativa", SqlDbType.Int, 4);
@@ -1271,9 +1328,10 @@ namespace GameObserver.Data
                                 IdVisitor = reader.GetInt32(4),
                                 DateAgainst = reader.GetDateTime(5),
                                 IdAgainst = reader.GetInt32(6),
-                                IdUser = reader.GetString(7),
-                                IdCause = reader.GetInt32(8),
-                                IdExecute = reader.IsDBNull(9) ? (int?)null : reader.GetInt32(9)
+                                IdEvent = reader.GetInt32(7),
+                                IdUser = reader.GetString(8),
+                                IdCause = reader.GetInt32(9),
+                                IdExecute = reader.IsDBNull(10) ? (int?)null : reader.GetInt32(10)
 
                             };
                         }
@@ -1323,9 +1381,11 @@ namespace GameObserver.Data
                                 IdVisitor = reader.GetInt32(4),
                                 DateAgainst = reader.GetDateTime(5),
                                 IdAgainst = reader.GetInt32(6),
-                                IdUser = reader.GetString(7),
-                                IdCause = reader.GetInt32(8),
-                                IdExecute = reader.IsDBNull(9)? (int?)null :reader.GetInt32(9)
+                                IdEvent = reader.GetInt32(7),
+                                IdUser = reader.GetString(8),
+                                IdCause = reader.GetInt32(9),
+                                IdExecute = reader.IsDBNull(10) ? (int?)null : reader.GetInt32(10)
+                                
                                 
                             };
                         }
@@ -1396,43 +1456,7 @@ namespace GameObserver.Data
             }
         }
 
-        public Associate GetAllAssociatesbyOpinionEvent(DateTime datahora, String iduser)
-        {
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from associar where datahora=@datahora and idutilizador=@iduser";
-                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyy-MM-dd HH:mm:ss");
-                cmd.Parameters.Add("@iduser", SqlDbType.VarChar).Value = iduser;
-
-                try
-                {
-                    conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-
-                            return new Associate()
-                            {
-                                IdEvent = reader.GetInt32(0),
-                                Date = reader.GetDateTime(1),
-                                IdUser = reader.GetString(2),
-                                
-                            };
-                        }
-                    }
-                    return null;
-                }
-
-                finally
-                {
-                    conn.Close();
-                }
-
-            }
-        }
-
+        
         public Event GetEvent(int id)
         {
             using (SqlConnection conn = new SqlConnection(Stringconn))

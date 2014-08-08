@@ -95,7 +95,9 @@ namespace GameObserver.DomainModel
         Opinion GetAllOpinionsByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag , DateTime minitosegundo , String idutilizador);
 
-        Associate GetAllAssociatesbyOpinionEvent(DateTime datahora , String iduser);
+        int GetUserOpinionByEvent(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, String idutilizador, int idevent,
+            String negative);
 
         void InsertUser(String name, int idrole);
 

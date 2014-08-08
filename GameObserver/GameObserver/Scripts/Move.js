@@ -868,7 +868,7 @@
                 saveplayer.event = ide;
                 saveplayer.idplayer = idp;
             //} else {
-                saveplayer.idexe = idp;
+                //saveplayer.idexe = idp;
                 console.log("clickotherteam");
             //}
             //if (ide != null) {
@@ -1660,6 +1660,7 @@
 
                             if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
                                 console.log("create opiniaooo");
+                                
                             }
                         };
 
@@ -1668,7 +1669,7 @@
                         xmlhttp1.send("dateinstant=" + entry.dated + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
                             "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&iduser=" + document.getElementById("curruserid").innerHTML.trim() + "&dateop=" + dt + "&negative=" + entry.opinion);
 
-
+                        removedetails();
 
                     }
                 });
@@ -2566,7 +2567,17 @@
 
 
 
-
+    function createRect(x,y , h , id) {
+        var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rectexecutor.setAttributeNS(null, 'height', h);
+        rectexecutor.setAttributeNS(null, 'width', '5%');
+        rectexecutor.setAttributeNS(null, 'id', id+"rect");
+        rectexecutor.setAttributeNS(null, 'style', 'fill:blue;stroke:black');
+        rectexecutor.setAttributeNS(null, 'x', x);
+        rectexecutor.setAttributeNS(null, 'y', y);
+        rectexecutor.setAttributeNS(null, 'visibility', 'visible');
+        svg.getElementById("all").appendChild(rectexecutor);
+    }
 
 
     function creatediv(left, top, name) {
@@ -2613,6 +2624,74 @@
         document.body.appendChild(divs);
     }
 
+
+    function createMyCounters(name, number, x, y , opinion) {
+        var divmain = document.createElement('div');
+        divmain.id = 'n' + name;
+        divmain.style.position = 'absolute';
+        //divmain.style.width = '50%';
+        //divmain.style.height = '100%';
+        divmain.style.left = (opinion=='yes')?"0%":'50%';
+        //divmain.style.top = y+"px";
+
+        var divcount = document.createElement('div');
+        divcount.id = 'n'+name;
+        //divcount.style.width = '100%';
+        //divcount.style.height = '20%';
+        divcount.style.position = 'absolute';
+        //divcount.style.left = (opinion == 'yes') ? "0%" : '50%';
+        //divcount.style.left = '50%';
+        //divcount.style.top = y;
+
+        var evcount = document.createTextNode(number);
+        divcount.style.fontSize = "10px";
+        divcount.appendChild(evcount);
+
+        var divbar = document.createElement('div');
+        divbar.style.width = '80%';
+        divbar.style.height = (number)+"%";
+        divbar.style.backgroundColor = "blue";
+        divbar.style.position = 'absolute';
+        divbar.style.left = '20%';
+        divbar.style.top = "15%";
+        //divbar.appendChild(document.createTextNode("cenas"));
+
+        var divname = document.createElement('div');
+        divname.style.width = '100%';
+        divname.style.height = '0%';
+        divname.style.position = 'absolute';
+        divname.style.left = "50%";
+        divname.style.top = (number) + 15 + "%";
+        var evname = document.createTextNode(opinion);
+        divname.style.fontSize = "8px";
+        //console.log("evname", name);
+        divname.appendChild(evname);
+
+        //var divname = document.createElement('div');
+        //divname.style.width = '0%';
+        //divname.style.height = '0%';
+        //divname.style.position = 'absolute';
+        //divname.style.left = "20%";
+        //divname.style.top = (number*50/100)+15+"%";
+        //var evname = document.createTextNode(name);
+        //divname.style.fontSize = "8px";
+        ////console.log("evname", name);
+        //divname.appendChild(evname);
+
+
+
+
+        //divs.style.border = 'ridge';
+        divmain.appendChild(divcount);
+        //divmain.appendChild(divbar);
+        //divmain.appendChild(divname);
+        //document.body.appendChild(divmain);
+        //document.body.appendChild(divcount);
+        //document.body.appendChild(divbar);
+        return divmain;
+    }
+
+
     function createalldivs() {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
@@ -2621,14 +2700,61 @@
                 var resp = JSON.parse(xmlhttp.response);
                 var xleft = 80;
                 var xtop = 550;
+                var nevents = resp.length;
+                var xpos = (avwidth / 2 /(nevents*2))*100/avwidth;
+                var ypos = avheight+50;
+                var accxpos = xpos+"%";
                 resp.forEach(function (entry) {
-                    creatediv(xleft, xtop, entry.Type);
-                    if (xleft >= 900) {
-                        xtop += 35;
-                        xleft = 80;
-                    } else {
-                        xleft += 155;
-                    }
+
+                    var xmlhttp1 = new XMLHttpRequest();
+                    xmlhttp1.onreadystatechange = function() {
+
+                        if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                            var resp2 = JSON.parse(xmlhttp1.response);
+
+                            var xmlhttp2 = new XMLHttpRequest();
+                            xmlhttp2.onreadystatechange = function() {
+
+                                if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+                                    var resp3 = JSON.parse(xmlhttp2.response);
+
+                                    console.log("entry.type", entry.Type);
+                                    console.log("resp2", resp2);
+                                    console.log("accxpos", accxpos);
+                                    
+                                    var divyes = createMyCounters(entry.Type, resp2, accxpos, ypos , "yes");
+                                    accxpos = parseInt(accxpos.substring(0, accxpos.length - 1)) + xpos + "%";
+                                    var divno = createMyCounters(entry.Type, resp3, accxpos, ypos , "no");
+                                    accxpos = parseInt(accxpos.substring(0, accxpos.length - 1)) + xpos + "%";
+                                    var divmain = document.createElement('div');
+                                    divmain.id = 'n';
+                                    divmain.style.position = 'absolute';
+                                    divmain.style.width = '3%';
+                                    divmain.style.height = '19%';
+                                    divmain.style.left = accxpos;
+                                    divmain.style.top = ypos + "px";
+                                    divmain.appendChild(divyes);
+                                    divmain.appendChild(divno);
+                                    document.body.appendChild(divmain);
+                                }
+                            };
+                            xmlhttp2.open("GET", "/SetUp/GetUserOpinionByEvent?idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
+                        "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&iduser=" + document.getElementById("curruserid").innerHTML.trim() + "&idevent=" + entry.Id + "&negative=no");
+                            xmlhttp2.send();
+
+                       }
+                    };
+                    xmlhttp1.open("GET", "/SetUp/GetUserOpinionByEvent?idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
+                        "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&iduser=" + document.getElementById("curruserid").innerHTML.trim() + "&idevent=" + entry.Id + "&negative=yes");
+                    xmlhttp1.send();
+
+                    //creatediv(xleft, xtop, entry.Type);
+                    //if (xleft >= 900) {
+                    //    xtop += 35;
+                    //    xleft = 80;
+                    //} else {
+                    //    xleft += 155;
+                    //}
                 });
             }
         };
@@ -2636,7 +2762,7 @@
         xmlhttp.send();
     }
 
-    // createalldivs();
+     createalldivs();
 
 
 };
