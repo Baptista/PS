@@ -239,7 +239,7 @@ namespace GameObserver.Controllers
         //idexecute.Equals("null") ? (int?)null : Convert.ToInt32(idexecute)
 
         public IEnumerable<TimeLineModel> CreateTimeLine(String idstadium, String datahora, String idequipav, String dataequipav,
-            String idequipag, String dataequipag , String username)
+            String idequipag, String dataequipag)
         {
             
             IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
@@ -260,10 +260,10 @@ namespace GameObserver.Controllers
             }
         }
 
-        public ActionResult GetTimeLine(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag, String username)
+        public ActionResult GetTimeLine(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag)
         {
 
-            IEnumerable<TimeLineModel> allTimeLineModels = CreateTimeLine(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag , username);
+            IEnumerable<TimeLineModel> allTimeLineModels = CreateTimeLine(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag);
             return Json(allTimeLineModels, JsonRequestBehavior.AllowGet);
         }
 
@@ -492,5 +492,21 @@ namespace GameObserver.Controllers
 
 
         }
+
+
+        public ActionResult GetOpinionByInstant(String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
+            String idagainst, String negative, String instant)
+        {
+            DateTime d = DateTime.Parse(instant.Substring(0,25));
+
+            return Json(_repo.GetOpinionByInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora),
+                Convert.ToInt32(idvisitor),
+                Convert.ToDateTime(datavisitor), Convert.ToInt32(idagainst), Convert.ToDateTime(dataagainst),
+                negative,Convert.ToDateTime(d)), JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
     }
 }

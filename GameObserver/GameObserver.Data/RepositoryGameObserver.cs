@@ -1340,10 +1340,50 @@ namespace GameObserver.Data
 
 
 
-        public IEnumerable<Instant> GetOpinionByMatch(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-            int idequipag, DateTime dataequipag, int idutilizador)
+        public int GetOpinionByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, String negative, DateTime min)
         {
-            return null;
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select count(*) from Opiniao inner join Instante on (Instante.datadefronta = Opiniao.datadefronta and Instante.datahora = Opiniao.datahora" +
+" and Opiniao.iddefronta = Instante.iddefronta and Opiniao.datavisitante = Instante.datavisitante and Opiniao.idvisitante=Instante.idvisitante" +
+" and Opiniao.idestadio = Instante.idestadio and Instante.minutosegundo = Opiniao.minutosegundoinstante)" + " where " +
+                                  "Opiniao.idestadio=@ids and Opiniao.datahora=@datahora and" +
+                                  " Opiniao.datavisitante=@datavis and Opiniao.idvisitante=@idvis and" +
+                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and nagativa=@neg and Instante.minutosegundo=@minutoinstante";
+
+
+                cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = dataequipav.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idequipav;
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = dataequipag.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idequipag;
+                cmd.Parameters.Add("@minutoinstante", SqlDbType.DateTime).Value = min.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@neg", SqlDbType.Int).Value = (negative == "yes") ? 1 : 0;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return reader.GetInt32(0);
+                            
+                        }
+                       return 0;
+                    }
+
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
         }
 
         public Instant GetInstant(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,

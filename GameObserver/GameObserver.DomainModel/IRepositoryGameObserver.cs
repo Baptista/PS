@@ -91,7 +91,8 @@ namespace GameObserver.DomainModel
         void InsertLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag , DateTime horaminuto, String svg);
 
-
+        int GetOpinionByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, String opinion, DateTime min);
         Opinion GetAllOpinionsByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag , DateTime minitosegundo , String idutilizador);
 
