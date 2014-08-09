@@ -481,5 +481,16 @@ namespace GameObserver.Controllers
 
             
         }
+
+        public ActionResult GetOpinionByEvent(String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
+            String idagainst, String idevent, String negative)
+        {
+            return Json(_repo.GetOpinionByEvent(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora),
+                Convert.ToInt32(idvisitor),
+                Convert.ToDateTime(datavisitor), Convert.ToInt32(idagainst), Convert.ToDateTime(dataagainst),
+                Convert.ToInt32(idevent), negative), JsonRequestBehavior.AllowGet);
+
+
+        }
     }
 }

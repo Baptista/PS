@@ -1,118 +1,126 @@
-﻿@using Microsoft.AspNet.Identity
-@model GameObserver.Models.GameDetails
+﻿@model GameObserver.Models.GameDetails
 
 @section header
 {
+    
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="/Scripts/Move.js" type="text/javascript"> </script>
-}
+    @*<script src="/Scripts/charts.js" type="text/javascript"> </script>*@
 
-@*@{
+    }
+
+    @*@{
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>*@
 
     @*<h4>MatchModel</h4>*@
-   
-    
-        
-        @*<p style="left:20%;position:absolute"> @Html.DisplayFor(model => model.clubvisitor.Name) </p>
+
+
+
+    @*<p style="left:20%;position:absolute"> @Html.DisplayFor(model => model.clubvisitor.Name) </p>
         <p style="left:60%;position: absolute">@Html.DisplayFor(model => model.clubagainst.Name)</p>
         <p style="left:40%;position: absolute"> @Html.DisplayFor(model => model.matchModel.Date)</p>*@
 @*<dt>
             @Html.DisplayNameFor(model => model.matchModel.IdVisitor)
         </dt>*@
 
-<p hidden id="iddetailssetup_idstadium">
-    @Html.DisplayFor(model => model.matchModel.IdStadium)
-</p>
+    <p hidden id="iddetailssetup_idstadium">
+        @Html.DisplayFor(model => model.matchModel.IdStadium)
+    </p>
 
-<p hidden id="iddetailssetup_date">
-    @Html.DisplayFor(model => model.matchModel.Date)
-</p>
+    <p hidden id="iddetailssetup_date">
+        @Html.DisplayFor(model => model.matchModel.Date)
+    </p>
 
-<p hidden id="iddetailssetup_idvisitor">
-            @Html.DisplayFor(model => model.matchModel.IdVisitor)
-        </p>
+    <p hidden id="iddetailssetup_idvisitor">
+                @Html.DisplayFor(model => model.matchModel.IdVisitor)
+            </p>
 
-        @*<dt>
+            @*<dt>
             @Html.DisplayNameFor(model => model.matchModel.DateVisitor)
         </dt>*@
 
-        <p hidden id="iddetailssetup_datevisitor">
-            @Html.DisplayFor(model => model.matchModel.DateVisitor)
-        </p>
+            <p hidden id="iddetailssetup_datevisitor">
+                @Html.DisplayFor(model => model.matchModel.DateVisitor)
+            </p>
 
-        @*<dt>
+            @*<dt>
             @Html.DisplayNameFor(model => model.matchModel.IdAgainst)
         </dt>*@
 
-        <p hidden id ="iddetailssetup_idagainst">
-            @Html.DisplayFor(model => model.matchModel.IdAgainst)
-        </p>
+            <p hidden id ="iddetailssetup_idagainst">
+                @Html.DisplayFor(model => model.matchModel.IdAgainst)
+            </p>
 
-        @*<dt>
+            @*<dt>
             @Html.DisplayNameFor(model => model.matchModel.DateAgainst)
         </dt>*@
 
-        <p hidden id="iddetailssetup_dateagainst">
-            @Html.DisplayFor(model => model.matchModel.DateAgainst)
-        </p>
+            <p hidden id="iddetailssetup_dateagainst">
+                @Html.DisplayFor(model => model.matchModel.DateAgainst)
+            </p>
 
-<p hidden id="idref1">
-    @Html.DisplayFor(model => model.matchModel.IdFirstReferee)
-</p>
-<p hidden id="idref2">
-    @Html.DisplayFor(model => model.matchModel.IdSecondReferee)
-</p>
-<p hidden id="idref3">
-    @Html.DisplayFor(model => model.matchModel.IdThirdReferee)
-</p>
-<p hidden id="idref4">
-    @Html.DisplayFor(model => model.matchModel.IdFourReferee)
-</p>
-<p hidden id="idnameclubvisitor">
-    @Html.DisplayFor(model => model.clubvisitor.Name)
-</p>
-<p hidden id="idnameclubagainst">
-    @Html.DisplayFor(model => model.clubagainst.Name)
-</p>
-<p hidden id="idclubvisitorphoto">
-    @Html.DisplayFor(model => model.clubvisitor.Symbol)
-</p>
-<p hidden id="idclubagainstphoto">
-    @Html.DisplayFor(model => model.clubagainst.Symbol)
-</p>
-<p hidden id="curruserid">
-    @User.Identity.Name
-</p>
-<p hidden id="havecurruser">
-    @User.Identity.IsAuthenticated
-</p>
-<p hidden id="isadmin">
-    @User.IsInRole("admin")
-</p>
-
-
+    <p hidden id="idref1">
+        @Html.DisplayFor(model => model.matchModel.IdFirstReferee)
+    </p>
+    <p hidden id="idref2">
+        @Html.DisplayFor(model => model.matchModel.IdSecondReferee)
+    </p>
+    <p hidden id="idref3">
+        @Html.DisplayFor(model => model.matchModel.IdThirdReferee)
+    </p>
+    <p hidden id="idref4">
+        @Html.DisplayFor(model => model.matchModel.IdFourReferee)
+    </p>
+    <p hidden id="idnameclubvisitor">
+        @Html.DisplayFor(model => model.clubvisitor.Name)
+    </p>
+    <p hidden id="idnameclubagainst">
+        @Html.DisplayFor(model => model.clubagainst.Name)
+    </p>
+    <p hidden id="idclubvisitorphoto">
+        @Html.DisplayFor(model => model.clubvisitor.Symbol)
+    </p>
+    <p hidden id="idclubagainstphoto">
+        @Html.DisplayFor(model => model.clubagainst.Symbol)
+    </p>
+    <p hidden id="curruserid">
+        @User.Identity.Name
+    </p>
+    <p hidden id="havecurruser">
+        @User.Identity.IsAuthenticated
+    </p>
+    <p hidden id="isadmin">
+        @User.IsInRole("admin")
+    </p>
 
 
 
-@*@Html.DisplayFor(model=>model.svg)*@
-    
 
-@*<button id="idbuttonauto">Auto</button>
+
+    @*@Html.DisplayFor(model=>model.svg)*@
+
+
+    @*<button id="idbuttonauto">Auto</button>
 <button id="idbuttonreset">Reset</button>
 <button id="idbuttonsave">Save</button>*@
 
+
+<div id="chart_div" style="position: absolute; left: 80%; top: 70% " ></div>
 <div class="row" style="position: absolute; left: 4% ">
-    <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/newsmall.svg") />
-   
-</div>
-@*<div id="timeline" style="position: fixed; width: 25%; height: 60%; overflow: auto; position: fixed; left: 70%; top: 10%; border:ridge; ">
-    
+        <object id="svgobject" type="image/svg+xml" data=@Url.Content("~/fonts/newsmall.svg") />
+
+    </div>
+    @*<div id="timeline" style="position: fixed; width: 25%; height: 60%; overflow: auto; position: fixed; left: 70%; top: 10%; border:ridge; ">
+
 </div>*@
 
+
+
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>

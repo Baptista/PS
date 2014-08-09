@@ -99,6 +99,13 @@ namespace GameObserver.DomainModel
             int idequipag, DateTime dataequipag, String idutilizador, int idevent,
             String negative);
 
+        int GetOpinionByEvent(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, int idevent,
+            String negative);
+
+        Instant GetInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag, DateTime instante);
+
         void InsertUser(String name, int idrole);
 
         Layout GetLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
