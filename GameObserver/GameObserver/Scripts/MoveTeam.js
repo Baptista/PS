@@ -649,7 +649,7 @@
         txtElem.setAttributeNS(null, "x", xpos);
         txtElem.setAttributeNS(null, "y", ypos);
         txtElem.setAttributeNS(null, "font-size", avwidth / 8 + "%");
-        txtElem.setAttributeNS(null, 'cursor', 'pointer');
+        //txtElem.setAttributeNS(null, 'cursor', 'pointer');
         var helloTxt = document.createTextNode(name);
 
         txtElem.appendChild(helloTxt);
@@ -870,6 +870,7 @@
                             //}
                             //ndefensehome = 0;
                         } else if (pos == "Guarda-redes") {
+                            if (ngkfull == 0)return;
                             //allcircles = [];
                             //if (evt.clientX >= middlex) {
                             //    next = nextposition(amiddlegkx, amiddlegky, agk);
@@ -900,8 +901,14 @@
             DragTarget.parentNode.appendChild(DragTarget);
             DragTarget.setAttributeNS(null, 'pointer-events', 'none');
             var transMatrix = DragTarget.getCTM();
-            GrabPoint.x = TrueCoords.x - Number(transMatrix.e);
-            GrabPoint.y = TrueCoords.y - Number(transMatrix.f);
+            
+            //console.log("transMatrix", transMatrix);
+            //console.log("BackDrop != targetElement", TrueCoords.x);
+            //console.log("BackDrop != targetElement", TrueCoords.y);
+            GrabPoint.x = TrueCoords.x;//- Number(transMatrix.e);
+            GrabPoint.y = TrueCoords.y;//- Number(transMatrix.f);
+            //console.log("BackDrop != targetElement", GrabPoint.x);
+            //console.log("BackDrop != targetElement", GrabPoint.y);
         }
             }
             , timer);
@@ -912,7 +919,11 @@
         if (DragTarget) {
             var newX = TrueCoords.x - GrabPoint.x;
             var newY = TrueCoords.y - GrabPoint.y;
-            DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
+            //console.log("SVGDocument.onmousemove", newX);
+            //console.log("SVGDocument.onmousemove", newY);
+            DragTarget.setAttributeNS(null, 'x', TrueCoords.x);
+            DragTarget.setAttributeNS(null, 'y', TrueCoords.y);
+            //DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
         }
     };
 
@@ -984,7 +995,7 @@
         // end hold-only operation here, if desired
         //}
         console.log("up", evt.target.nodeName);
-        if (evt.target.nodeName != 'image' && evt.target.nodeName != 'circle' && evt.target.nodeName != 'text') {
+        if (evt.target.nodeName != 'image') {
             console.log("up");
             DragTarget.setAttributeNS(null, 'x', OldCoor.x);
             DragTarget.setAttributeNS(null, 'y', OldCoor.y);
@@ -1006,21 +1017,21 @@
         //        || GrabPoint.x < halfposition && DragTarget.getAttributeNS(null, 'x') > halfposition
         //    ||evt.clientY<150
 
-        if (evt.target.nodeName != 'image') {
+        //if (evt.target.nodeName != 'image') {
 
-            console.log("first");
-            console.log("GrabPoint.x", GrabPoint.x);
-            console.log("middlex", middlex);
-            console.log("DragTarget.getAttributeNS(null, 'x')", DragTarget.getAttributeNS(null, 'x'));
-            DragTarget.setAttributeNS(null, 'x', OldCoor.x);
-            DragTarget.setAttributeNS(null, 'y', OldCoor.y);
-            DragTarget.setAttributeNS(null, 'transform', "");
-            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+        //    console.log("first");
+        //    console.log("GrabPoint.x", GrabPoint.x);
+        //    console.log("middlex", middlex);
+        //    console.log("DragTarget.getAttributeNS(null, 'x')", DragTarget.getAttributeNS(null, 'x'));
+        //    DragTarget.setAttributeNS(null, 'x', OldCoor.x);
+        //    DragTarget.setAttributeNS(null, 'y', OldCoor.y);
+        //    DragTarget.setAttributeNS(null, 'transform', "");
+        //    DragTarget.setAttributeNS(null, 'pointer-events', 'all');
 
-            DragTarget = null;
-            removeTempImages();
-            return;
-        }
+        //    DragTarget = null;
+        //    removeTempImages();
+        //    return;
+        //}
 
         var oldimg = IsImageInPosition(allplayershome,evt.clientX, evt.clientY);
 
@@ -1139,10 +1150,13 @@
 
 
     function GetTrueCoords(evt) {
-        var newScale = SVGRoot.currentScale;
-        var translation = SVGRoot.currentTranslate;
-        TrueCoords.x = (evt.clientX - translation.x) / newScale;
-        TrueCoords.y = (evt.clientY - translation.y) / newScale;
+        
+        TrueCoords.x = evt.clientX;
+        TrueCoords.y = evt.clientY;
+        console.log("GetTrueCoords", TrueCoords.x);
+        console.log("GetTrueCoords", TrueCoords.y);
+        console.log("GetTrueCoords", evt.clientX);
+        console.log("GetTrueCoords", evt.clientY);
     };
 
 

@@ -148,8 +148,10 @@ window.onload = function () {
     var isAdmin = document.getElementById("isadmin").innerHTML.trim();
     var iduser = document.getElementById("curruserid").innerHTML.trim();
     var isAuth = document.getElementById("havecurruser").innerHTML.trim();
+    var idformationhome = null;
+    var idformationaway = null;
 
-
+  
     var a = document.getElementById("svgobject");
     var svg = null;
     var svgheight = null;
@@ -200,8 +202,8 @@ window.onload = function () {
     var t = timernow();
     var txtElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
     txtElem.setAttributeNS(null, "x", "48%");
-    txtElem.setAttributeNS(null, "y", "10%");
-    txtElem.setAttributeNS(null, "font-size", avwidth/50);
+    txtElem.setAttributeNS(null, "y", "12%");
+    txtElem.setAttributeNS(null, "font-size", avwidth/50+"px");
     txtElem.setAttributeNS(null, 'id', "timer");
     var helloTxt = document.createTextNode(t);
     txtElem.appendChild(helloTxt);
@@ -219,6 +221,7 @@ window.onload = function () {
 
         if (xmlhttp3.readyState == 4 && xmlhttp3.status == 200) {
             var resp = JSON.parse(xmlhttp3.response);
+            idformationhome = resp.Id;
 
             formation = resp.Designation.split('x');
             defense = formation[0];
@@ -260,6 +263,7 @@ window.onload = function () {
 
         if (xmlhttp7.readyState == 4 && xmlhttp7.status == 200) {
             var resp = JSON.parse(xmlhttp7.response);
+            idformationaway = resp.Id;
 
             aformation = resp.Designation.split('x');
             adefense = parseInt(aformation[0]);
@@ -357,8 +361,13 @@ window.onload = function () {
     var counthome = 0;
     function allfinishome(all) {
         ++counthome;
-        console.log("count", all, counthome);
+        
+        console.log("counth", all, counthome);
         if (counthome == all) {
+            
+            if (nplayershomeplaying < 7) {
+                window.location = "/Team/Index";
+            }
             allfinish();
                
         }
@@ -366,8 +375,11 @@ window.onload = function () {
     var countaway = 0;
     function allfinisaway(all) {
         ++countaway;
-        console.log("count", all, countaway);
+        console.log("counta", all, countaway);
         if (countaway == all) {
+            if (nplayersawayplaying < 7) {
+                window.location = "/Team/Index";
+            }
             allfinish();
             
         }
@@ -413,9 +425,10 @@ window.onload = function () {
     //    xmlhttp6.send();
     //}
 
-
+    var nplayershomeplaying = 0;
 
     function loadpostions() {
+        
         var rect = svg.getElementById("all");
         var pos = rect.getBoundingClientRect();
         var x = "0%";
@@ -431,9 +444,10 @@ window.onload = function () {
             if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
                 var resp = JSON.parse(xmlhttp5.response);
 
+                console.log("ryoyoyoy", resp);
                 var totalplayers = resp.length;
                 resp.forEach(function (entry) {
-                    
+                    console.log("yoyoyoy", entry);
                     //var xmlhttp6 = new XMLHttpRequest();
 
                     //xmlhttp6.onreadystatechange = function() {
@@ -513,6 +527,7 @@ window.onload = function () {
                                                         img = PhotoonSvg(resp2.Id, resp2.Photo, middlestrikerx, middlestrikery * nstrikerhome + movey);
                                                         ++nstrikerhome;
                                                         --nstrikerfull;
+                                                        allplayershome[allplayershome.length] = img;
                                                         //movedownstriker += (svgheight / striker) / 2;
                                                     }
                                                 } else {
@@ -544,9 +559,12 @@ window.onload = function () {
                                             //    y = y + 50;
                                             //    x = pos.left + 10;
                                             //}
+                                            console.log("yayayay", entry);
                                             playersnotplaying[playersnotplaying.length] = img;
                                             allfinishome(totalplayers);
                                         } else {
+                                            console.log("yayayay", entry);
+                                            nplayershomeplaying++;
                                             xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
                                             xmlhttp1.send();
                                         }
@@ -574,8 +592,9 @@ window.onload = function () {
     }
 
 
-
+    var nplayersawayplaying = 0;
     function loadpostions2() {
+        
         var rect = svg.getElementById("all");
         var pos = rect.getBoundingClientRect();
         var x = "55%";
@@ -699,9 +718,11 @@ window.onload = function () {
                                             //    y = y + 50;
                                             //    x = pos.left + 10;
                                             //}
+                                            
                                             playersnotplaying[playersnotplaying.length] = img;
                                             allfinisaway(totalplayers);
                                         } else {
+                                            nplayersawayplaying++;
                                             xmlhttp1.open("GET", "/SetUp/GetPosition?id=" + entry.IdPosition, true);
                                             xmlhttp1.send();
                                         }
@@ -1324,13 +1345,13 @@ window.onload = function () {
                     if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
                         var resp1 = JSON.parse(xmlhttp5.response);
 
-
                         var count1 = 0;
                         resp1.forEach(function (entry) {
+                            if (count1 == 8) return;
+
                             var obj = {};
                             
-                            
-                            console.log("dateeeeee", entry.date);
+                            //console.log("dateeeeee", entry.date);
                             console.log("ydetails", yposdetails);
                             var substringedDate = entry.date.substring(6); //substringedDate= 1291548407008)/
                             var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
@@ -1729,12 +1750,30 @@ window.onload = function () {
                             if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
                                 console.log("create opiniaooo");
                                 
-                                //divcount.id = 'c' + name + opinion;
-                                document.getElementById('c' + name + entry.opinion)
+                                
+                                var xmlhttp2 = new XMLHttpRequest();
+                                xmlhttp2.onreadystatechange = function() {
+
+                                    if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+                                        var resp1 = JSON.parse(xmlhttp2.response);
+
+                                        console.log("c" + resp1.IdEvent + entry.opinion, "c" + resp1.IdEvent + entry.opinion);
+                                        var c = document.getElementById("c" + resp1.IdEvent + entry.opinion);
+                                        c.innerHTML = parseInt(c.innerHTML.trim()) + 1;
+                                        var b = document.getElementById("b" + resp1.IdEvent + entry.opinion);
+                                        b.style.height = (parseInt(c.innerHTML.trim()) + 1) + "%";
+                                        var nn = document.getElementById("n" + resp1.IdEvent + entry.opinion);
+                                        nn.style.top = (parseInt(c.innerHTML.trim()) + 1) + 20 + "%";
+                                    }
+                                };
+
+                                xmlhttp2.open("GET", "/SetUp/GetInstant?idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
+                     "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&negative=no" + "&instant=" + entry.dated);
+                                xmlhttp2.send();
 
                             }
                         };
-
+                        console.log("datecreateopinionuser" , dt);
                         xmlhttp1.open("POST", "/SetUp/CreateOpinionUser", true);
                         xmlhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                         xmlhttp1.send("dateinstant=" + entry.dated + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
@@ -1827,6 +1866,7 @@ window.onload = function () {
 
 
                                 } else if (resp1.Type == 'Substituição') {
+                                    console.log("replacePlayer(entry.causeId, entry.executeId);", saveplayer.idplayer, saveplayer.idexe);
                                     replacePlayer(saveplayer.idplayer, saveplayer.idexe);
                                 }
                             }
@@ -1840,7 +1880,7 @@ window.onload = function () {
                 xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
                 xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
-                    "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe);
+                    "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe + "&iduser=" + document.getElementById("curruserid").innerHTML.trim());
 
                 removedetails();
                 return;
@@ -2440,11 +2480,17 @@ window.onload = function () {
     }
 
     
-    function replacePlayer(causeId , executeId) {
+    function replacePlayer(causeId, executeId) {
+        
+        console.log("allplayershome", allplayershome);
         allplayershome.forEach(function (entry2) {
+            console.log("alllllllplayershome", entry2.getAttributeNS(null, 'id') ,causeId);
             if (entry2.getAttributeNS(null, 'id') == causeId) {
-                playersnotplaying.forEach(function (entry3) {
+                console.log("playersnotplaying", playersnotplaying);
+                playersnotplaying.forEach(function idx(entry3) {
+                    console.log("playeres not playing");
                     if (entry3.getAttributeNS(null, 'id') == executeId) {
+                        console.log("playeres entry3");
                         var secposx = entry3.getAttributeNS(null, 'x');
                         var secposy = entry3.getAttributeNS(null, 'y');
                         entry3.setAttributeNS(null, 'x', entry2.getAttributeNS(null, 'x'));
@@ -2457,6 +2503,8 @@ window.onload = function () {
                 });
             }
         });
+        console.log("allplayershomeaaa", allplayershome);
+        console.log("playersnotplayingaaa", playersnotplaying);
     }
 
 
@@ -2479,11 +2527,11 @@ window.onload = function () {
                 var resp = JSON.parse(xmlhttp5.response);
                 console.log("resp", resp);
                 resp.forEach(function (entry) {
-                    console.log("dateeeeee", entry.date);
+                    //console.log("dateeeeee", entry.date);
                     var substringedDate = entry.date.substring(6); //substringedDate= 1291548407008)/
                     var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
                     var datet = new Date(parsedIntDate);
-
+                    console.log("dateeeeee", datet);
                     var xmlhttp1 = new XMLHttpRequest();
                     xmlhttp1.onreadystatechange = function() {
 
@@ -2504,6 +2552,7 @@ window.onload = function () {
                                         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                                             var resp1 = JSON.parse(xmlhttp.response);
                                             if (resp1.Type == 'Substituição') {
+                                                console.log("replacePlayer(entry.causeId, entry.executeId);", entry.causeId, entry.executeId);
                                                 replacePlayer(entry.causeId, entry.executeId);
 
 
@@ -2615,6 +2664,7 @@ window.onload = function () {
                 auxdiv2.style.left = "24%";
 
                 if (resp2.executeName == null) {
+                    console.log("sem execute");
                     txt = document.createTextNode(" | " + date.toLocaleTimeString() + ' - ' + resp2.eventName + " - " + resp2.causeName);
                 } else {
                     txt = document.createTextNode(" | " + date.toLocaleTimeString() + ' - ' + resp2.eventName + " - " + resp2.causeName + " - " + resp2.executeName);
@@ -2623,7 +2673,7 @@ window.onload = function () {
                 auxdiv4.style.position = 'absolute';
                 auxdiv4.style.color = 'black';
                 auxdiv4.style.left = "24%";
-                if (txt.length > 50)
+                if (txt.length > 40)
                     auxdiv4.style.fontSize = ((parseInt(timeline.style.width.substring(0, 2)) / 100) * avwidth) / (txt.length / 2.2) + "px";
                 console.log("fontsize", txt.length, ((parseInt(timeline.style.width.substring(0, 2)) / 100) * avwidth) / 100);
                 auxdiv4.appendChild(txt);
@@ -2672,11 +2722,11 @@ window.onload = function () {
 
                 if (timeline.firstChild != null) {
                     var allchilds = timeline.childNodes;
-                    console.log("frst", allchilds);
+                    //console.log("frst", allchilds);
                     console.log("frstllll", allchilds.length);
                     for (var i = 0; i < allchilds.length; ++i) {
-                        console.log("frst", allchilds);
-                        if (allchilds[i].innerHTML.substring(0, 8) < date.toLocaleTimeString()) {
+                        //console.log("frst", allchilds[i].childNodes[0].childNodes[3].innerHTML.substring(3,11));
+                        if (allchilds[i].childNodes[0].childNodes[3].innerHTML.substring(3, 11) < date.toLocaleTimeString()) {
                             console.log("entrou");
                             timeline.insertBefore(hr, allchilds[i]);
                             return true;
@@ -2887,7 +2937,7 @@ window.onload = function () {
         var divbar = document.createElement('div');
         divbar.id = 'b' + name + opinion;
         divbar.style.width = '40%';
-        divbar.style.height = (number)+"%";
+        divbar.style.height = (number*100/avheight)+"%";
         divbar.style.backgroundColor = "blue";
         divbar.style.position = 'absolute';
         divbar.style.left = '5%';
@@ -2900,7 +2950,7 @@ window.onload = function () {
         divname.style.height = '0%';
         divname.style.position = 'absolute';
         divname.style.left = "10%";
-        divname.style.top = (number) + 20 + "%";
+        divname.style.top = (number*100/avheight) + 20 + "%";
         var evname = document.createTextNode((opinion=='yes')?"sim":"não");
         divname.style.fontSize = avwidth/100+"px";
         //console.log("evname", name);
@@ -2961,9 +3011,9 @@ window.onload = function () {
                                     console.log("resp2", resp2);
                                     console.log("accxpos", accxpos);
                                     xleft = accxpos;
-                                    var divyes = createMyCounters(entry.Type, resp2, accxpos, ypos , "yes");
+                                    var divyes = createMyCounters(entry.Id, resp2, accxpos, ypos , "yes");
                                     accxpos = parseInt(accxpos.substring(0, accxpos.length - 1)) + xpos + "%";
-                                    var divno = createMyCounters(entry.Type, resp3, accxpos, ypos , "no");
+                                    var divno = createMyCounters(entry.Id, resp3, accxpos, ypos , "no");
                                     accxpos = parseInt(accxpos.substring(0, accxpos.length - 1)) + xpos + "%";
                                     var divmain = document.createElement('div');
                                     divmain.id = 'n';

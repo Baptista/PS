@@ -31,7 +31,6 @@ namespace GameObserver.Controllers
         private PlayerToPlayerModel _mapperPlayerToPlayerModel;
         private IntegrateToIntegrateModel _mapperIntegrateToIntegrateModel;
 
-        private static readonly object locker = new object();
         
         public SetUpController()
         {
@@ -227,14 +226,14 @@ namespace GameObserver.Controllers
 
         public void CreateOpinion(String datenow,
             String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
-            String idagainst, String idcause , int idevent , String idexecute)
+            String idagainst, String idcause , int idevent , String idexecute, String iduser)
         {
             
             int intv;
             DateTime d = DateTime.Parse(datenow.Substring(0,25));
             //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
             _repo.CreateOpinion(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitor),Convert.ToDateTime(dataagainst),
-                Convert.ToInt32(idagainst), User.Identity.Name, Convert.ToInt32(idcause), (Int32.TryParse(idexecute,out intv))?intv:(int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
+                Convert.ToInt32(idagainst), iduser, Convert.ToInt32(idcause), (Int32.TryParse(idexecute,out intv))?intv:(int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
         }
         //idexecute.Equals("null") ? (int?)null : Convert.ToInt32(idexecute)
 
@@ -242,7 +241,7 @@ namespace GameObserver.Controllers
             String idequipag, String dataequipag)
         {
             
-            IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
+            IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstantDescDate(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
                 Convert.ToDateTime(dataequipav),
                 Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag)));
 
@@ -464,11 +463,12 @@ namespace GameObserver.Controllers
             DateTime d = DateTime.Parse(dateop);
             
                 //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
+            
 
                 _repo.CreateOpinionUser(Convert.ToDateTime(dateinstant), Convert.ToInt32(idstadium),
                     Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor),
                     Convert.ToDateTime(dataagainst),
-                    Convert.ToInt32(idagainst), User.Identity.Name, DateTime.Now, negative);
+                    Convert.ToInt32(idagainst), iduser, d, negative);
             }
 
         public ActionResult GetUserOpinionByEvent(String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
@@ -507,6 +507,27 @@ namespace GameObserver.Controllers
 
         }
 
+        public ActionResult GetInstant(String idstadium, String datahora, String datavisitor, String idvisitor,
+            String dataagainst,String idagainst, String instant)
+        {
+            //DateTime d = DateTime.Parse(instant.Substring(0, 25));
 
+            return Json(_repo.GetInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora),
+                Convert.ToInt32(idvisitor),
+                Convert.ToDateTime(datavisitor), Convert.ToInt32(idagainst), Convert.ToDateTime(dataagainst),
+                Convert.ToDateTime(instant)), JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        public void DeleteOpinionsByInstant(String datetime)
+        {
+            _repo.DeleteOpinionsByInstant(Convert.ToDateTime(datetime));
+        }
+
+        public void DeleteInstant(String datetime)
+        {
+            _repo.DeleteInstant(Convert.ToDateTime(datetime));
+        }
     }
 }

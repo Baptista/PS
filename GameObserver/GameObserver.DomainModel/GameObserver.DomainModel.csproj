@@ -61,7 +61,6 @@
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\Stadium.cs" />
     <Compile Include="Entities\Team.cs" />
-    <Compile Include="Entities\User.cs" />
     <Compile Include="IRepositoryGameObserver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

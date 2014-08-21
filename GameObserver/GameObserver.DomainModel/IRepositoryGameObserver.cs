@@ -26,9 +26,9 @@ namespace GameObserver.DomainModel
         //Actor GetClubByPlayer(int idplayer);
 
         Boolean IsPlayer(int id);
-        
 
-
+        void DeleteOpinionsByInstant(DateTime date);
+        void DeleteInstant(DateTime date);
 
         Club GetClub(int id);
         Formation GetFormation(int id);
@@ -106,6 +106,9 @@ namespace GameObserver.DomainModel
 
         Instant GetInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag, DateTime instante);
+
+        IEnumerable<Instant> GetAllInstantDescDate(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
+            int idequipag, DateTime dataequipag);
 
         void InsertUser(String name, int idrole);
 

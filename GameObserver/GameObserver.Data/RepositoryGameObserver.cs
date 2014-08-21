@@ -15,7 +15,7 @@ namespace GameObserver.Data
     public class RepositoryGameObserver: IRepositoryGameObserver
     {
 
-        private static String Stringconn = ConfigurationManager.ConnectionStrings["GameObserverConn"].ConnectionString;
+        private static readonly String Stringconn = ConfigurationManager.ConnectionStrings["GameObserverConn"].ConnectionString;
 
 
         public IEnumerable<Instant> GetInstantByCause(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
@@ -906,14 +906,14 @@ namespace GameObserver.Data
 " and Opiniao.idestadio = Instante.idestadio and Instante.minutosegundo = Opiniao.minutosegundoinstante)" + " where " +
                                   "Opiniao.idestadio=@ids and Opiniao.datahora=@datahora and" +
                                   " Opiniao.datavisitante=@datavis and Opiniao.idvisitante=@idvis and" +
-                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and Instante.idevento=@idevent and nagativa=@neg";
+                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and Instante.idevento=@idevent and negativa=@neg";
 
 
                 cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
-                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyy-MM-dd HH:mm:ss");
-                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = dataequipav.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = dataequipav.ToString("yyyy-MM-dd");
                 cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idequipav;
-                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = dataequipag.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = dataequipag.ToString("yyyy-MM-dd");
                 cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idequipag;
                 cmd.Parameters.Add("@idevent", SqlDbType.Int).Value = idevent;
                 cmd.Parameters.Add("@neg", SqlDbType.Int).Value = (negative == "yes") ? 1 : 0;
@@ -961,14 +961,14 @@ namespace GameObserver.Data
 " and Opiniao.idestadio = Instante.idestadio and Instante.minutosegundo = Opiniao.minutosegundoinstante)" +" where "+
                                   "Opiniao.idestadio=@ids and Opiniao.datahora=@datahora and" +
                                   " Opiniao.datavisitante=@datavis and Opiniao.idvisitante=@idvis and" +
-                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and Opiniao.idutilizador=@iduser and Instante.idevento=@idevent and nagativa=@neg";
+                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and Opiniao.idutilizador=@iduser and Instante.idevento=@idevent and negativa=@neg";
 
                 
                 cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
-                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyy-MM-dd HH:mm:ss");
-                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = dataequipav.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datahora.ToString("yyyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = dataequipav.ToString("yyyy-MM-dd");
                 cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idequipav;
-                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = dataequipag.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = dataequipag.ToString("yyyy-MM-dd");
                 cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idequipag;
                 cmd.Parameters.Add("@iduser", SqlDbType.VarChar).Value = idutilizador;
                 cmd.Parameters.Add("@idevent", SqlDbType.Int).Value = idevent;
@@ -1040,6 +1040,47 @@ namespace GameObserver.Data
 
             }
         }
+
+
+        public void DeleteInstant(DateTime date)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "delete from Instante where Instante.minutosegundo = " + date.ToString("yyyy-MM-dd HH:mm:ss"); ;
+
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteReader();
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        public void DeleteOpinionsByInstant(DateTime date)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "delete from Opiniao where Opiniao.minutosegundoinstante = @min";
+                cmd.Parameters.Add("@min", SqlDbType.DateTime).Value = date.ToString("yyyy-MM-dd HH:mm:ss"); ;
+                try
+                {
+                    conn.Open();
+                    cmd.ExecuteReader();
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+
 
 
         public IEnumerable<Match> GetAllMatches()
@@ -1266,7 +1307,7 @@ namespace GameObserver.Data
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     SqlParameter p1 = new SqlParameter("@minutosegundo", SqlDbType.DateTime, 8);
-                    p1.Value = minutesecond.ToString("HH:mm:ss");
+                    p1.Value = minutesecond.ToString("yyyy-MM-dd HH:mm:ss");
                     p1.Direction = ParameterDirection.Input;
 
                     SqlParameter p2 = new SqlParameter("@idestadio", SqlDbType.Int, 4);
@@ -1298,7 +1339,7 @@ namespace GameObserver.Data
                     p8.Direction = ParameterDirection.Input;
 
                     SqlParameter p9 = new SqlParameter("@datahoraopiniao", SqlDbType.DateTime, 8);
-                    p9.Value = datehouropinion.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    p9.Value = datehouropinion.ToString("yyyy-MM-dd HH:mm:ss.FFFFF");
                     p9.Direction = ParameterDirection.Input;
 
                     SqlParameter p10 = new SqlParameter("@negativa", SqlDbType.Int, 4);
@@ -1327,6 +1368,10 @@ namespace GameObserver.Data
                         cmd.ExecuteNonQuery();
                         //transaction.Commit();
                     }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
                     finally
                     {
                         conn.Close();
@@ -1351,7 +1396,7 @@ namespace GameObserver.Data
 " and Opiniao.idestadio = Instante.idestadio and Instante.minutosegundo = Opiniao.minutosegundoinstante)" + " where " +
                                   "Opiniao.idestadio=@ids and Opiniao.datahora=@datahora and" +
                                   " Opiniao.datavisitante=@datavis and Opiniao.idvisitante=@idvis and" +
-                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and nagativa=@neg and Instante.minutosegundo=@minutoinstante";
+                                  " Opiniao.datadefronta=@dataaga and Opiniao.iddefronta=@idaga and negativa=@neg and Instante.minutosegundo=@minutoinstante";
 
 
                 cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
@@ -1400,7 +1445,7 @@ namespace GameObserver.Data
                 cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idteamv;
                 cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = datateamg.ToString("yyy-MM-dd");
                 cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idteamg;
-                cmd.Parameters.Add("@min", SqlDbType.Int).Value = instante.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@min", SqlDbType.DateTime).Value = instante.ToString("yyy-MM-dd HH:mm:ss");
 
                 try
                 {
@@ -1489,6 +1534,57 @@ namespace GameObserver.Data
             }
         }
 
+
+        public IEnumerable<Instant> GetAllInstantDescDate(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
+            int idteamg, DateTime datateamg)
+        {
+            using (SqlConnection conn = new SqlConnection(Stringconn))
+            {
+                SqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "select * from Instante where idestadio=@ids and datahora=@datahora and datavisitante=@datavis and idvisitante=@idvis and datadefronta=@dataaga and iddefronta=@idaga order by Instante.minutosegundo desc";
+
+                cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
+                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datehour.ToString("yyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = datateamv.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idteamv;
+                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = datateamg.ToString("yyy-MM-dd");
+                cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idteamg;
+
+                try
+                {
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            yield return new Instant()
+                            {
+                                MinuteSeconds = reader.GetDateTime(0),
+                                IdStadium = reader.GetInt32(1),
+                                DateMatch = reader.GetDateTime(2),
+                                DateVisitor = reader.GetDateTime(3),
+                                IdVisitor = reader.GetInt32(4),
+                                DateAgainst = reader.GetDateTime(5),
+                                IdAgainst = reader.GetInt32(6),
+                                IdEvent = reader.GetInt32(7),
+                                IdUser = reader.GetString(8),
+                                IdCause = reader.GetInt32(9),
+                                IdExecute = reader.IsDBNull(10) ? (int?)null : reader.GetInt32(10)
+
+
+                            };
+                        }
+                    }
+                }
+
+                finally
+                {
+                    conn.Close();
+                }
+
+            }
+        }
 
 
 
