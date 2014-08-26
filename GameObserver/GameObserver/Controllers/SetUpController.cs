@@ -529,5 +529,12 @@ namespace GameObserver.Controllers
         {
             _repo.DeleteInstant(Convert.ToDateTime(datetime));
         }
+
+
+        //public ActionResult IsPlayer(String id)
+        //{
+        //    return Json(_repo.IsPlayer(Convert.ToInt32(id)) , JsonRequestBehavior.AllowGet);
+        //}
+
     }
 }

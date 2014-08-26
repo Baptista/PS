@@ -136,7 +136,10 @@ window.onload = function () {
     var playersnotplaying = [];
     var saveplayer = {};
 
-    var arropinions = [];    
+    var arropinions = [];
+
+    var nsubst = 0;
+    var datestartmatch = null;
 
     //////////////////////////////////////////////
     var idequipav = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
@@ -151,6 +154,7 @@ window.onload = function () {
     var idformationhome = null;
     var idformationaway = null;
 
+    
   
     var a = document.getElementById("svgobject");
     var svg = null;
@@ -188,32 +192,38 @@ window.onload = function () {
 
     inserirnameclubs(null, "Tempo", "48%", "6%");
 
-    function timernow() {
+    function timernow(dat) {
+        console.log("timecalled");
         var d = new Date();
-        var hourgame = document.getElementById("iddetailssetup_date").innerHTML.trim().split(" ")[1].split(":");
-        var newh = Math.abs(d.getHours() - hourgame[0]) * 60;
-        var newm = Math.abs(d.getMinutes() - hourgame[1]);
-        var news = Math.abs(d.getSeconds() - hourgame[2]);
-        var timemin = newh + newm + Math.round(news / 60);
-        return timemin + ":" + Math.round(news % 60);
+        ///var hourgame = document.getElementById("iddetailssetup_date").innerHTML.trim().split(" ")[1].split(":");
+        return new Date(d - dat).toTimeString().substring(0,8);
+        //var newh = Math.abs(d.getHours() - dat.getHours());//* 60;
+        //var newm = Math.abs(d.getMinutes() - dat.getMinutes());
+        //var news = Math.abs(d.getSeconds() - dat.getSeconds());
+        //var timemin = newh +":"+ newm;// + Math.round(news / 60);
+        //return timemin + ":" + news;//Math.round(news % 60);
         //inserirnameclubs(timemin + ":" + Math.round(news % 60), halfposition - 20, 20);
     }
 
-    var t = timernow();
+    //var t = timernow();
     var txtElem = document.createElementNS("http://www.w3.org/2000/svg", "text");
     txtElem.setAttributeNS(null, "x", "48%");
     txtElem.setAttributeNS(null, "y", "12%");
     txtElem.setAttributeNS(null, "font-size", avwidth/50+"px");
     txtElem.setAttributeNS(null, 'id', "timer");
-    var helloTxt = document.createTextNode(t);
+    var helloTxt = document.createTextNode("00:00:00");
     txtElem.appendChild(helloTxt);
     svg.getElementById("all").appendChild(txtElem);
 
-    setInterval(function () {
-        var oldtimer = svg.getElementById("timer");
-        oldtimer.innerHTML = timernow();
-    }, 1000);
+    var mytimer = null;
 
+    function starttime(dat) {
+        mytimer = setInterval(function () {
+            var oldtimer = svg.getElementById("timer");
+            console.log("timecalled");
+            oldtimer.innerHTML = timernow(dat);
+        }, 1000);
+    }
 
     var xmlhttp3 = new XMLHttpRequest();
 
@@ -961,107 +971,128 @@ window.onload = function () {
                 console.log("clickotherteam");
             //}
             //if (ide != null) {
+            var xmlhttp8 = new XMLHttpRequest();
 
-                var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                rectexecutor.setAttributeNS(null, 'height', '80%');
-                rectexecutor.setAttributeNS(null, 'width', '20%');
-                rectexecutor.setAttributeNS(null, 'id', '0');
-                rectexecutor.setAttributeNS(null, 'style', 'fill:green;stroke:white');
-                rectexecutor.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 20 + "%");
-                rectexecutor.setAttributeNS(null, 'y', yposdetails);
-                rectexecutor.setAttributeNS(null, 'visibility', 'visible');
-                svg.getElementById("all").appendChild(rectexecutor);
-                showdetails[showdetails.length] = rectexecutor;
+            xmlhttp8.onreadystatechange = function() {
 
-                var xmlhttp = new XMLHttpRequest();
+                if (xmlhttp8.readyState == 4 && xmlhttp8.status == 200) {
+                    var resp = JSON.parse(xmlhttp8.response);
+                    console.log("trrr", resp);
+                    if (resp) {
+                        var rectexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        rectexecutor.setAttributeNS(null, 'height', '80%');
+                        rectexecutor.setAttributeNS(null, 'width', '20%');
+                        rectexecutor.setAttributeNS(null, 'id', '0');
+                        rectexecutor.setAttributeNS(null, 'style', 'fill:green;stroke:white');
+                        rectexecutor.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 20 + "%");
+                        rectexecutor.setAttributeNS(null, 'y', yposdetails);
+                        rectexecutor.setAttributeNS(null, 'visibility', 'visible');
+                        svg.getElementById("all").appendChild(rectexecutor);
+                        showdetails[showdetails.length] = rectexecutor;
 
-                xmlhttp.onreadystatechange = function() {
+                        var xmlhttp = new XMLHttpRequest();
 
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        var resp1 = JSON.parse(xmlhttp.response);
+                        xmlhttp.onreadystatechange = function() {
 
-                        var xmlhttp1 = new XMLHttpRequest();
+                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                                var resp1 = JSON.parse(xmlhttp.response);
 
-                        xmlhttp1.onreadystatechange = function() {
+                                var xmlhttp1 = new XMLHttpRequest();
 
-                            if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
-                                var resp3 = JSON.parse(xmlhttp1.response);
-                                y = "8%";
-                                var temp = null;
-                                resp3.forEach(function(entry) {
-                                    
-                                    //createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
-                                    var circles2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                                    circles2.setAttribute("cx", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%");
-                                    circles2.setAttribute("cy", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
-                                    circles2.setAttribute("fill", "#ffffff");
-                                    circles2.setAttribute("stroke", "#000000");
-                                    circles2.setAttribute("r", "1%");
-                                    circles2.setAttribute("id", entry.Id);
-                                    svg.getElementById("all").appendChild(circles2);
-                                    showdetails[showdetails.length] = circles2;
-                                    circles2.onclick = function() {
+                                xmlhttp1.onreadystatechange = function() {
 
-                                        if (temp != null) {
+                                    if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
+                                        var resp3 = JSON.parse(xmlhttp1.response);
+                                        y = "8%";
+                                        var temp = null;
+                                        resp3.forEach(function(entry) {
 
-                                            svg.getElementById("all").removeChild(temp);
-                                            removeElemFromArray(showdetails, temp);
-                                            console.log("remove circle", temp);
-                                            temp = null;
+                                            //createcircles(entry.Id, null, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                            var circles2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                                            circles2.setAttribute("cx", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%");
+                                            circles2.setAttribute("cy", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                            circles2.setAttribute("fill", "#ffffff");
+                                            circles2.setAttribute("stroke", "#000000");
+                                            circles2.setAttribute("r", "1%");
+                                            circles2.setAttribute("id", entry.Id);
+                                            svg.getElementById("all").appendChild(circles2);
+                                            showdetails[showdetails.length] = circles2;
+                                            circles2.onclick = function() {
+
+                                                if (temp != null) {
+
+                                                    svg.getElementById("all").removeChild(temp);
+                                                    removeElemFromArray(showdetails, temp);
+                                                    console.log("remove circle", temp);
+                                                    temp = null;
+                                                }
+
+                                                console.log("circles");
+                                                var circlesinside2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                                                circlesinside2.setAttribute("cx", (circles2.getAttributeNS(null, 'cx')));
+                                                circlesinside2.setAttribute("cy", (circles2.getAttributeNS(null, 'cy')));
+                                                circlesinside2.setAttribute("fill", "#000000");
+                                                circlesinside2.setAttribute("stroke", "#000000");
+                                                circlesinside2.setAttribute("r", "0.8%");
+                                                circlesinside2.setAttribute("id", "circcc");
+                                                svg.getElementById("all").appendChild(circlesinside2);
+                                                showdetails[showdetails.length] = circlesinside2;
+                                                console.log("lastcircle", temp);
+                                                temp = circlesinside2;
+                                                saveplayer.idexe = circles2.getAttributeNS(null, 'id');
+                                                console.log("saveplayer.idexe", saveplayer.idexe);
+                                            };
+
+                                            createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                            y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+
+                                        });
+                                    }
+                                };
+
+                                var xmlhttp9 = new XMLHttpRequest();
+
+                                xmlhttp9.onreadystatechange = function() {
+
+                                    if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
+                                        var resp2 = JSON.parse(xmlhttp9.response);
+
+                                        if (resp2.Type != "Inicio da Partida" || resp2.Type != "Fim da Partida") {
+
+
+                                            var idc;
+                                            if (resp2.Type == "Substituição") {
+                                                idc = resp1.IdClub;
+
+                                            } else {
+                                                if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
+                                                    idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
+                                                } else {
+                                                    idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
+                                                }
+                                            }
+                                            xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
+                                            xmlhttp1.send();
                                         }
 
-                                        console.log("circles");
-                                        var circlesinside2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                                        circlesinside2.setAttribute("cx", (circles2.getAttributeNS(null, 'cx')));
-                                        circlesinside2.setAttribute("cy", (circles2.getAttributeNS(null, 'cy')));
-                                        circlesinside2.setAttribute("fill", "#000000");
-                                        circlesinside2.setAttribute("stroke", "#000000");
-                                        circlesinside2.setAttribute("r", "0.8%");
-                                        circlesinside2.setAttribute("id", "circcc");
-                                        svg.getElementById("all").appendChild(circlesinside2);
-                                        showdetails[showdetails.length] = circlesinside2;
-                                        console.log("lastcircle", temp);
-                                        temp = circlesinside2;
-                                        saveplayer.idexe = circles2.getAttributeNS(null,'id');
-                                        console.log("saveplayer.idexe", saveplayer.idexe);
-                                    };
+                                    }
+                                };
+                                xmlhttp9.open("GET", "/SetUp/GetEvent?id=" + ide, true);
+                                xmlhttp9.send();
 
-                                    createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
-                                    y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
-
-                                });
                             }
                         };
+                        xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + idp, true);
+                        xmlhttp.send();
 
-                        var xmlhttp9 = new XMLHttpRequest();
+                    } 
+                }
+            };
+            xmlhttp8.open("GET", "/SetUp/IsPlayer?id=" + idp, true);
+            xmlhttp8.send();
 
-                        xmlhttp9.onreadystatechange = function() {
 
-                            if (xmlhttp9.readyState == 4 && xmlhttp9.status == 200) {
-                                var resp2 = JSON.parse(xmlhttp9.response);
-                                var idc;
-                                if (resp2.Type == "Substituição") {
-                                    idc = resp1.IdClub;
-
-                                } else {
-                                    if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
-                                        idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
-                                    } else {
-                                        idc = document.getElementById("iddetailssetup_idvisitor").innerHTML.trim();
-                                    }
-                                }
-                                xmlhttp1.open("GET", "/SetUp/GetAllPlayerFromClub?idclub=" + idc, true);
-                                xmlhttp1.send();
-                            }
-                        }
-                        xmlhttp9.open("GET", "/SetUp/GetEvent?id=" + ide, true);
-                        xmlhttp9.send();
-
-                    }
-                };
-                xmlhttp.open("GET", "/SetUp/GetPlayerWithClub?idplayer=" + idp, true);
-                xmlhttp.send();
-
+            
             
             console.log("saveplayers", saveplayer);
         };
@@ -1809,10 +1840,16 @@ window.onload = function () {
                 //console.log("idest", idequipa);
                 //console.log("idest", saveplayer);
                 var xmlhttp10 = new XMLHttpRequest();
-                var dt = new Date();
+                //var dt = new Date();
                 //var substringedDate = dt.substring(6); //substringedDate= 1291548407008)/
                 //var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
                 //var datet = new Date(parsedIntDate);
+                
+                var dt = svg.getElementById("timer").innerHTML.trim().split(":");
+
+                dt = new Date(0, 0, 0, dt[0], dt[1], dt[2]);
+                
+
                 xmlhttp10.onreadystatechange = function() {
 
                     if (xmlhttp10.readyState == 4 && xmlhttp10.status == 200) {
@@ -1868,6 +1905,11 @@ window.onload = function () {
                                 } else if (resp1.Type == 'Substituição') {
                                     console.log("replacePlayer(entry.causeId, entry.executeId);", saveplayer.idplayer, saveplayer.idexe);
                                     replacePlayer(saveplayer.idplayer, saveplayer.idexe);
+                                } else if (resp1.Type == 'Inicio da Partida') {
+                                    datestartmatch = new Date();
+                                    starttime(datestartmatch);
+                                }else if (resp1.Type == 'Fim da Partida') {
+                                    clearInterval(mytimer);
                                 }
                             }
                         };
@@ -1876,7 +1918,17 @@ window.onload = function () {
 
                     }
                 }
-                console.log("idexexexe", saveplayer.idexe);
+                //var timematch = document.getElementById("iddetailssetup_date").innerHTML.trim().split(" ")[1].split(":");
+
+                //var newh = timematch[0];
+                //var newm = timematch[1];
+                //var news = timematch[2];
+                //dt = new Date(0, 0, 0, newh, newm, news);
+                
+                //dt = svg.getElementById("timer").innerHTML.trim().split(":");
+                //dt = new Date(0,0,0,dt[0],dt[1],dt[2]);
+
+                console.log("idexexexe", dt);
                 xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
                 xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
@@ -2027,14 +2079,14 @@ window.onload = function () {
         
 
     };
-    SVGDocument.onmousemove = function (evt) {
-        GetTrueCoords(evt);
-        if (DragTarget) {
-            var newX = TrueCoords.x - GrabPoint.x;
-            var newY = TrueCoords.y - GrabPoint.y;
-            DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
-        }
-    };
+    //SVGDocument.onmousemove = function (evt) {
+    //    GetTrueCoords(evt);
+    //    if (DragTarget) {
+    //        var newX = TrueCoords.x - GrabPoint.x;
+    //        var newY = TrueCoords.y - GrabPoint.y;
+    //        DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
+    //    }
+    //};
 
     //function whitchcircle(ev) {
     //    for (var i = 0; i < tempimages.length; ++i) {
@@ -2100,10 +2152,10 @@ window.onload = function () {
             return true;
             // run click-only operation here
         }
-        if (DragTarget == null) {
-            console.log("mouseuuuup");
-            return;
-        }
+        //if (DragTarget == null) {
+        //    console.log("mouseuuuup");
+        //    return;
+        //}
         // Otherwise, if the mouse was being held, end the hold
         //else if (isclick) {
         isclick = false;
@@ -2121,10 +2173,10 @@ window.onload = function () {
         //    removeTempImages();
         //    return;
         //}
-        if (evt.target.nodeName == 'circle') {
-            console.log("aaaaa");
-            return;
-        }
+        //if (evt.target.nodeName == 'circle') {
+        //    console.log("aaaaa");
+        //    return;
+        //}
 
         //|| GrabPoint.x > halfposition && DragTarget.getAttributeNS(null, 'x') < halfposition
         //        || GrabPoint.x < halfposition && DragTarget.getAttributeNS(null, 'x') > halfposition
@@ -2146,52 +2198,52 @@ window.onload = function () {
         //    return;
         //}
 
-        var oldimg = IsImageInPosition(evt.clientX, evt.clientY);
+        //var oldimg = IsImageInPosition(evt.clientX, evt.clientY);
 
-        if (oldimg != null) {
-            console.log("second");
+        //if (oldimg != null) {
+        //    console.log("second");
 
-            console.log("oldcoor", OldCoor);
-            console.log("oldimg", oldimg);
-            DragTarget.setAttributeNS(null, 'x', oldimg.getAttributeNS(null, "x"));
-            DragTarget.setAttributeNS(null, 'y', oldimg.getAttributeNS(null, "y"));
-            DragTarget.setAttributeNS(null, 'transform', "");
-            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+        //    console.log("oldcoor", OldCoor);
+        //    console.log("oldimg", oldimg);
+        //    DragTarget.setAttributeNS(null, 'x', oldimg.getAttributeNS(null, "x"));
+        //    DragTarget.setAttributeNS(null, 'y', oldimg.getAttributeNS(null, "y"));
+        //    DragTarget.setAttributeNS(null, 'transform', "");
+        //    DragTarget.setAttributeNS(null, 'pointer-events', 'all');
 
-            oldimg.setAttributeNS(null, 'x', OldCoor.x);
-            oldimg.setAttributeNS(null, 'y', OldCoor.y);
-            oldimg.setAttributeNS(null, 'transform', "");
-            oldimg.setAttributeNS(null, 'pointer-events', 'all');
+        //    oldimg.setAttributeNS(null, 'x', OldCoor.x);
+        //    oldimg.setAttributeNS(null, 'y', OldCoor.y);
+        //    oldimg.setAttributeNS(null, 'transform', "");
+        //    oldimg.setAttributeNS(null, 'pointer-events', 'all');
 
-            removeElemFromArray(allplayershome, oldimg);
-            removeElemFromArray(playersnotplaying, oldimg);
-            allplayershome[allplayershome.length] = DragTarget;
-            playersnotplaying[playersnotplaying.length] = DragTarget;
-            //replace(oldimg, DragTarget);
-            //whereplayeres[whereplayeres.length] = DragTarget;
-            removeTempImages();
-            nmiddlehome = 1;
-            ndefensehome = 1;
-            nstrikerhome = 1;
-            DragTarget = null;
-            return;
-        }
+        //    removeElemFromArray(allplayershome, oldimg);
+        //    removeElemFromArray(playersnotplaying, oldimg);
+        //    allplayershome[allplayershome.length] = DragTarget;
+        //    playersnotplaying[playersnotplaying.length] = DragTarget;
+        //    //replace(oldimg, DragTarget);
+        //    //whereplayeres[whereplayeres.length] = DragTarget;
+        //    removeTempImages();
+        //    nmiddlehome = 1;
+        //    ndefensehome = 1;
+        //    nstrikerhome = 1;
+        //    DragTarget = null;
+        //    return;
+        //}
 
 
-        if (!IsInPositonRange(evt.clientX, evt.clientY)) {
-            //var cenas = svg.getElementById(OldCoor.id);
-            //cenas.setAttributeNS(null, 'x', OldCoor.x);
-            //cenas.setAttributeNS(null, 'y', OldCoor.y);
-            console.log("third");
-            DragTarget.setAttributeNS(null, 'x', OldCoor.x);
-            DragTarget.setAttributeNS(null, 'y', OldCoor.y);
-            DragTarget.setAttributeNS(null, 'transform', "");
-            DragTarget.setAttributeNS(null, 'pointer-events', 'all');
+        //if (!IsInPositonRange(evt.clientX, evt.clientY)) {
+        //    //var cenas = svg.getElementById(OldCoor.id);
+        //    //cenas.setAttributeNS(null, 'x', OldCoor.x);
+        //    //cenas.setAttributeNS(null, 'y', OldCoor.y);
+        //    console.log("third");
+        //    DragTarget.setAttributeNS(null, 'x', OldCoor.x);
+        //    DragTarget.setAttributeNS(null, 'y', OldCoor.y);
+        //    DragTarget.setAttributeNS(null, 'transform', "");
+        //    DragTarget.setAttributeNS(null, 'pointer-events', 'all');
 
-            DragTarget = null;
-            removeTempImages();
-            return;
-        }
+        //    DragTarget = null;
+        //    removeTempImages();
+        //    return;
+        //}
 
         //if (DragTarget) {
         //    console.log("four");
@@ -2507,7 +2559,7 @@ window.onload = function () {
         console.log("playersnotplayingaaa", playersnotplaying);
     }
 
-
+    
 
 
     function FillTimeLine() {
@@ -2554,11 +2606,17 @@ window.onload = function () {
                                             if (resp1.Type == 'Substituição') {
                                                 console.log("replacePlayer(entry.causeId, entry.executeId);", entry.causeId, entry.executeId);
                                                 replacePlayer(entry.causeId, entry.executeId);
-
+                                                nsubst++;
 
                                             }
                                             else if (resp1.Type == 'Cartão Vermelho') {
                                                 removePhoto(entry.causeId);
+                                            }else if (resp1.Type == 'Inicio da Partida') {
+                                                //datestartmatch = new Date();
+                                                starttime(datet);
+                                            }else if(resp1.Type == 'Fim da Partida')
+                                            {
+                                                
                                             }
                                         }
                                     };
@@ -2663,11 +2721,14 @@ window.onload = function () {
                 auxdiv2.style.color = 'red';
                 auxdiv2.style.left = "24%";
 
+                console.log("daaaaaate", date);
+                console.log("daaaaaate", date.toTimeString());
+
                 if (resp2.executeName == null) {
                     console.log("sem execute");
-                    txt = document.createTextNode(" | " + date.toLocaleTimeString() + ' - ' + resp2.eventName + " - " + resp2.causeName);
+                    txt = document.createTextNode(" | " + date.toTimeString().substring(0,8) + ' - ' + resp2.eventName + " - " + resp2.causeName);
                 } else {
-                    txt = document.createTextNode(" | " + date.toLocaleTimeString() + ' - ' + resp2.eventName + " - " + resp2.causeName + " - " + resp2.executeName);
+                    txt = document.createTextNode(" | " + date.toTimeString().substring(0, 8) + ' - ' + resp2.eventName + " - " + resp2.causeName + " - " + resp2.executeName);
                 }
                 var auxdiv4 = document.createElement('div');
                 auxdiv4.style.position = 'absolute';
@@ -2726,7 +2787,7 @@ window.onload = function () {
                     console.log("frstllll", allchilds.length);
                     for (var i = 0; i < allchilds.length; ++i) {
                         //console.log("frst", allchilds[i].childNodes[0].childNodes[3].innerHTML.substring(3,11));
-                        if (allchilds[i].childNodes[0].childNodes[3].innerHTML.substring(3, 11) < date.toLocaleTimeString()) {
+                        if (allchilds[i].childNodes[0].childNodes[3].innerHTML.substring(3, 11) < date.toTimeString()) {
                             console.log("entrou");
                             timeline.insertBefore(hr, allchilds[i]);
                             return true;

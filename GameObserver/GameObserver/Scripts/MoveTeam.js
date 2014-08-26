@@ -906,7 +906,7 @@
             //console.log("BackDrop != targetElement", TrueCoords.x);
             //console.log("BackDrop != targetElement", TrueCoords.y);
             GrabPoint.x = TrueCoords.x;//- Number(transMatrix.e);
-            GrabPoint.y = TrueCoords.y;//- Number(transMatrix.f);
+            GrabPoint.y = TrueCoords.y; //- Number(transMatrix.f);
             //console.log("BackDrop != targetElement", GrabPoint.x);
             //console.log("BackDrop != targetElement", GrabPoint.y);
         }
@@ -921,9 +921,9 @@
             var newY = TrueCoords.y - GrabPoint.y;
             //console.log("SVGDocument.onmousemove", newX);
             //console.log("SVGDocument.onmousemove", newY);
-            DragTarget.setAttributeNS(null, 'x', TrueCoords.x);
-            DragTarget.setAttributeNS(null, 'y', TrueCoords.y);
-            //DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
+            //DragTarget.setAttributeNS(null, 'x', newX);
+            //DragTarget.setAttributeNS(null, 'y', newY);
+            DragTarget.setAttributeNS(null, 'transform', 'translate(' + newX + ',' + newY + ')');
         }
     };
 
@@ -1153,10 +1153,10 @@
         
         TrueCoords.x = evt.clientX;
         TrueCoords.y = evt.clientY;
-        console.log("GetTrueCoords", TrueCoords.x);
-        console.log("GetTrueCoords", TrueCoords.y);
-        console.log("GetTrueCoords", evt.clientX);
-        console.log("GetTrueCoords", evt.clientY);
+        //console.log("GetTrueCoords", TrueCoords.x);
+        //console.log("GetTrueCoords", TrueCoords.y);
+        //console.log("GetTrueCoords", evt.clientX);
+        //console.log("GetTrueCoords", evt.clientY);
     };
 
 
@@ -1335,7 +1335,7 @@
         var idclub = document.getElementById("idteamclub").innerHTML;
         var date = document.getElementById("idteamdata").innerHTML;
 
-
+        if (allplayershome.length < 7)return;
         allplayershome.forEach(function (entry) {
             
             var imgx = entry.getAttributeNS(null, 'x');
