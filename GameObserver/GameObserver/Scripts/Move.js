@@ -193,7 +193,7 @@ window.onload = function () {
     inserirnameclubs(null, "Tempo", "48%", "6%");
 
     function timernow(dat) {
-        console.log("timecalled");
+        //console.log("timecalled");
         var d = new Date();
         ///var hourgame = document.getElementById("iddetailssetup_date").innerHTML.trim().split(" ")[1].split(":");
         return new Date(d - dat).toTimeString().substring(0,8);
@@ -220,7 +220,7 @@ window.onload = function () {
     function starttime(dat) {
         mytimer = setInterval(function () {
             var oldtimer = svg.getElementById("timer");
-            console.log("timecalled");
+            //console.log("timecalled");
             oldtimer.innerHTML = timernow(dat);
         }, 1000);
     }
@@ -1115,7 +1115,7 @@ window.onload = function () {
 
 
     function createAdminInteract(id, photo, posx, posy) {
-
+        console.log("sssss");
         var xmlhttp8 = new XMLHttpRequest();
 
         xmlhttp8.onreadystatechange = function () {
@@ -1759,6 +1759,20 @@ window.onload = function () {
     }
 
 
+    function GetEvent(id) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                return JSON.parse(xmlhttp.response);
+                
+            }
+        };
+
+        xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
+        xmlhttp.send();
+    }
+
 
     SVGDocument.onmousedown = function (evt) {
         
@@ -1840,14 +1854,14 @@ window.onload = function () {
                 //console.log("idest", idequipa);
                 //console.log("idest", saveplayer);
                 var xmlhttp10 = new XMLHttpRequest();
-                //var dt = new Date();
+                var dt = new Date();
                 //var substringedDate = dt.substring(6); //substringedDate= 1291548407008)/
                 //var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
                 //var datet = new Date(parsedIntDate);
                 
-                var dt = svg.getElementById("timer").innerHTML.trim().split(":");
+                //var dt = svg.getElementById("timer").innerHTML.trim().split(":");
 
-                dt = new Date(0, 0, 0, dt[0], dt[1], dt[2]);
+                //dt = new Date(0, 0, 0, dt[0], dt[1], dt[2]);
                 
 
                 xmlhttp10.onreadystatechange = function() {
@@ -1860,11 +1874,11 @@ window.onload = function () {
                         console.log("date", dt);
                         LineInTimeLine(saveplayer.event, saveplayer.idplayer, saveplayer.idexe, dt,0,0);
 
-                        var xmlhttp = new XMLHttpRequest();
-                        xmlhttp.onreadystatechange = function() {
+                        var xmlhttp1 = new XMLHttpRequest();
+                        xmlhttp1.onreadystatechange = function() {
 
-                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                var resp1 = JSON.parse(xmlhttp.response);
+                            if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                                var resp1 = JSON.parse(xmlhttp1.response);
                                 if (resp1.Type == 'Cartão Vermelho') {
 
                                     removePhoto(saveplayer.idplayer);
@@ -1905,6 +1919,7 @@ window.onload = function () {
                                 } else if (resp1.Type == 'Substituição') {
                                     console.log("replacePlayer(entry.causeId, entry.executeId);", saveplayer.idplayer, saveplayer.idexe);
                                     replacePlayer(saveplayer.idplayer, saveplayer.idexe);
+                                    nsubst++;
                                 } else if (resp1.Type == 'Inicio da Partida') {
                                     datestartmatch = new Date();
                                     starttime(datestartmatch);
@@ -1913,8 +1928,8 @@ window.onload = function () {
                                 }
                             }
                         };
-                        xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
-                        xmlhttp.send();
+                        xmlhttp1.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
+                        xmlhttp1.send();
 
                     }
                 }
@@ -1927,15 +1942,33 @@ window.onload = function () {
                 
                 //dt = svg.getElementById("timer").innerHTML.trim().split(":");
                 //dt = new Date(0,0,0,dt[0],dt[1],dt[2]);
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
 
-                console.log("idexexexe", dt);
-                xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
-                xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
-                    "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe + "&iduser=" + document.getElementById("curruserid").innerHTML.trim());
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var resp = JSON.parse(xmlhttp.response);
+                        if (resp.Type == 'Substituição' && nsubst == 3) {
 
-                removedetails();
-                return;
+                        } else {
+                            console.log("idexexexe", dt);
+                            xmlhttp10.open("POST", "/SetUp/CreateOpinion", true);
+                            xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
+                                "&dataagainst=" + dataequipag + "&idagainst=" + idequipag + "&idcause=" + saveplayer.idplayer + "&idevent=" + saveplayer.event + "&idexecute=" + saveplayer.idexe + "&iduser=" + document.getElementById("curruserid").innerHTML.trim());
+
+                            
+                        }
+                        removedetails();
+                        return;
+                    }
+                };
+
+                xmlhttp.open("GET", "/SetUp/GetEvent?id=" + saveplayer.event, true);
+                xmlhttp.send();
+
+
+
+                
             }
 
         }
@@ -2571,7 +2604,9 @@ window.onload = function () {
         //var dataequipag = document.getElementById("iddetailssetup_dateagainst").innerHTML.trim();
         //var idstadium = document.getElementById("iddetailssetup_idstadium").innerHTML.trim();
         //var datahora = document.getElementById("iddetailssetup_date").innerHTML.trim();
-
+        var itsfinish = false;
+        var starmatch = null;
+        var endmatch = null;
 
         xmlhttp5.onreadystatechange = function () {
 
@@ -2606,17 +2641,34 @@ window.onload = function () {
                                             if (resp1.Type == 'Substituição') {
                                                 console.log("replacePlayer(entry.causeId, entry.executeId);", entry.causeId, entry.executeId);
                                                 replacePlayer(entry.causeId, entry.executeId);
-                                                nsubst++;
+                                                if(datet.getHours()!=0 || datet.getMinutes()!=0 || datet.getSeconds()!=0)
+                                                    nsubst++;
 
                                             }
                                             else if (resp1.Type == 'Cartão Vermelho') {
                                                 removePhoto(entry.causeId);
                                             }else if (resp1.Type == 'Inicio da Partida') {
                                                 //datestartmatch = new Date();
+                                                console.log("INICIO DA PARTIDA");
+                                                starmatch = datet;
                                                 starttime(datet);
-                                            }else if(resp1.Type == 'Fim da Partida')
-                                            {
-                                                
+                                                if (endmatch != null) {
+                                                    
+                                                    clearInterval(mytimer);
+                                                    var oldtimer = svg.getElementById("timer");
+                                                    //console.log("timecalled");
+                                                    oldtimer.innerHTML = new Date(endmatch - datet).toTimeString().substring(0, 8);
+                                                }
+                                            } else if (resp1.Type == 'Fim da Partida') {
+                                                console.log("FIM DA PARTIDA");
+                                                //itsfinish = true;
+                                                endmatch = datet;
+                                                clearInterval(mytimer);
+                                                if (starmatch != null) {
+                                                    var oldtimer = svg.getElementById("timer");
+                                                    //console.log("timecalled");
+                                                    oldtimer.innerHTML = new Date(starmatch - datet).toTimeString().substring(0, 8);
+                                                }
                                             }
                                         }
                                     };
