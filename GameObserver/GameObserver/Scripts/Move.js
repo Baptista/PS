@@ -1206,11 +1206,11 @@ window.onload = function () {
 
                         var svgbutton = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                         svgbutton.setAttributeNS(null, 'height', '4%');
-                        svgbutton.setAttributeNS(null, 'width', '4%');
+                        svgbutton.setAttributeNS(null, 'width', '6%');
                         svgbutton.setAttributeNS(null, 'id', '0');
                         //svgbutton.setAttributeNS(null, 'style', 'fill:white;stroke:white');
                         svgbutton.setAttributeNS(null, 'fill', 'white');
-                        svgbutton.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 15 + "%");
+                        svgbutton.setAttributeNS(null, 'x', parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 14 + "%");
                         svgbutton.setAttributeNS(null, 'y', parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 75 + "%");
                         svgbutton.setAttributeNS(null, 'visibility', 'visible');
                         svgbutton.setAttributeNS(null, 'cursor', 'pointer');
@@ -1220,7 +1220,7 @@ window.onload = function () {
                         //};
 
                         svg.getElementById("all").appendChild(svgbutton);
-                        createLabels("Save", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 15 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 78 + "%");
+                        createLabels("Guardar", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 14 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 78 + "%");
 
 
                         //var svgexecutor = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
@@ -1350,10 +1350,10 @@ window.onload = function () {
                 var date = new Date(parsedIntDate);
                 console.log("resp", date.toDateString());
                 //var jsonText = JsonConvert.SerializeObject(resp.Born, new IsoDateTimeConverter());
-                createLabels("Name: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
-                createLabels("Born: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
-                createLabels("Height: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
-                createLabels("Weight: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
+                createLabels("Nome: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
+                createLabels("Nasceu: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
+                createLabels("Altura: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
+                createLabels("Peso: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
 
                 xposdetails = "27%";
                 yposdetails = "45%";
@@ -2765,13 +2765,13 @@ window.onload = function () {
                 var auxdiv1 = document.createElement('div');
                 auxdiv1.style.position = 'absolute';
                 auxdiv1.style.color = 'red';
-                auxdiv1.style.left = "12%";
+                auxdiv1.style.left = aux.length+11+"%";
                 auxdiv1.appendChild(aux1);
 
                 var auxdiv2 = document.createElement('div');
                 auxdiv2.style.position = 'absolute';
                 auxdiv2.style.color = 'red';
-                auxdiv2.style.left = "24%";
+                auxdiv2.style.left = aux1.length+20+"%";
 
                 console.log("daaaaaate", date);
                 console.log("daaaaaate", date.toTimeString());
@@ -2785,11 +2785,12 @@ window.onload = function () {
                 var auxdiv4 = document.createElement('div');
                 auxdiv4.style.position = 'absolute';
                 auxdiv4.style.color = 'black';
-                auxdiv4.style.left = "24%";
-                if (txt.length > 40)
-                    auxdiv4.style.fontSize = ((parseInt(timeline.style.width.substring(0, 2)) / 100) * avwidth) / (txt.length / 2.2) + "px";
+                auxdiv4.style.left = aux.length+aux1.length+20+"%";
+                
                 console.log("fontsize", txt.length, ((parseInt(timeline.style.width.substring(0, 2)) / 100) * avwidth) / 100);
                 auxdiv4.appendChild(txt);
+                if (auxdiv4.length > 40)
+                    auxdiv4.style.fontSize = ((parseInt(timeline.style.width.substring(0, 2)) / 100) * avwidth) / (txt.length / 2.2) + "px";
 
                 var auxdiv3 = document.createElement('div');
                 auxdiv3.appendChild(auxdiv1);
@@ -2961,6 +2962,7 @@ window.onload = function () {
     timeline.style.top = '10%';
     timeline.title = "TimeLine";
     timeline.style.border = 'ridge';
+    timeline.style.whiteSpace = 'nowrap';
     //timeline.style.backgroundColor = 'green';
     document.body.appendChild(timeline);
 

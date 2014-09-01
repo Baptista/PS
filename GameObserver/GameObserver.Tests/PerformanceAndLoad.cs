@@ -49,6 +49,7 @@ namespace GameObserver.Tests
             }
             Console.WriteLine("Teste de carga - maximo de {0} transações em 10 segundos", maxload);
             Console.WriteLine("Teste de performance - {0} para efectuar 2000 transações ", mintime);
+            DeleteInstant("2014-05-24 20:00:00.000");
             Console.ReadKey();
         }
 
@@ -56,7 +57,7 @@ namespace GameObserver.Tests
         {
             SetUpController controller = new SetUpController();
             datenow = DateTime.Now;
-            controller.CreateOpinion(datenow.ToString("R") , "1" ,"2014-05-24 20:00:00.000", "2014-05-23", "1",
+            controller.CreateInstant(datenow.ToString("R") , "1" ,"2014-05-24 20:00:00.000", "2014-05-23", "1",
                         "2014-05-23", "2","8",4,"30","Admin");
         }
 
@@ -77,7 +78,7 @@ namespace GameObserver.Tests
                 //DateTime d = Convert.ToDateTime(dt);
                 //Thread.Sleep(10);    
 
-                totalrequests += CreateOpinionUserAsync(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
+                totalrequests += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
                         "2014-05-24 20:00:00.000", "2014-05-23", "1",
                         "2014-05-23", "2", "user", auxdatenow.ToString("yyyy-MM-dd HH:mm:ss.FFFFF"), "yes");
 
@@ -113,7 +114,7 @@ namespace GameObserver.Tests
                     //DateTime s = DateTime.Parse(dt);
                     auxdatenow = auxdatenow.AddMilliseconds(10);
                     //DateTime d = Convert.ToDateTime(dt);
-                    nusers += CreateOpinionUserAsync(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
+                    nusers += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
                         "2014-05-24 20:00:00.000", "2014-05-23", "1",
                         "2014-05-23", "2", user, auxdatenow.ToString("yyyy-MM-dd HH:mm:ss.FFFFF"), "yes");
 
@@ -129,7 +130,7 @@ namespace GameObserver.Tests
             return new TimeSpan(0);
         }
         
-        public int CreateOpinionUserAsync(String dataopinion, String neg, String hour, String hourvisitor,
+        public int CreateOpinionUser(String dataopinion, String neg, String hour, String hourvisitor,
             String idvisitor, String houragainst, String idagainst, String username, String houtopinion, String opinion)
         {
             SetUpController controller = new SetUpController();
@@ -142,6 +143,12 @@ namespace GameObserver.Tests
         {
             SetUpController controller = new SetUpController();
             controller.DeleteOpinionsByInstant(datetime);
+        }
+
+        public void DeleteInstant(String datetime)
+        {
+            SetUpController controller = new SetUpController();
+            controller.DeleteInstant(datetime);
         }
     }
 }

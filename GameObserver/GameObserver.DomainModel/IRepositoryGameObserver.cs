@@ -68,10 +68,12 @@ namespace GameObserver.DomainModel
 
         IEnumerable<Event> GetAllEvents();
 
-        void CreateOpinion(DateTime minutosegundo , int idestadio , DateTime datahora , DateTime datavisitante , int idvisitante,
+        void CreateInstant(DateTime minutosegundo , int idestadio , DateTime datahora , DateTime datavisitante , int idvisitante,
             DateTime datadefronta , int iddefronta , String idutilizador, int causou , int? executou , DateTime datahoraopiniao , 
             int negativa , int idevento);
 
+
+        
 
         void CreateOpinionUser(DateTime minutosegundo, int idestadio, DateTime datahora, DateTime datavisitante,
             int idvisitante,

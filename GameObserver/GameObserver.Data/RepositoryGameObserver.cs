@@ -1047,7 +1047,7 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "delete from Instante where Instante.minutosegundo = " + date.ToString("yyyy-MM-dd HH:mm:ss"); ;
+                cmd.CommandText = "delete from Instante where Instante.minutosegundo = '" + date.ToString("yyyy-MM-dd HH:mm:ss")+"'"; ;
 
                 try
                 {
@@ -1196,7 +1196,7 @@ namespace GameObserver.Data
             }
         }
 
-        public void CreateOpinion(DateTime minutesecond, int idstadium, DateTime datehour, DateTime datevisitor,
+        public void CreateInstant(DateTime minutesecond, int idstadium, DateTime datehour, DateTime datevisitor,
             int idvisitor,
             DateTime dateagainst, int idagainst, String iduser, int cause, int? execute, DateTime datehouropinion,
             int negative, int idevent)

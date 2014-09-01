@@ -224,7 +224,7 @@ namespace GameObserver.Controllers
             return Json(evens , JsonRequestBehavior.AllowGet);
         }
 
-        public void CreateOpinion(String datenow,
+        public void CreateInstant(String datenow,
             String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
             String idagainst, String idcause , int idevent , String idexecute, String iduser)
         {
@@ -232,7 +232,7 @@ namespace GameObserver.Controllers
             int intv;
             DateTime d = DateTime.Parse(datenow.Substring(0,25));
             //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
-            _repo.CreateOpinion(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitor),Convert.ToDateTime(dataagainst),
+            _repo.CreateInstant(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitor),Convert.ToDateTime(dataagainst),
                 Convert.ToInt32(idagainst), iduser, Convert.ToInt32(idcause), (Int32.TryParse(idexecute,out intv))?intv:(int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
         }
         //idexecute.Equals("null") ? (int?)null : Convert.ToInt32(idexecute)
