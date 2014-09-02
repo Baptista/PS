@@ -10,102 +10,47 @@
     @Html.ActionLink("Criar Partida", "Create")
 </p>
 <table class="table">
-    @*<tr>
-        <th>
-            @Html.DisplayNameFor(model => model.IdStadium)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdFirstReferee)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdSecondReferee)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdThirdReferee)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdFourReferee)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdVisitor)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateVisitor)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdAgainst)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateAgainst)
-        </th>
-        <th></th>
-    </tr>*@
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <img src=@Url.Content("~/fonts/"+@item.HomePhoto) width="50" height="50" />
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.HomeName)
-        </td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img src=@Url.Content("~/fonts/"+@item.HomePhoto) width="50" height="50" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HomeName)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AwayName)
-        </td>
-        <td>
-            <img src=@Url.Content("~/fonts/" + @item.AwayPhoto) width="50" height="50" />
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AwayName)
+            </td>
+            <td>
+                <img src=@Url.Content("~/fonts/" + @item.AwayPhoto) width="50" height="50" />
+            </td>
 
-        @*<td>
-            @Html.DisplayFor(modelItem => item.IdStadium)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdFirstReferee)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdSecondReferee)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdThirdReferee)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdFourReferee)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdVisitor)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateVisitor)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdAgainst)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateAgainst)
-        </td>*@
-        <td>
-            @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-            @Html.ActionLink("Ver", "Details", new
+
+            <td>
+
+                @Html.ActionLink("Ver", "Details", new
             {
-                idstadium = item.IdStadium, date = item.Date, idfirstref = item.IdFirstReferee,
-                idsecondref = item.IdSecondReferee, idthirdref = item.IdThirdReferee, idfourref=item.IdFourReferee,
-                idvisitor = item.IdVisitor, datevisitor = item.DateVisitor, idagainst = item.IdAgainst, dateagainst = item.DateAgainst
+                idstadium = item.IdStadium,
+                date = item.Date,
+                idfirstref = item.IdFirstReferee,
+                idsecondref = item.IdSecondReferee,
+                idthirdref = item.IdThirdReferee,
+                idfourref = item.IdFourReferee,
+                idvisitor = item.IdVisitor,
+                datevisitor = item.DateVisitor,
+                idagainst = item.IdAgainst,
+                dateagainst = item.DateAgainst
             })
-            
-            @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-        </td>
-    </tr>
-}
+
+
+            </td>
+        </tr>
+    }
 
 </table>

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using GameObserver.DomainModel.Entities;
 using GameObserver.Models;
 

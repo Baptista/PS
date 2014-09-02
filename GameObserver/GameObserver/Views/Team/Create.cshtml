@@ -7,27 +7,27 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>TeamCreateModel</h4>
         <hr />
         @Html.ValidationSummary(true)
-        
+
         <p> select club </p>
         <select name="selectedclub">
             @foreach (var club in Model.AllClubs)
             {
-                <option value = @club.Id>@club.Name</option>
+                <option value=@club.Id>@club.Name</option>
             }
         </select>
         <p> select formation </p>
         <select name="selectformation">
             @foreach (var formation in Model.AllFormations)
             {
-                <option value =@formation.Id>@formation.Designation</option>
+                <option value=@formation.Id>@formation.Designation</option>
             }
         </select>
         <div class="form-group">

@@ -67,9 +67,9 @@ namespace GameObserver.Controllers
 
         public ActionResult AdjustTeam(DateTime date, int idclub, int idformation)
         {
-           
+
             ClubModel clubModel = _mapperClubToClubModel.Map(_repo.GetClub(idclub));
-            
+
             TeamModel t = new TeamModel()
             {
                 IdClub = idclub,
@@ -81,8 +81,7 @@ namespace GameObserver.Controllers
             return View(t);
         }
 
-        //
-        // GET: /Team/
+
         public ActionResult Index()
         {
             IEnumerable<TeamModel> allteams = _mapperTeamToTeamModel.MapAll(_repo.GetAllTeams()).ToList();
@@ -96,9 +95,8 @@ namespace GameObserver.Controllers
             return View(allteams);
         }
 
-       
-        //
-        // GET: /Team/Create
+
+
         public ActionResult Create()
         {
             IEnumerable<ClubModel> clubModel = _mapperClubToClubModel.MapAll(_repo.GetAllClubs());
@@ -111,8 +109,7 @@ namespace GameObserver.Controllers
             return View(teamcreate);
         }
 
-        //
-        // POST: /Team/Create
+
         [HttpPost]
         public ActionResult Create(String selectedclub, String selectformation)
         {
@@ -121,12 +118,12 @@ namespace GameObserver.Controllers
                 int idclub = Convert.ToInt32(selectedclub);
                 int idformation = Convert.ToInt32(selectformation);
                 DateTime data = DateTime.Now;
-                
-                _repo.CreateTeam(idformation,idclub,data);
+
+                _repo.CreateTeam(idformation, idclub, data);
                 IEnumerable<ActorModel> playersModel = _mapperActorToActorModel.MapAll(_repo.GetPlayersByClub(Convert.ToInt32(selectedclub)));
                 foreach (var playerModel in playersModel)
                 {
-                    _repo.InsertPlayersOnTeam(playerModel.Id,idclub,data,0);
+                    _repo.InsertPlayersOnTeam(playerModel.Id, idclub, data, 0);
                 }
                 return RedirectToAction("Index");
             }
@@ -139,9 +136,9 @@ namespace GameObserver.Controllers
         public ActionResult GetPlayersByTeam(String date, String idclub)
         {
             IEnumerable<IntegrateModel> integrateModel = _mapperIntegrateToIntegrateModel.MapAll(
-                _repo.GetPlayersByTeam(Convert.ToInt32(idclub),Convert.ToDateTime(date)));
+                _repo.GetPlayersByTeam(Convert.ToInt32(idclub), Convert.ToDateTime(date)));
             return Json(integrateModel, JsonRequestBehavior.AllowGet);
-            
+
         }
     }
 }

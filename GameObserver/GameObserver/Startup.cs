@@ -1,6 +1,5 @@
 ﻿using System;
 using GameObserver.Models;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
@@ -25,7 +24,7 @@ namespace GameObserver
             {
                 if (!rm.RoleExists("admin"))
                 {
-                    var result = rm.Create(new IdentityRole("admin"));
+                    rm.Create(new IdentityRole("admin"));
                     var um = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
                     var user = new ApplicationUser() { UserName = "adminn" };
                     um.Create(user, "asdfgh");

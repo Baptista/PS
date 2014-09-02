@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Web;
 using System.Web.Mvc;
 using GameObserver.Data;
 using GameObserver.DomainModel;
@@ -26,12 +22,10 @@ namespace GameObserver.Controllers
         private EventToEventModel _mapperEventToEventModel;
         private InstantToInstantModel _mapperInstantToInstantModel;
         private OpinionToOpinionModel _mapperOpinionToOpinionModel;
-        private AssociateToAssociateModel _mapperAssociateToAssociateModel;
-        private LayoutToLayoutModel _mapperLayoutToLayoutModel;
         private PlayerToPlayerModel _mapperPlayerToPlayerModel;
         private IntegrateToIntegrateModel _mapperIntegrateToIntegrateModel;
 
-        
+
         public SetUpController()
         {
             _repo = new RepositoryGameObserver();
@@ -46,22 +40,13 @@ namespace GameObserver.Controllers
             _mapperEventToEventModel = new EventToEventModel();
             _mapperInstantToInstantModel = new InstantToInstantModel();
             _mapperOpinionToOpinionModel = new OpinionToOpinionModel();
-            _mapperAssociateToAssociateModel = new AssociateToAssociateModel();
-            _mapperLayoutToLayoutModel = new LayoutToLayoutModel();
             _mapperPlayerToPlayerModel = new PlayerToPlayerModel();
             _mapperIntegrateToIntegrateModel = new IntegrateToIntegrateModel();
         }
 
-        //
-        // GET: /SetUp/
+        
         public ActionResult Index()
         {
-            //TeamPositionModel model = new TeamPositionModel()
-            //{
-            //    PlayerAway = _mapperActorToActorModel.MapAll(_repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime("2014-05-23"),1))),
-            //    PlayerHome = _mapperActorToActorModel.MapAll(_repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime("2014-05-23"), 2)))
-            //};
-            
             return View(GetAllIndex());
         }
 
@@ -86,7 +71,7 @@ namespace GameObserver.Controllers
                     IdStadium = matchModel.IdStadium,
                     IdThirdReferee = matchModel.IdThirdReferee,
                     IdVisitor = matchModel.IdVisitor
-                    
+
                 };
             }
         }
@@ -98,7 +83,7 @@ namespace GameObserver.Controllers
             IEnumerable<StadiumModel> allStadiums = _mapperStadiumToStadiumModel.MapAll(_repo.GetAllStadiums());
             IEnumerable<ActorModel> allReferees = _mapperActorToActorModel.MapAll(_repo.GetAllReferees());
 
-            CreateGameModel game=new CreateGameModel()
+            CreateGameModel game = new CreateGameModel()
             {
                 AllReferees = allReferees,
                 AllStadiums = allStadiums,
@@ -109,7 +94,7 @@ namespace GameObserver.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(String selectedhome, String selectedaway,String selectedstadium,
+        public ActionResult Create(String selectedhome, String selectedaway, String selectedstadium,
             String selectedrefereefirst, String selectedrefereesecond, String selectedrefereethird, String selectedrefereefour)
         {
             string[] hometeam = selectedhome.Split('|');
@@ -129,32 +114,18 @@ namespace GameObserver.Controllers
                 DateAgainst = Convert.ToDateTime(awayteam[1])
             };
 
-            //TeamModel home = _mapperTeamToTeamModel.Map(_repo.GetTeam(Convert.ToDateTime(hometeam[0]), Convert.ToInt32(hometeam[1])));
-            //TeamModel away = _mapperTeamToTeamModel.Map(_repo.GetTeam(Convert.ToDateTime(awayteam[0]), Convert.ToInt32(awayteam[1])));
-            //StadiumModel stadiumModel = _mapperStadiumToStadiumModel.Map(_repo.GetStadium(Convert.ToInt32(selectedstadium)));
-            //ActorModel firstReferee = _mapperActorToActorModel.Map(_repo.GetReferee(Convert.ToInt32(selectedrefereefirst)));
-            //ActorModel secondReferee = _mapperActorToActorModel.Map(_repo.GetReferee(Convert.ToInt32(selectedrefereesecond)));
-            //ActorModel thirdReferee = _mapperActorToActorModel.Map(_repo.GetReferee(Convert.ToInt32(selectedrefereethird)));
-            //ActorModel fourReferee = _mapperActorToActorModel.Map(_repo.GetReferee(Convert.ToInt32(selectedrefereefour)));
-            //DateTime now = DateTime.Now;
-
             _repo.CreateMatch(_mapperMatchModelToMatch.Map(matchModel));
 
             return RedirectToAction("Index");
 
         }
-        
+
         public ActionResult Details(
             int idstadium, DateTime date, int idfirstref,
                 int idsecondref, int idthirdref, int idfourref,
                 int idvisitor, DateTime datevisitor, int idagainst, DateTime dateagainst
             )
         {
-
-            //LayoutModel layoutModel = _mapperLayoutToLayoutModel.Map(_repo.GetLayout(Convert.ToInt32(idstadium),
-            //    Convert.ToDateTime(date),Convert.ToInt32(idvisitor),Convert.ToDateTime(datevisitor),
-            //    Convert.ToInt32(idagainst),Convert.ToDateTime(dateagainst)));
-
 
             MatchModel matchModel = new MatchModel()
             {
@@ -172,9 +143,6 @@ namespace GameObserver.Controllers
             ClubModel visitor = _mapperClubToClubModel.Map(_repo.GetClub(idvisitor));
             ClubModel against = _mapperClubToClubModel.Map(_repo.GetClub(idagainst));
 
-
-            
-
             GameDetails details = new GameDetails()
             {
                 matchModel = matchModel,
@@ -185,14 +153,6 @@ namespace GameObserver.Controllers
             return View(details);
         }
 
-
-        //public ActionResult GetPlayers(String id,String dateq)
-        //{
-        //    var Players = _mapperActorToActorModel.MapAll(
-        //            _repo.GetPlayersByTeam(_repo.GetTeam(Convert.ToDateTime(dateq), Convert.ToInt32(id))));
-            
-        //    return Json(Players, JsonRequestBehavior.AllowGet);
-        //}
 
         public ActionResult GetFormation(String id, String dateq)
         {
@@ -221,45 +181,42 @@ namespace GameObserver.Controllers
         public ActionResult GetEvents()
         {
             IEnumerable<EventModel> evens = _mapperEventToEventModel.MapAll(_repo.GetAllEvents());
-            return Json(evens , JsonRequestBehavior.AllowGet);
+            return Json(evens, JsonRequestBehavior.AllowGet);
         }
 
         public void CreateInstant(String datenow,
             String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
-            String idagainst, String idcause , int idevent , String idexecute, String iduser)
+            String idagainst, String idcause, int idevent, String idexecute, String iduser)
         {
-            
-            int intv;
-            DateTime d = DateTime.Parse(datenow.Substring(0,25));
-            //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
-            _repo.CreateInstant(d , Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToDateTime(datavisitor),Convert.ToInt32(idvisitor),Convert.ToDateTime(dataagainst),
-                Convert.ToInt32(idagainst), iduser, Convert.ToInt32(idcause), (Int32.TryParse(idexecute,out intv))?intv:(int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
-        }
-        //idexecute.Equals("null") ? (int?)null : Convert.ToInt32(idexecute)
 
+            int intv;
+            DateTime d = DateTime.Parse(datenow.Substring(0, 25));
+            _repo.CreateInstant(d, Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor), Convert.ToDateTime(dataagainst),
+                Convert.ToInt32(idagainst), iduser, Convert.ToInt32(idcause), (Int32.TryParse(idexecute, out intv)) ? intv : (int?)null, DateTime.Now, 1, Convert.ToInt32(idevent));
+        }
         public IEnumerable<TimeLineModel> CreateTimeLine(String idstadium, String datahora, String idequipav, String dataequipav,
             String idequipag, String dataequipag)
         {
-            
+
             IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstantDescDate(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
                 Convert.ToDateTime(dataequipav),
                 Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag)));
 
             foreach (var allInstantModel in allInstantModels)
             {
-                
-                        yield return new TimeLineModel()
-                        {
-                            date = allInstantModel.MinuteSeconds,
-                            eventId = allInstantModel.IdEvent,
-                            causeId = allInstantModel.IdCause,
-                            executeId = allInstantModel.IdExecute
-                        };
-                    
+
+                yield return new TimeLineModel()
+                {
+                    date = allInstantModel.MinuteSeconds,
+                    eventId = allInstantModel.IdEvent,
+                    causeId = allInstantModel.IdCause,
+                    executeId = allInstantModel.IdExecute
+                };
+
             }
         }
 
-        public ActionResult GetTimeLine(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag)
+        public ActionResult GetTimeLine(String idstadium, String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag)
         {
 
             IEnumerable<TimeLineModel> allTimeLineModels = CreateTimeLine(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag);
@@ -286,16 +243,6 @@ namespace GameObserver.Controllers
         }
 
 
-       [ValidateInput(false)]
-        public void InsertLayout(String idstadium, String datahora, String idequipav, 
-            String dataequipav, String idequipag, String dataequipag, String datenow, String svg)
-        {
-            DateTime d = DateTime.Parse(datenow.Substring(0,25));
-
-            _repo.InsertLayout(Convert.ToInt32(idstadium),Convert.ToDateTime(datahora),Convert.ToInt32(idequipav),Convert.ToDateTime(dataequipav),
-                Convert.ToInt32(idequipag),Convert.ToDateTime(dataequipag),d,svg);
-        }
-
 
         public ActionResult GetPosition(String id)
         {
@@ -321,42 +268,6 @@ namespace GameObserver.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        //public ActionResult HaveRedCard(String idstadium , String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag , String idp)
-        //{
-        //     IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetInstantByCause(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
-        //        Convert.ToDateTime(dataequipav),
-        //        Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag) , Convert.ToInt32(idp)));
-
-
-        //    foreach (var allInstantModel in allInstantModels)
-        //    {
-        //        IEnumerable<OpinionModel> allOpinionModels =
-        //            _mapperOpinionToOpinionModel.MapAll(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
-        //                Convert.ToDateTime(datahora),
-        //                Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
-        //                Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds));
-
-
-        //        foreach (var opinion in allOpinionModels)
-        //        {
-        //            IEnumerable<AssociateModel> allAssociateModels =
-        //                _mapperAssociateToAssociateModel.MapAll(_repo.GetAllAssociatesbyOpinionEvent(opinion.Date,
-        //                    1));
-
-        //            foreach (var allAssociateModel in allAssociateModels)
-        //            {
-        //                if (_repo.GetEvent(allAssociateModel.IdEvent).Type.Equals("Cartao Vermelho"))
-        //                {
-        //                    return Json(true , JsonRequestBehavior.AllowGet);
-        //                }
-        //            }
-        //        }
-
-        //    }
-        //    return Json(false, JsonRequestBehavior.AllowGet);
-        //}
-
-
         public ActionResult GetPlayersByTeam(String date, String idclub)
         {
             IEnumerable<IntegrateModel> integrateModel = _mapperIntegrateToIntegrateModel.MapAll(
@@ -371,11 +282,11 @@ namespace GameObserver.Controllers
         {
             IEnumerable<InstantModel> allInstantModels = _mapperInstantToInstantModel.MapAll(_repo.GetAllInstantByCause(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora), Convert.ToInt32(idequipav),
                 Convert.ToDateTime(dataequipav),
-                Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag),Convert.ToInt32(idcause)));
+                Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag), Convert.ToInt32(idcause)));
 
             foreach (var allInstantModel in allInstantModels)
             {
-                OpinionModel opinion=null;
+                OpinionModel opinion = null;
                 try
                 {
                     opinion = _mapperOpinionToOpinionModel.Map(_repo.GetAllOpinionsByInstant(Convert.ToInt32(idstadium),
@@ -387,7 +298,7 @@ namespace GameObserver.Controllers
                 }
                 catch (ArgumentException)
                 {
-                    
+
                 }
                 if (opinion == null)
                 {
@@ -398,7 +309,7 @@ namespace GameObserver.Controllers
 
         public IEnumerable<TimeLineModel> AuxGetOpinionAdmin(String idstadium, String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag, String idcause)
         {
-            IEnumerable<InstantModel> allInstantModels = AuxGetOpinionUserByInstant(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag,idcause);
+            IEnumerable<InstantModel> allInstantModels = AuxGetOpinionUserByInstant(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag, idcause);
 
 
             foreach (var allInstantModel in allInstantModels)
@@ -411,31 +322,30 @@ namespace GameObserver.Controllers
                         Convert.ToInt32(idequipav), Convert.ToDateTime(dataequipav), Convert.ToInt32(idequipag),
                         Convert.ToDateTime(dataequipag), allInstantModel.MinuteSeconds, "Adminn"));
 
-               
-                    yield return new TimeLineModel()
-                    {
-                        date = allInstantModel.MinuteSeconds,
-                        eventId = allInstantModel.IdEvent,
-                        causeId = allInstantModel.IdCause,
-                        executeId = allInstantModel.IdExecute
-                    };
-                
+
+                yield return new TimeLineModel()
+                {
+                    date = allInstantModel.MinuteSeconds,
+                    eventId = allInstantModel.IdEvent,
+                    causeId = allInstantModel.IdCause,
+                    executeId = allInstantModel.IdExecute
+                };
+
 
             }
         }
 
 
-        public ActionResult GetOpinionUserByInstant(String idstadium, String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag , String idcause)
+        public ActionResult GetOpinionUserByInstant(String idstadium, String datahora, String idequipav, String dataequipav, String idequipag, String dataequipag, String idcause)
         {
-            //IEnumerable<TimeLineModel> t = AuxGetOpinionAdmin(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag);
-            
-            return Json(AuxGetOpinionAdmin(idstadium,  datahora,  idequipav,  dataequipav,idequipag,dataequipag,idcause),JsonRequestBehavior.AllowGet);
+
+            return Json(AuxGetOpinionAdmin(idstadium, datahora, idequipav, dataequipav, idequipag, dataequipag, idcause), JsonRequestBehavior.AllowGet);
         }
 
 
         public ActionResult IsPlayer(String id)
         {
-            return Json(_repo.IsPlayer(Convert.ToInt32(id)) , JsonRequestBehavior.AllowGet);
+            return Json(_repo.IsPlayer(Convert.ToInt32(id)), JsonRequestBehavior.AllowGet);
         }
 
 
@@ -449,27 +359,24 @@ namespace GameObserver.Controllers
                     Convert.ToInt32(idequipag), Convert.ToDateTime(dataequipag)));
 
             return Json(allInstantModels, JsonRequestBehavior.AllowGet);
-            
+
         }
 
 
-        
+
         public void CreateOpinionUser(String dateinstant,
             String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
-            String idagainst, String iduser, String dateop , String negative)
+            String idagainst, String iduser, String dateop, String negative)
         {
 
             int intv;
             DateTime d = DateTime.Parse(dateop);
-            
-                //var utcTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(d, "Pacific Standard Time", "UTC");
-            
 
-                _repo.CreateOpinionUser(Convert.ToDateTime(dateinstant), Convert.ToInt32(idstadium),
-                    Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor),
-                    Convert.ToDateTime(dataagainst),
-                    Convert.ToInt32(idagainst), iduser, d, negative);
-            }
+            _repo.CreateOpinionUser(Convert.ToDateTime(dateinstant), Convert.ToInt32(idstadium),
+                Convert.ToDateTime(datahora), Convert.ToDateTime(datavisitor), Convert.ToInt32(idvisitor),
+                Convert.ToDateTime(dataagainst),
+                Convert.ToInt32(idagainst), iduser, d, negative);
+        }
 
         public ActionResult GetUserOpinionByEvent(String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
             String idagainst, String iduser, String idevent, String negative)
@@ -477,9 +384,9 @@ namespace GameObserver.Controllers
             return Json(_repo.GetUserOpinionByEvent(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora),
                 Convert.ToInt32(idvisitor),
                 Convert.ToDateTime(datavisitor), Convert.ToInt32(idagainst), Convert.ToDateTime(dataagainst),
-                iduser, Convert.ToInt32(idevent), negative),JsonRequestBehavior.AllowGet);
+                iduser, Convert.ToInt32(idevent), negative), JsonRequestBehavior.AllowGet);
 
-            
+
         }
 
         public ActionResult GetOpinionByEvent(String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
@@ -497,20 +404,19 @@ namespace GameObserver.Controllers
         public ActionResult GetOpinionByInstant(String idstadium, String datahora, String datavisitor, String idvisitor, String dataagainst,
             String idagainst, String negative, String instant)
         {
-            DateTime d = DateTime.Parse(instant.Substring(0,25));
+            DateTime d = DateTime.Parse(instant.Substring(0, 25));
 
             return Json(_repo.GetOpinionByInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora),
                 Convert.ToInt32(idvisitor),
                 Convert.ToDateTime(datavisitor), Convert.ToInt32(idagainst), Convert.ToDateTime(dataagainst),
-                negative,Convert.ToDateTime(d)), JsonRequestBehavior.AllowGet);
+                negative, Convert.ToDateTime(d)), JsonRequestBehavior.AllowGet);
 
 
         }
 
         public ActionResult GetInstant(String idstadium, String datahora, String datavisitor, String idvisitor,
-            String dataagainst,String idagainst, String instant)
+            String dataagainst, String idagainst, String instant)
         {
-            //DateTime d = DateTime.Parse(instant.Substring(0, 25));
 
             return Json(_repo.GetInstant(Convert.ToInt32(idstadium), Convert.ToDateTime(datahora),
                 Convert.ToInt32(idvisitor),
@@ -529,12 +435,6 @@ namespace GameObserver.Controllers
         {
             _repo.DeleteInstant(Convert.ToDateTime(datetime));
         }
-
-
-        //public ActionResult IsPlayer(String id)
-        //{
-        //    return Json(_repo.IsPlayer(Convert.ToInt32(id)) , JsonRequestBehavior.AllowGet);
-        //}
 
     }
 }

@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 using GameObserver.DomainModel;
 using GameObserver.DomainModel.Entities;
 
@@ -16,58 +12,6 @@ namespace GameObserver.Data
     {
 
         private static readonly String Stringconn = ConfigurationManager.ConnectionStrings["GameObserverConn"].ConnectionString;
-
-
-        public IEnumerable<Instant> GetInstantByCause(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
-            int idteamg, DateTime datateamg,int idcause)
-        {
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Instante where causou=@idpla and idestadio=@ids and datahora=@datahora and datavisitante=@datavis and idvisitante=@idvis and datadefronta=@dataaga and iddefronta=@idaga";
-
-                cmd.Parameters.Add("@idpla", SqlDbType.Int).Value = idcause;
-                cmd.Parameters.Add("@ids", SqlDbType.Int).Value = idstadium;
-                cmd.Parameters.Add("@datahora", SqlDbType.DateTime).Value = datehour.ToString("yyy-MM-dd HH:mm:ss");
-                cmd.Parameters.Add("@datavis", SqlDbType.DateTime).Value = datateamv.ToString("yyy-MM-dd");
-                cmd.Parameters.Add("@idvis", SqlDbType.Int).Value = idteamv;
-                cmd.Parameters.Add("@dataaga", SqlDbType.DateTime).Value = datateamg.ToString("yyy-MM-dd");
-                cmd.Parameters.Add("@idaga", SqlDbType.Int).Value = idteamg;
-
-                try
-                {
-                    conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-
-                            yield return new Instant()
-                            {
-                                MinuteSeconds = reader.GetDateTime(0),
-                                IdStadium = reader.GetInt32(1),
-                                DateMatch = reader.GetDateTime(2),
-                                DateVisitor = reader.GetDateTime(3),
-                                IdVisitor = reader.GetInt32(4),
-                                DateAgainst = reader.GetDateTime(5),
-                                IdAgainst = reader.GetInt32(6),
-                                IdEvent = reader.GetInt32(7),
-                                IdUser = reader.GetString(8),
-                                IdCause = reader.GetInt32(9),
-                                IdExecute = reader.IsDBNull(10) ? (int?)null : reader.GetInt32(10)
-
-                            };
-                        }
-                    }
-                }
-
-                finally
-                {
-                    conn.Close();
-                }
-
-            }
-        }
 
 
         public void UpdateIntegrate(int idclub, DateTime date, int idplayer, int idposition)
@@ -301,22 +245,6 @@ namespace GameObserver.Data
         }
 
 
-        public IEnumerable<Actor> GetPlayers(String sub)
-        {
-            //IEnumerable<Actor> all = GetAllPlayers();
-            
-            int i = 0;
-            foreach (Actor actor in GetAllPlayers())
-            {
-                if (actor.Name.ToLower().Contains(sub.ToLower()))
-                {
-                    ++i;
-                    yield return actor;
-                }
-                if (i > 9) break;
-                
-            }
-        } 
 
         public Club GetClub(int id)
         {
@@ -535,40 +463,7 @@ namespace GameObserver.Data
             }
         }
 
-        public void RemovePlayersOnTeam(int idplayer, int idclub, DateTime date)
-        {
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = new SqlCommand("RemoverJogadorNaEquipa", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter p1 = new SqlParameter("@idjogador", SqlDbType.Int, 4);
-                p1.Value = idplayer;
-                p1.Direction = ParameterDirection.Input;
-
-                SqlParameter p2 = new SqlParameter("@idclube", SqlDbType.Int, 4);
-                p2.Value = idclub;
-                p2.Direction = ParameterDirection.Input;
-
-                SqlParameter p3 = new SqlParameter("@dateequipa", SqlDbType.Date, 8);
-                p3.Value = date.Date.ToString("yyyy-MM-dd");
-                p3.Direction = ParameterDirection.Input;
-
-                cmd.Parameters.Add(p1);
-                cmd.Parameters.Add(p2);
-                cmd.Parameters.Add(p3);
-                
-                try
-                {
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-        }
+       
 
         public IEnumerable<Stadium> GetAllStadiums()
         {
@@ -686,7 +581,6 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                //adicionar Jogador=1
                 cmd.CommandText = "select * from Actor inner join Jogador on (Actor.id=Jogador.id) where Actor.id=@idc";
                 cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
@@ -717,7 +611,6 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                //adicionar Jogador=1
                 cmd.CommandText = "select * from Actor where id=@idc";
                 cmd.Parameters.Add("@idc", SqlDbType.Int).Value = id;
                 try
@@ -785,43 +678,7 @@ namespace GameObserver.Data
             }
         }
 
-        public IEnumerable<Actor> GetAllPlayers()
-        {
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from Actor where Jogador=1";
-
-                try
-                {
-                    conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-
-                            yield return new Actor()
-                            {
-                                Id = reader.GetInt32(0),
-                                Name = reader.GetString(1),
-                                Born = reader.GetDateTime(2),
-                                Height = reader.GetDecimal(3),
-                                Photo = reader.GetString(4),
-                                Weight = reader.GetInt32(5),
-                                Referee = reader.GetInt32(6),
-                                Player = reader.GetInt32(7)
-                            };
-                        }
-                    }
-                }
-
-                finally
-                {
-                    conn.Close();
-                }
-
-            }
-        }
+       
 
         public IEnumerable<Team> GetAllTeams()
         {
@@ -859,7 +716,7 @@ namespace GameObserver.Data
 
         public Team GetTeam(DateTime date, int idclub)
         {
-            String data = date.Date.ToString("yyyy-MM-dd");
+           
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
@@ -923,14 +780,13 @@ namespace GameObserver.Data
                     conn.Open();
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        int rows = 0;
+                        
                         if (reader.Read())
                         {
                             return reader.GetInt32(0);
-                            //rows++;
+                            
                         }
-                        //return rows;
-                        //return reader.Cast<Object>().Count();
+                        
                         return 0;
                     }
 
@@ -979,14 +835,13 @@ namespace GameObserver.Data
                     conn.Open();
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        int rows = 0;
+                        
                         if (reader.Read())
                         {
                             return reader.GetInt32(0);
-                            //rows++;
+                           
                         }
-                        //return rows;
-                        //return reader.Cast<Object>().Count();
+                       
                         return 0;
                     }
                     
@@ -1012,8 +867,7 @@ namespace GameObserver.Data
                 cmd.CommandText = "select integrar.* from Equipa inner join integrar on(Equipa.id=integrar.idclube and Equipa.data=integrar.dataequipa) where Equipa.id=@idc and Equipa.data=@dt";
                 cmd.Parameters.Add("@idc", SqlDbType.Int).Value = idclub;
                 cmd.Parameters.Add("@dt", SqlDbType.DateTime).Value = date.ToString("yyyy-MM-dd");  
-                //"select Actor.* from Equipa inner join integrar on(Equipa.id=conter.idclube and Equipa.data=conter.dataequipa) inner join Jogador on(Jogador.id=conter.idjogador)inner join Actor on(Jogador.id=Actor.id) where Equipa.id="+team.IdClub+" and Equipa.data='"+data+"'";
-
+                
                 try
                 {
                     conn.Open();
@@ -1300,7 +1154,7 @@ namespace GameObserver.Data
             DateTime dateagainst, int idagainst, String iduser, DateTime datehouropinion, String opinion)
         {
 
-                //SqlTransaction transaction;
+                
                 using (SqlConnection conn = new SqlConnection(Stringconn))
                 {
                     SqlCommand cmd = new SqlCommand("InserirOpiniao", conn);
@@ -1359,19 +1213,13 @@ namespace GameObserver.Data
                     cmd.Parameters.Add(p10);
 
                     
-                    //transaction = conn.BeginTransaction(datehouropinion + "");
-
                     try
                     {
                         conn.Open();
-                        //cmd.Transaction = transaction;
                         cmd.ExecuteNonQuery();
-                        //transaction.Commit();
+                       
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
+                    
                     finally
                     {
                         conn.Close();
@@ -1730,144 +1578,6 @@ namespace GameObserver.Data
             }
         }
 
-
-        public void InsertLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-            int idequipag, DateTime dataequipag, DateTime horaminuto,String svg)
-        {
-
-
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = new SqlCommand("InserirDisposicao", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter p1 = new SqlParameter("@svg", SqlDbType.VarChar, 8*1000);
-                p1.Value = svg;
-                p1.Direction = ParameterDirection.Input;
-
-
-                SqlParameter p2 = new SqlParameter("@horaminuto", SqlDbType.DateTime, 8);
-                p2.Value = horaminuto.ToString("HH:mm:ss");
-                p2.Direction = ParameterDirection.Input;
-
-                SqlParameter p3 = new SqlParameter("@idestadio", SqlDbType.Int, 4);
-                p3.Value = idstadium;
-                p3.Direction = ParameterDirection.Input;
-
-                SqlParameter p4 = new SqlParameter("@datahora", SqlDbType.DateTime, 8);
-                p4.Value = datahora.ToString("yyyy-MM-dd HH:mm:ss");
-                p4.Direction = ParameterDirection.Input;
-
-                SqlParameter p5 = new SqlParameter("@datavisitante", SqlDbType.DateTime, 8);
-                p5.Value = dataequipav.ToString("yyyy-MM-dd");
-                p5.Direction = ParameterDirection.Input;
-
-                SqlParameter p6 = new SqlParameter("@idvisitante", SqlDbType.Int, 4);
-                p6.Value = idequipav;
-                p6.Direction = ParameterDirection.Input;
-
-                SqlParameter p7 = new SqlParameter("@datadefronta", SqlDbType.DateTime, 8);
-                p7.Value = dataequipag.ToString("yyyy-MM-dd");
-                p7.Direction = ParameterDirection.Input;
-
-                SqlParameter p8 = new SqlParameter("@iddefronta", SqlDbType.Int, 4);
-                p8.Value = idequipag;
-                p8.Direction = ParameterDirection.Input;
-
-                cmd.Parameters.Add(p1);
-                cmd.Parameters.Add(p2);
-                cmd.Parameters.Add(p3);
-                cmd.Parameters.Add(p4);
-                cmd.Parameters.Add(p5);
-                cmd.Parameters.Add(p6);
-                cmd.Parameters.Add(p7);
-                cmd.Parameters.Add(p8);
-
-                try
-                {
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-        }
-
-        public void InsertUser(String name, int idrole)
-        {
-
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = new SqlCommand("InserirUtilizador", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter p1 = new SqlParameter("@nome", SqlDbType.VarChar, 50);
-                p1.Value = name;
-                p1.Direction = ParameterDirection.Input;
-
-                SqlParameter p2 = new SqlParameter("@idpapel", SqlDbType.Int, 4);
-                p2.Value = idrole;
-                p2.Direction = ParameterDirection.Input;
-
-                cmd.Parameters.Add(p1);
-                cmd.Parameters.Add(p2);
-                
-                try
-                {
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-        }
-
-        public Layout GetLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-            int idequipag, DateTime dataequipag)
-        {
-            using (SqlConnection conn = new SqlConnection(Stringconn))
-            {
-                SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select top 1 * from Disposicao where idestadio=" + idstadium + " and datahora='" + datahora.ToString("yyyy-MM-dd HH:mm:ss") +
-                    "' and datavisitante='" + dataequipav.ToString("yyyy-MM-dd")+"' and idvisitante="+idequipav+
-                    " and datadefronta='" + dataequipag.ToString("yyyy-MM-dd")+"' and iddefronta="+idequipag+
-                    " order by horaminuto desc";
-
-                try
-                {
-                    conn.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-
-                            return new Layout()
-                            {
-                                Svg = reader.GetString(0),
-                                Hourminute = reader.GetDateTime(1),
-                                IdStadium = reader.GetInt32(2),
-                                DateMatch = reader.GetDateTime(3),
-                                DateVisitor = reader.GetDateTime(4),
-                                IdVisitor = reader.GetInt32(5),
-                                DateAgainst = reader.GetDateTime(6),
-                                IdAgainst = reader.GetInt32(7)
-                            };
-                        }
-                    }
-                    return null;
-                }
-
-                finally
-                {
-                    conn.Close();
-                }
-
-            }
-        }
 
     }
 }

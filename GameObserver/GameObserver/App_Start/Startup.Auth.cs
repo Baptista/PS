@@ -34,7 +34,6 @@ namespace GameObserver
             //   appId: "644643725630197",
             //   appSecret: "0ff6cb6d1745e716a75fda26d46b5d15");
 
-            //app.UseGoogleAuthentication();
             app.UseGoogleAuthentication();
         }
     }

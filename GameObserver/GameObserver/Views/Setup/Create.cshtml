@@ -7,19 +7,19 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>CreateGameModel</h4>
         <hr />
         @Html.ValidationSummary(true)
-        
+
         <div class="form-group">
 
             <div class="col-md-10">
-                select home team                 
+                select home team
                 <select name="selectedhome">
                     @foreach (var item in Model.AllTeams)
                     {
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="form-group">
-            
+
             <div class="col-md-10">
                 select away team
                 <select name="selectedaway">
@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="form-group">
-            
+
             <div class="col-md-10">
                 select stadium
                 <select name="selectedstadium">
@@ -55,9 +55,9 @@
 
             </div>
         </div>
-        
+
         <div class="form-group">
-            
+
             <div class="col-md-10">
                 select first referee
                 <select name="selectedrefereefirst">
@@ -69,10 +69,10 @@
 
             </div>
         </div>
-        
+
 
         <div class="form-group">
-            
+
             <div class="col-md-10">
                 select second referee
                 <select name="selectedrefereesecond">
@@ -84,9 +84,9 @@
 
             </div>
         </div>
-        
+
         <div class="form-group">
-            
+
             <div class="col-md-10">
                 select third referee
                 <select name="selectedrefereethird">
@@ -98,10 +98,10 @@
 
             </div>
         </div>
-        
-        
+
+
         <div class="form-group">
-            
+
             <div class="col-md-10">
                 select four referee
                 <select name="selectedrefereefour">
@@ -113,7 +113,7 @@
 
             </div>
         </div>
-        
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -125,9 +125,5 @@
 
 <div>
     @Html.ActionLink("Back to List", "Index")|
-    
-</div>
 
-@*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@
+</div>

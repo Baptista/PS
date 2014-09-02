@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GameObserver.DomainModel.Entities;
 
 namespace GameObserver.DomainModel
@@ -23,8 +19,7 @@ namespace GameObserver.DomainModel
         Player GetPlayerWithClub(int id);
 
         IEnumerable<Actor> GetPlayersByClub(int idclub);
-        //Actor GetClubByPlayer(int idplayer);
-
+        
         Boolean IsPlayer(int id);
 
         void DeleteOpinionsByInstant(DateTime date);
@@ -33,28 +28,18 @@ namespace GameObserver.DomainModel
         Club GetClub(int id);
         Formation GetFormation(int id);
 
-        IEnumerable<Actor> GetPlayers(String sub);
-
         Position GetPlayerPosition(int idplayer);
         Position GetPosition(int id);
-
-        IEnumerable<Instant> GetInstantByCause(int idstadium, DateTime datehour, int idteamv, DateTime datateamv,
-            int idteamg, DateTime datateamg,int id);
-
-        //Instant GetLastInstant();
 
         void InsertPlayersOnTeam(int idplayer, int idclub, DateTime date, int idpos);
 
 
-
-        void RemovePlayersOnTeam(int idplayer, int idclub, DateTime date);
 
         IEnumerable<Stadium> GetAllStadiums();
         IEnumerable<Actor> GetAllReferees();
 
         Actor GetReferee(int id);
 
-        IEnumerable<Actor> GetAllPlayers();
         IEnumerable<Team> GetAllTeams();
 
         Team GetTeam(DateTime date, int idclub);
@@ -79,9 +64,7 @@ namespace GameObserver.DomainModel
             int idvisitante,
             DateTime datadefronta, int iddefronta, String idutilizador, DateTime datahoraopiniao,String opinion);
 
-        //IEnumerable<Instant> GetOpinionByMatch(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-        //    int idequipag, DateTime dataequipag);
-
+        
         IEnumerable<Instant> GetAllInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag);
 
@@ -89,9 +72,6 @@ namespace GameObserver.DomainModel
         IEnumerable<Instant> GetAllInstantByCause(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag, int cause);
 
-
-        void InsertLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-            int idequipag, DateTime dataequipag , DateTime horaminuto, String svg);
 
         int GetOpinionByInstant(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag, String opinion, DateTime min);
@@ -112,11 +92,9 @@ namespace GameObserver.DomainModel
         IEnumerable<Instant> GetAllInstantDescDate(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
             int idequipag, DateTime dataequipag);
 
-        void InsertUser(String name, int idrole);
+        //void InsertUser(String name, int idrole);
 
-        Layout GetLayout(int idstadium, DateTime datahora, int idequipav, DateTime dataequipav,
-            int idequipag, DateTime dataequipag);
-
+       
 
         void UpdateIntegrate(int idclub, DateTime date, int idplayer, int position);
 

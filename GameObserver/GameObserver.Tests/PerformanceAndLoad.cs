@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using GameObserver.Controllers;
 
 namespace GameObserver.Tests
@@ -10,25 +8,21 @@ namespace GameObserver.Tests
     {
 
         private static DateTime datenow;
-        private static int inc = 0;
+        private static int inc;
         string user = "user";
 
         public static void Main()
         {
 
             SetUpControllerTest test = new SetUpControllerTest();
-            //controller = new SetUpController();
             test.CallTests();
         }
 
         public void CallTests()
         {
-            //SetUp();
-
-            //TestLoad();
-
+            
             int maxload = 0;
-            int currload = 0;
+            int currload;
             TimeSpan currtime = new TimeSpan(0);
             TimeSpan mintime = new TimeSpan(0, 0, 1, 0);
             for (int i = 0; i < 50; ++i)
@@ -67,53 +61,39 @@ namespace GameObserver.Tests
             
             int totalrequests=0;
             DateTime start = DateTime.Now;
-            int index = 0;
             DateTime auxdatenow = datenow;
             while ((DateTime.Now - start).TotalMilliseconds < 10*1000)
             {
-                //var dt = "2014-08-11 21:00:38.000".Substring(0, 23) + index;
-                //var dt = "2014-08-11 22:00:38.000";
-                //DateTime s = DateTime.Parse(dt);
                 auxdatenow = auxdatenow.AddMilliseconds(10);
-                //DateTime d = Convert.ToDateTime(dt);
-                //Thread.Sleep(10);    
-
+                
                 totalrequests += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
                         "2014-05-24 20:00:00.000", "2014-05-23", "1",
                         "2014-05-23", "2", "user", auxdatenow.ToString("yyyy-MM-dd HH:mm:ss.FFFFF"), "yes");
 
-                //Console.WriteLine("Criados {0} opinões ", totalrequests);
             }
 
             Console.WriteLine("Criados {0} opinões em 10 segundos ", totalrequests);
             return totalrequests;
         }
 
-
-
-
-        
         
         public TimeSpan TestPerformance()
         {
             const int totalopinionsPerUser = 10;
             const int totalusers = 200;
             int nusers = 0;
-            //const string user = "user";
+            
             user =+ inc++ +"";
             DateTime start = DateTime.Now;
             DateTime auxdatenow = datenow;
 
-            //auxdatenow = auxdatenow.AddHours(1);
-
+            
             for (int i = 0; i < totalusers; ++i)
             {
                 for (int j = 0; j < totalopinionsPerUser; ++j)
                 {
-                    //var dt = "2014-08-11 21:00:38.000";
-                    //DateTime s = DateTime.Parse(dt);
+                    
                     auxdatenow = auxdatenow.AddMilliseconds(10);
-                    //DateTime d = Convert.ToDateTime(dt);
                     nusers += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
                         "2014-05-24 20:00:00.000", "2014-05-23", "1",
                         "2014-05-23", "2", user, auxdatenow.ToString("yyyy-MM-dd HH:mm:ss.FFFFF"), "yes");
