@@ -295,20 +295,23 @@
         var countaway = 0;
         function allfinisaway(all) {
             ++countaway;
-
+            console.log("coisas", all);
+            console.log("coisas2", countaway);
             if (countaway == all) {
                 if (nplayersawayplaying < 7) {
                     window.location = "/Team/Index";
                 }
                 allfinish();
-
+                
             }
         }
 
         var count = 0;
         function allfinish() {
             count++;
+            
             if (count == 2) {
+                FillTimeLine();
                 setInterval(function () {
                     timeline.innerHTML = "";
                     FillTimeLine();
@@ -605,10 +608,10 @@
 
 
 
-        var lastcircle = null;
+        
         function createcircles(idp, ide, x, y) {
 
-
+            var lastcircle = null;
             var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circles.setAttribute("cx", x);
             circles.setAttribute("cy", y);
@@ -680,46 +683,9 @@
                                             y = "8%";
                                             var temp = null;
                                             resp3.forEach(function (entry) {
-
-
-                                                var circles2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                                                circles2.setAttribute("cx", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%");
-                                                circles2.setAttribute("cy", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
-                                                circles2.setAttribute("fill", "#ffffff");
-                                                circles2.setAttribute("stroke", "#000000");
-                                                circles2.setAttribute("r", "1%");
-                                                circles2.setAttribute("id", entry.Id);
-                                                svg.getElementById("all").appendChild(circles2);
-                                                showdetails[showdetails.length] = circles2;
-                                                circles2.onclick = function () {
-
-                                                    if (temp != null) {
-
-                                                        svg.getElementById("all").removeChild(temp);
-                                                        removeElemFromArray(showdetails, temp);
-
-                                                        temp = null;
-                                                    }
-
-
-                                                    var circlesinside2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                                                    circlesinside2.setAttribute("cx", (circles2.getAttributeNS(null, 'cx')));
-                                                    circlesinside2.setAttribute("cy", (circles2.getAttributeNS(null, 'cy')));
-                                                    circlesinside2.setAttribute("fill", "#000000");
-                                                    circlesinside2.setAttribute("stroke", "#000000");
-                                                    circlesinside2.setAttribute("r", "0.8%");
-                                                    circlesinside2.setAttribute("id", "circcc");
-                                                    svg.getElementById("all").appendChild(circlesinside2);
-                                                    showdetails[showdetails.length] = circlesinside2;
-
-                                                    temp = circlesinside2;
-                                                    saveplayer.idexe = circles2.getAttributeNS(null, 'id');
-
-                                                };
-
-                                                createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                                                
+                                                createSecondActor(entry, temp,y);
                                                 y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
-
                                             });
                                         }
                                     };
@@ -736,8 +702,27 @@
 
                                                 var idc;
                                                 if (resp2.Type == "Substituição") {
-                                                    idc = resp1.IdClub;
+                                                    
+                                                    var temp = null;
+                                                    y = "8%";
+                                                    playersnotplaying.forEach(function(entry) {
+                                                        
+                                                        var xmlhttp2 = new XMLHttpRequest();
+                                                        xmlhttp2.onreadystatechange = function () {
 
+                                                            if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
+                                                                var resp4 = JSON.parse(xmlhttp2.response);
+
+                                                                createSecondActor(resp4, temp,y);
+                                                                y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+                                                            }
+                                                        };
+                                                        xmlhttp2.open("GET", "/SetUp/GetPlayer?id=" + entry.getAttributeNS(null,'id'), true);
+                                                        xmlhttp2.send();
+
+                                                    });
+                                                    
+                                                    return;
                                                 } else {
                                                     if (resp1.IdClub == document.getElementById("iddetailssetup_idvisitor").innerHTML.trim()) {
                                                         idc = document.getElementById("iddetailssetup_idagainst").innerHTML.trim();
@@ -771,6 +756,52 @@
         }
 
 
+        
+        function createSecondActor(entry , temp,y) {
+            
+                
+                var circles2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circles2.setAttribute("cx", parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 23 + "%");
+                circles2.setAttribute("cy", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                circles2.setAttribute("fill", "#ffffff");
+                circles2.setAttribute("stroke", "#000000");
+                circles2.setAttribute("r", "1%");
+                circles2.setAttribute("id", entry.Id);
+                svg.getElementById("all").appendChild(circles2);
+                showdetails[showdetails.length] = circles2;
+                circles2.onclick = function () {
+
+                    if (temp != null) {
+
+                        svg.getElementById("all").removeChild(temp);
+                        removeElemFromArray(showdetails, temp);
+
+                        temp = null;
+                    }
+
+                    var circlesinside2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    circlesinside2.setAttribute("cx", (circles2.getAttributeNS(null, 'cx')));
+                    circlesinside2.setAttribute("cy", (circles2.getAttributeNS(null, 'cy')));
+                    circlesinside2.setAttribute("fill", "#000000");
+                    circlesinside2.setAttribute("stroke", "#000000");
+                    circlesinside2.setAttribute("r", "0.8%");
+                    circlesinside2.setAttribute("id", "circcc");
+                    svg.getElementById("all").appendChild(circlesinside2);
+                    showdetails[showdetails.length] = circlesinside2;
+
+                    temp = circlesinside2;
+                    saveplayer.idexe = circles2.getAttributeNS(null, 'id');
+
+                };
+
+                createLabels(entry.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 25 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+                
+            
+        }
+
+
+
+
         function PutBaseInfoPlayer(id, photo, posx, posy) {
             var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
             svgimg.setAttributeNS(null, 'height', svgheight / 9);
@@ -782,6 +813,19 @@
             svgimg.setAttributeNS(null, 'visibility', 'visible');
             svg.getElementById("all").appendChild(svgimg);
             return svgimg;
+        }
+
+        function findById(arr, id) {
+
+            for (var i = 0; i < arr.length; ++i) {
+
+                if (parseInt(arr[i].getAttributeNS(null, 'id')) == id) {
+                    
+                    return true;
+                }
+                
+            }
+            return false;
         }
 
 
@@ -822,10 +866,10 @@
                     var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
                     var date = new Date(parsedIntDate);
 
-                    createLabels("Name: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
-                    createLabels("Born: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
-                    createLabels("Height: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
-                    createLabels("Weight: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
+                    createLabels("Nome: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
+                    createLabels("Nasceu: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
+                    createLabels("Altura: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
+                    createLabels("Peso: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
 
                     var xmlhttp9 = new XMLHttpRequest();
 
@@ -844,28 +888,32 @@
                                     if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
                                         var resp1 = JSON.parse(xmlhttp1.response);
                                         if (resp1 == true) {
-                                            if (entry.Type == "Inicio da Partida" || entry.Type == "Fim da Partida") {
+                                            
+                                            if (findById(playersnotplaying, id) == true) {
+                                                console.log("ce", id);
+                                                if (entry.Type == 'Canto' || entry.Type == 'Fora - de - Jogo' || entry.Type == 'Penalty'
+                                                    || entry.Type == 'Canto' || entry.Type == 'Golo' || entry.Type == "Inicio da Partida"
+                                                    || entry.Type == "Fim da Partida" || entry.Type == "Substituição") {
 
-                                                return;
+                                                    return;
+                                                } 
                                             } else {
-                                                y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+                                                if (entry.Type == "Inicio da Partida" || entry.Type == "Fim da Partida") {
 
-                                                createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
-
-                                                createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 1 + "%");
+                                                    return;
+                                                } 
                                             }
                                         } else {
                                             if (entry.Type != "Inicio da Partida" && entry.Type != "Fim da Partida") {
 
                                                 return;
-                                            } else {
-                                                y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
-
-                                                createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
-
-                                                createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 1 + "%");
-                                            }
+                                            } 
                                         }
+                                        y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
+
+                                        createcircles(resp.Id, entry.Id, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 1 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + "%");
+
+                                        createLabels(entry.Type, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 2 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + parseInt(y.substring(0, y.length - 1)) + 1 + "%");
                                     }
                                 }
                                 xmlhttp1.open("GET", "/SetUp/IsPlayer?id=" + id, true);
@@ -903,6 +951,10 @@
             xmlhttp8.send();
 
         }
+
+        
+        
+
 
 
         function createUserInteract(id) {
