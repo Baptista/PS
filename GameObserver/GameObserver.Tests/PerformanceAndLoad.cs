@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using GameObserver.Controllers;
 
 namespace GameObserver.Tests
@@ -15,7 +16,12 @@ namespace GameObserver.Tests
         {
 
             SetUpControllerTest test = new SetUpControllerTest();
-            test.CallTests();
+            //test.CallTests();
+            test.SetUp();
+            test.TestLoad();
+            test.DeleteOpinionsByInstant(datenow.ToString("yyyy-MM-dd HH:mm:ss"));
+            test.DeleteInstant("2014-05-24 20:00:00.000");
+            
         }
 
         public void CallTests()
@@ -33,7 +39,7 @@ namespace GameObserver.Tests
                 {
                     maxload = currload;
                 }
-                DeleteOpinionsByInstant(datenow.ToString("yyyy-MM-dd HH:mm:ss"));
+                //DeleteOpinionsByInstant(datenow.ToString("yyyy-MM-dd HH:mm:ss"));
                 SetUp();
                 if ((currtime = TestPerformance()) < mintime)
                 {
@@ -58,21 +64,24 @@ namespace GameObserver.Tests
 
         public int TestLoad()
         {
-            
-            int totalrequests=0;
-            DateTime start = DateTime.Now;
+            StreamWriter file = new StreamWriter("LogTests.txt");
+            int nrequests = 0;
+            int totalrequests=1000*1000*50;
             DateTime auxdatenow = datenow;
-            while ((DateTime.Now - start).TotalMilliseconds < 10*1000)
+            while (nrequests <totalrequests )
             {
                 auxdatenow = auxdatenow.AddMilliseconds(10);
                 
-                totalrequests += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
+                DateTime statop = DateTime.Now;
+                nrequests += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
                         "2014-05-24 20:00:00.000", "2014-05-23", "1",
                         "2014-05-23", "2", "user", auxdatenow.ToString("yyyy-MM-dd HH:mm:ss.FFFFF"), "yes");
 
+                file.WriteLine("Opinião número {0} demora {1}", nrequests, DateTime.Now - statop);
+                
             }
-
-            Console.WriteLine("Criados {0} opinões em 10 segundos ", totalrequests);
+            file.Close();
+            Console.WriteLine("Concluído ver LogTests.txt");
             return totalrequests;
         }
 
