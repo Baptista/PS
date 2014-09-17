@@ -39,7 +39,7 @@ namespace GameObserver.Tests
                 {
                     maxload = currload;
                 }
-                //DeleteOpinionsByInstant(datenow.ToString("yyyy-MM-dd HH:mm:ss"));
+                DeleteOpinionsByInstant(datenow.ToString("yyyy-MM-dd HH:mm:ss"));
                 SetUp();
                 if ((currtime = TestPerformance()) < mintime)
                 {
@@ -66,23 +66,32 @@ namespace GameObserver.Tests
         {
             StreamWriter file = new StreamWriter("LogTests.txt");
             int nrequests = 0;
-            int totalrequests=1000*1000*50;
+            //int totalrequests=1000*1000*50;
             DateTime auxdatenow = datenow;
-            while (nrequests <totalrequests )
+
+            try
             {
-                auxdatenow = auxdatenow.AddMilliseconds(10);
-                
-                DateTime statop = DateTime.Now;
-                nrequests += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
+                while (true)
+                {
+                    auxdatenow = auxdatenow.AddMilliseconds(10);
+
+                    DateTime statop = DateTime.Now;
+
+                    nrequests += CreateOpinionUser(datenow.ToString("yyyy-MM-dd HH:mm:ss"), "1",
                         "2014-05-24 20:00:00.000", "2014-05-23", "1",
                         "2014-05-23", "2", "user", auxdatenow.ToString("yyyy-MM-dd HH:mm:ss.FFFFF"), "yes");
 
-                file.WriteLine("Opinião número {0} demora {1}", nrequests, DateTime.Now - statop);
-                
+                    file.WriteLine("Opinião número {0} demora {1}", nrequests, DateTime.Now - statop);
+
+
+                }
             }
-            file.Close();
-            Console.WriteLine("Concluído ver LogTests.txt");
-            return totalrequests;
+            finally
+            {
+                file.Close();
+                Console.WriteLine("Concluído ver LogTests.txt");
+                //return totalrequests;
+            }
         }
 
         

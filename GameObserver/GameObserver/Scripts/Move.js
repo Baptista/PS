@@ -312,11 +312,7 @@
             
             if (count == 2) {
                 FillTimeLine();
-                setInterval(function () {
-                    timeline.innerHTML = "";
-                    FillTimeLine();
-                }, 60000);
-
+                
             }
         }
 
