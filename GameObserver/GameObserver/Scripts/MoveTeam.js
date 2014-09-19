@@ -54,8 +54,8 @@
     var svgheight = null;
     var svgwidth = null;
 
-    var avheight = window.screen.availHeight / 1.5;
-    var avwidth = window.screen.availWidth / 1.5;
+    var avheight = window.innerHeight / 1.5;
+    var avwidth = window.innerWidth / 1.5;
 
     a.setAttributeNS(null, 'height', avheight);
     a.setAttributeNS(null, 'width', avwidth);

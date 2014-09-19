@@ -25,9 +25,9 @@
                     
                     @if (User.IsInRole("admin"))
                     {
-                        <li>@Html.ActionLink("Team", "Index", "Team")</li>
+                        <li>@Html.ActionLink("Equipa", "Index", "Team")</li>
                     }
-                    <li>@Html.ActionLink("Game","Index","SetUp")</li>
+                    <li>@Html.ActionLink("Partida","Index","SetUp")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

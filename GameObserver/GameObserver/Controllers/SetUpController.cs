@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using GameObserver.Data;
 using GameObserver.DomainModel;
+using GameObserver.DomainModel.Entities;
 using GameObserver.Mappers;
 using GameObserver.Models;
 
@@ -76,13 +78,22 @@ namespace GameObserver.Controllers
             }
         }
 
+        public IEnumerable<TeamModel> GetallclubsName(IEnumerable<TeamModel> team)
+        {
+            foreach (var teamModel in team)
+            {
+                teamModel.NameClub = _repo.GetClub(teamModel.IdClub).Name;
+                yield return teamModel;
+            }
+        } 
 
         public ActionResult Create()
         {
             IEnumerable<TeamModel> allTeams = _mapperTeamToTeamModel.MapAll(_repo.GetAllTeams());
             IEnumerable<StadiumModel> allStadiums = _mapperStadiumToStadiumModel.MapAll(_repo.GetAllStadiums());
             IEnumerable<ActorModel> allReferees = _mapperActorToActorModel.MapAll(_repo.GetAllReferees());
-
+            allTeams = GetallclubsName(allTeams);
+            
             CreateGameModel game = new CreateGameModel()
             {
                 AllReferees = allReferees,

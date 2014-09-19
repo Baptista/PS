@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<GameObserver.Models.TeamModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Índice";
 }
 
-<h2>Index</h2>
+<h2>Índice</h2>
 
 <p>
     
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Criar equipa", "Create")
 </p>
 <table class="table">
    
@@ -28,7 +28,7 @@
             @Html.DisplayFor(modelItem => item.Formation)
         </td>
         <td>
-            @Html.ActionLink("AdjustTeam", "AdjustTeam", new { date = item.Data, idclub = item.IdClub, idformation = item.IdFormation })
+            @Html.ActionLink("Ver", "AdjustTeam", new { date = item.Data, idclub = item.IdClub, idformation = item.IdFormation })
             
         </td>
     </tr>

@@ -1,10 +1,10 @@
 ﻿@model GameObserver.Models.CreateGameModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Criar";
 }
 
-<h2>Create</h2>
+<h2>Criar</h2>
 
 
 @using (Html.BeginForm())
@@ -12,18 +12,18 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>CreateGameModel</h4>
+        <h4>Criar Partida</h4>
         <hr />
         @Html.ValidationSummary(true)
 
         <div class="form-group">
 
             <div class="col-md-10">
-                select home team
+                Selecionar equipa da casa
                 <select name="selectedhome">
                     @foreach (var item in Model.AllTeams)
                     {
-                        <option value="@item.IdClub|@item.Data">@item.IdClub|@item.Data </option>
+                        <option value="@item.IdClub|@item.Data">@item.NameClub|@item.Data </option>
                     }
                 </select>
 
@@ -32,11 +32,11 @@
         <div class="form-group">
 
             <div class="col-md-10">
-                select away team
+                Selecionar equipa visitante
                 <select name="selectedaway">
                     @foreach (var item in Model.AllTeams)
                     {
-                        <option value="@item.IdClub|@item.Data">@item.IdClub|@item.Data </option>
+                        <option value="@item.IdClub|@item.Data">@item.NameClub|@item.Data </option>
                     }
                 </select>
 
@@ -45,7 +45,7 @@
         <div class="form-group">
 
             <div class="col-md-10">
-                select stadium
+                Selecionar estádio
                 <select name="selectedstadium">
                     @foreach (var item in Model.AllStadiums)
                     {
@@ -59,7 +59,7 @@
         <div class="form-group">
 
             <div class="col-md-10">
-                select first referee
+                Selecionar primeiro árbitro
                 <select name="selectedrefereefirst">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -74,7 +74,7 @@
         <div class="form-group">
 
             <div class="col-md-10">
-                select second referee
+                Selecionar segundo árbitro
                 <select name="selectedrefereesecond">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -88,7 +88,7 @@
         <div class="form-group">
 
             <div class="col-md-10">
-                select third referee
+                Selecionar terceiro árbitro
                 <select name="selectedrefereethird">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -103,7 +103,7 @@
         <div class="form-group">
 
             <div class="col-md-10">
-                select four referee
+                Selecionar quarto árbitro
                 <select name="selectedrefereefour">
                     @foreach (var item in Model.AllReferees)
                     {
@@ -117,13 +117,13 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Criar" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")|
+    @Html.ActionLink("Índice", "Index")|
 
 </div>
