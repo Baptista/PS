@@ -11,7 +11,7 @@ namespace GameObserver.Data
     public class RepositoryGameObserver: IRepositoryGameObserver
     {
 
-        private static readonly String Stringconn = ConfigurationManager.ConnectionStrings["GameObserverConn"].ConnectionString;
+        private static readonly String Stringconn = ConfigurationManager.ConnectionStrings["GameObserver"].ConnectionString;
 
 
         public void UpdateIntegrate(int idclub, DateTime date, int idplayer, int idposition)
