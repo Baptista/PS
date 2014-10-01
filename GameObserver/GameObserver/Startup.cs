@@ -14,14 +14,10 @@ namespace GameObserver
         {
             
             ConfigureAuth(app);
-            CreateAdmin();
+        
         }
 
-        public void CreateAdmin()
-        {
-            
-            
-        }
+        
 
     }
 }
