@@ -939,7 +939,7 @@ namespace GameObserver.Data
 
         public IEnumerable<Match> GetAllMatches()
         {
-            
+            //
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
