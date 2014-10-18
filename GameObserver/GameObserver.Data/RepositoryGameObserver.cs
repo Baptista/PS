@@ -943,7 +943,7 @@ namespace GameObserver.Data
             using (SqlConnection conn = new SqlConnection(Stringconn))
             {
                 SqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "select * from dbo.Partida";
+                cmd.CommandText = "select * from Partida";
 
                 try
                 {

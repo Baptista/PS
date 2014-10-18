@@ -310,7 +310,7 @@
 
                     var svgrec = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                     svgrec.setAttributeNS(null, 'height', '80%');
-                    svgrec.setAttributeNS(null, 'width', '20%');
+                    svgrec.setAttributeNS(null, 'width', '22%');
                     svgrec.setAttributeNS(null, 'id', resp.Id);
                     svgrec.setAttributeNS(null, 'style', 'fill:green;stroke:white');
                     svgrec.setAttributeNS(null, 'x', xposdetails);
@@ -336,7 +336,7 @@
                     var date = new Date(parsedIntDate);
 
                     createLabels("Nome: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
-                    createLabels("Nasceu: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
+                    createLabels("Nasceu: " + date.toLocaleDateString().toString("dd-MM-yyyy"), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
                     createLabels("Altura: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
                     createLabels("Peso: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
 

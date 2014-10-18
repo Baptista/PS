@@ -128,12 +128,13 @@
         svg.getElementById("all").appendChild(txtElem);
 
         var mytimer = null;
-
+        var lasttime = null;
         function starttime(dat) {
             mytimer = setInterval(function () {
                 var oldtimer = svg.getElementById("timer");
 
-                oldtimer.innerHTML = timernow(dat);
+                oldtimer.innerHTML = lasttime = timernow(dat);
+
             }, 1000);
         }
 
@@ -223,7 +224,7 @@
         function inserirsymbolclubs(photo, posx, posy) {
             var svgimg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
             svgimg.setAttributeNS(null, 'height', avheight / 9);
-            svgimg.setAttributeNS(null, 'width', avwidth / 18);
+            svgimg.setAttributeNS(null, 'width', avwidth / 20);
 
             svgimg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', "../fonts/" + photo);
             svgimg.setAttributeNS(null, 'x', posx);
@@ -233,7 +234,7 @@
 
         }
 
-        inserirsymbolclubs(document.getElementById("idclubvisitorphoto").innerHTML.trim(), "0", "1%");
+        inserirsymbolclubs(document.getElementById("idclubvisitorphoto").innerHTML.trim(), "1%", "1%");
         inserirsymbolclubs(document.getElementById("idclubagainstphoto").innerHTML.trim(), "93%", "1%");
 
         function inserirnameclubs(id, name, xpos, ypos) {
@@ -765,6 +766,7 @@
                 circles2.setAttribute("id", entry.Id);
                 svg.getElementById("all").appendChild(circles2);
                 showdetails[showdetails.length] = circles2;
+                saveplayer.idexe = null;
                 circles2.onclick = function () {
 
                     if (temp != null) {
@@ -861,9 +863,9 @@
                     var substringedDate = resp.Born.substring(6); //substringedDate= 1291548407008)/
                     var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
                     var date = new Date(parsedIntDate);
-
+                    
                     createLabels("Nome: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
-                    createLabels("Nasceu: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
+                    createLabels("Nasceu: " + date.toLocaleDateString().toString("dd-MM-yyyy"), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
                     createLabels("Altura: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
                     createLabels("Peso: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
 
@@ -992,9 +994,14 @@
                     var substringedDate = resp.Born.substring(6); //substringedDate= 1291548407008)/
                     var parsedIntDate = parseInt(substringedDate); //parsedIntDate= 1291548407008
                     var date = new Date(parsedIntDate);
-
+                    
+                    //console.log("datesss", date.toLocaleDateString());
+                    //console.log("datesss", date.toLocaleString());
+                    //console.log("datesss", date.toUTCString());
+                    //console.log("datesss", date.toDateString());
+                    //console.log("datesss", date.getDate());
                     createLabels("Nome: " + resp.Name, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.5 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 22 + "%");
-                    createLabels("Nasceu: " + date.toDateString(), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
+                    createLabels("Nasceu: " + date.toLocaleDateString().toString("dd-MM-yyyy"), parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 26 + "%");
                     createLabels("Altura: " + resp.Height, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 30 + "%");
                     createLabels("Peso: " + resp.Weight, parseInt(xposdetails.substring(0, xposdetails.length - 1)) + 0.3 + "%", parseInt(yposdetails.substring(0, yposdetails.length - 1)) + 34 + "%");
 
@@ -1329,8 +1336,13 @@
                     lastcircle = null;
 
                     var xmlhttp10 = new XMLHttpRequest();
-                    var dt = new Date();
-
+                    var dt = new Date(); //lasttime;
+                    if (lasttime != null) {
+                        dt.setHours(lasttime.split(':')[0]);
+                        dt.setMinutes(lasttime.split(':')[1]);
+                        dt.setSeconds(lasttime.split(':')[2]);
+                    }
+                    console.log("dt", dt);
                     xmlhttp10.onreadystatechange = function () {
 
                         if (xmlhttp10.readyState == 4 && xmlhttp10.status == 200) {
@@ -1371,7 +1383,7 @@
                             if (resp.Type == 'Substituição' && nsubst == 3) {
 
                             } else {
-
+                                console.log("dt", dt);
                                 xmlhttp10.open("POST", "/SetUp/CreateInstant", true);
                                 xmlhttp10.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                                 xmlhttp10.send("datenow=" + dt + "&idstadium=" + idstadium + "&datahora=" + datahora + "&datavisitor=" + dataequipav + "&idvisitor=" + idequipav +
@@ -1559,12 +1571,12 @@
                                                         oldtimer.innerHTML = new Date(endmatch - datet).toTimeString().substring(0, 8);
                                                     }
                                                 } else if (resp1.Type == 'Fim da Partida') {
-                                                    endmatch = datet;
+                                                    //endmatch = datet;
                                                     clearInterval(mytimer);
-                                                    if (starmatch != null) {
+                                                    //if (starmatch != null) {
                                                         var oldtimer = svg.getElementById("timer");
-                                                        oldtimer.innerHTML = new Date(starmatch - datet).toTimeString().substring(0, 8);
-                                                    }
+                                                        oldtimer.innerHTML = datet.toTimeString().substring(0, 8);//new Date(starmatch - datet).toTimeString().substring(0, 8);
+                                                    //}
                                                 }
                                                 ++nrequestinstant;
                                                 if (nrequestinstant == resp.length) {
@@ -1661,7 +1673,7 @@
                     auxdiv2.style.color = 'red';
                     auxdiv2.style.left = aux1.length + 20 + "%";
 
-
+                    console.log("date.toTimeString().substring(0, 8)", date);
                     if (resp2.executeName == null) {
                         txt = document.createTextNode(" | " + date.toTimeString().substring(0, 8) + ' - ' + resp2.eventName + " - " + resp2.causeName);
                     } else {
