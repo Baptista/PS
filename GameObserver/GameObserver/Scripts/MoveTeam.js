@@ -856,7 +856,7 @@
 
         var idclub = document.getElementById("idteamclub").innerHTML;
         var date = document.getElementById("idteamdata").innerHTML;
-
+        console.log("allplayershome", allplayershome);
         if (allplayershome.length < 7) return;
         allplayershome.forEach(function (entry) {
 

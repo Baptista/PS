@@ -618,7 +618,7 @@
             circles.setAttribute("id", "circ" + y);
             showdetails[showdetails.length] = circles;
             circles.onclick = function () {
-
+                concole.log("lastcircle", lastcircle);
                 if (lastcircle != null) {
 
                     svg.getElementById("all").removeChild(lastcircle);
@@ -1517,7 +1517,7 @@
 
             var starmatch = null;
             var endmatch = null;
-
+            
             xmlhttp5.onreadystatechange = function () {
 
                 if (xmlhttp5.readyState == 4 && xmlhttp5.status == 200) {
@@ -1568,10 +1568,10 @@
                                                         clearInterval(mytimer);
                                                         var oldtimer = svg.getElementById("timer");
 
-                                                        oldtimer.innerHTML = new Date(endmatch - datet).toTimeString().substring(0, 8);
+                                                        oldtimer.innerHTML = endmatch.toTimeString().substring(0, 8);
                                                     }
                                                 } else if (resp1.Type == 'Fim da Partida') {
-                                                    //endmatch = datet;
+                                                    endmatch = datet;
                                                     clearInterval(mytimer);
                                                     //if (starmatch != null) {
                                                         var oldtimer = svg.getElementById("timer");
@@ -1718,20 +1718,28 @@
             xmlhttp6.send();
         }
 
+        var txt = document.createTextNode("Registo de acontecimentos");
+        var p = document.createElement('b');
+        p.style.left = '77%';
+        p.style.top = '6%';
+        p.style.position = 'absolute';
+        p.style.fontSize = avwidth/50+"px";
+        p.appendChild(txt);
+        document.body.appendChild(p);
 
 
         var timeline = document.createElement('div');
         timeline.id = 'timeline';
         timeline.style.width = '25%';
-        timeline.style.height = '60%';
+        timeline.style.height = '30%';
         timeline.style.overflow = 'auto';
         timeline.style.position = 'fixed';
-        timeline.style.left = '70%';
+        timeline.style.left = '72%';
         timeline.style.top = '10%';
         timeline.title = "TimeLine";
         timeline.style.border = 'ridge';
         timeline.style.whiteSpace = 'nowrap';
-
+        //timeline.appendChild(txt);
         document.body.appendChild(timeline);
 
 
@@ -1753,7 +1761,7 @@
             divcount.style.top = "0%";
 
             var evcount = document.createTextNode(number);
-            divcount.style.fontSize = avwidth / 100 + "px";
+            divcount.style.fontSize = avwidth / 70 + "px";
             divcount.appendChild(evcount);
 
             var divbar = document.createElement('div');
@@ -1770,18 +1778,18 @@
             divname.style.width = '100%';
             divname.style.height = '0%';
             divname.style.position = 'absolute';
-            divname.style.left = "10%";
+            divname.style.left = "5%";
             divname.style.top = (number * 100 / avheight) + 20 + "%";
             var evname = document.createTextNode((opinion == 'yes') ? "sim" : "não");
-            divname.style.fontSize = avwidth / 100 + "px";
+            divname.style.fontSize = avwidth / 70 + "px";
 
             divname.appendChild(evname);
-
+            //divmain.style.textAlign = 'center';
 
             divmain.appendChild(divcount);
             divmain.appendChild(divbar);
             divmain.appendChild(divname);
-
+            //divmain.style.textAlign = 'center';
             return divmain;
         }
 
@@ -1794,8 +1802,8 @@
                     var resp = JSON.parse(xmlhttp.response);
                     var xleft = null;
                     var nevents = resp.length;
-                    var xpos = (avwidth / 2 / (nevents * 2)) * 100 / avwidth;
-                    var ypos = avheight + 50;
+                    var xpos = (avwidth / 2 / (nevents * 2)) * 120 / avwidth;
+                    var ypos = avheight + 60;
                     var accxpos = xpos + "%";
                     resp.forEach(function (entry) {
 
@@ -1813,27 +1821,36 @@
 
                                         xleft = accxpos;
                                         var divyes = createMyCounters(entry.Id, resp2, accxpos, ypos, "yes");
+                                        //divyes.style.textAlign = 'center';
                                         accxpos = parseInt(accxpos.substring(0, accxpos.length - 1)) + xpos + "%";
                                         var divno = createMyCounters(entry.Id, resp3, accxpos, ypos, "no");
+                                        //divno.style.textAlign = 'center';
                                         accxpos = parseInt(accxpos.substring(0, accxpos.length - 1)) + xpos + "%";
                                         var divmain = document.createElement('div');
                                         divmain.id = 'n';
                                         divmain.style.position = 'absolute';
-                                        divmain.style.width = '3%';
+                                        divmain.style.width = '4%';
                                         divmain.style.height = '19%';
                                         divmain.style.left = accxpos;
                                         divmain.style.top = ypos + "px";
+                                        //divmain.style.textAlign = 'center';
+                                        //divmain.style.border = "solid";
                                         divmain.appendChild(divyes);
                                         divmain.appendChild(divno);
                                         var divev = document.createElement('div');
                                         divev.id = 'n';
                                         divev.style.position = 'absolute';
                                         divev.style.top = (resp2 > resp3) ? resp2 + 20 + 15 + "%" : resp3 + 20 + 15 + "%";
-
+                                        //divev.style.left = "0%";
 
                                         var evname = document.createTextNode(entry.Type);
-                                        divev.style.fontSize = avwidth / 100 + "px";
-                                        divev.marginRight = "4cm";
+                                        divev.style.fontSize = avwidth / 70 + "px";
+                                        //divev.style.left = "5%";
+                                        //divev.marginRight = "4cm";
+                                        divev.style.textAlign = 'middle';
+                                        divev.style.marginLeft = '10%';
+                                        //divev.style.marginRight = '40%';
+                                        //divev.style.verticalAlign = 'middle';
                                         divev.appendChild(evname);
                                         divmain.appendChild(divev);
 
@@ -1913,11 +1930,13 @@
                             data.addColumn('string', 'Topping');
                             data.addColumn('number', 'Slices');
                             data.addRows(mainarr);
-
+                            
                             var options = {
-                                'title': 'Estatistica ' + ((opinion == "yes") ? "sim" : "não"),
-                                'width': avwidth / 4,
-                                'height': avheight / 3
+                                'title': ((opinion == "yes") ? "SIM" : "NÃO"),
+                                'width': avwidth / 2.5,
+                                'height': avheight / 2,
+                                'chartArea': { left: 0, width: 400 },
+                                'fontSize' : avwidth/70
                             };
                             var chart = new google.visualization.PieChart(document.getElementById(iddiv));
                             chart.draw(data, options);
