@@ -605,10 +605,11 @@
 
 
 
-        
+        var lastcircle = null;
         function createcircles(idp, ide, x, y) {
 
-            var lastcircle = null;
+            //var lastcircle = null;
+            //console.log("lastcircle", lastcircle);
             var circles = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circles.setAttribute("cx", x);
             circles.setAttribute("cy", y);
@@ -618,9 +619,9 @@
             circles.setAttribute("id", "circ" + y);
             showdetails[showdetails.length] = circles;
             circles.onclick = function () {
-                concole.log("lastcircle", lastcircle);
+                
                 if (lastcircle != null) {
-
+                    //console.log("lastcircle", lastcircle);
                     svg.getElementById("all").removeChild(lastcircle);
                     removeElemFromArray(showdetails, lastcircle);
 
@@ -639,12 +640,14 @@
 
 
                 lastcircle = circlesinside;
-
+                //console.log("lastcircle", lastcircle);
 
                 showdetails[showdetails.length] = circlesinside;
 
                 saveplayer.event = ide;
                 saveplayer.idplayer = idp;
+
+
                 var xmlhttp8 = new XMLHttpRequest();
 
                 xmlhttp8.onreadystatechange = function () {
@@ -678,10 +681,10 @@
                                         if (xmlhttp1.readyState == 4 && xmlhttp.status == 200) {
                                             var resp3 = JSON.parse(xmlhttp1.response);
                                             y = "8%";
-                                            var temp = null;
+                                            //var temp = null;
                                             resp3.forEach(function (entry) {
                                                 
-                                                createSecondActor(entry, temp,y);
+                                                createSecondActor(entry,y);
                                                 y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
                                             });
                                         }
@@ -700,7 +703,7 @@
                                                 var idc;
                                                 if (resp2.Type == "Substituição") {
                                                     
-                                                    var temp = null;
+                                                    //var temp = null;
                                                     y = "8%";
                                                     playersnotplaying.forEach(function(entry) {
                                                         
@@ -710,7 +713,7 @@
                                                             if (xmlhttp2.readyState == 4 && xmlhttp2.status == 200) {
                                                                 var resp4 = JSON.parse(xmlhttp2.response);
 
-                                                                createSecondActor(resp4, temp,y);
+                                                                createSecondActor(resp4,y);
                                                                 y = parseInt(y.substring(0, y.length - 1)) + 4 + "%";
                                                             }
                                                         };
@@ -753,8 +756,8 @@
         }
 
 
-        
-        function createSecondActor(entry , temp,y) {
+        var temp = null;
+        function createSecondActor(entry ,y) {
             
                 
                 var circles2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -768,7 +771,7 @@
                 showdetails[showdetails.length] = circles2;
                 saveplayer.idexe = null;
                 circles2.onclick = function () {
-
+                    console.log("tem", temp);
                     if (temp != null) {
 
                         svg.getElementById("all").removeChild(temp);
@@ -1333,8 +1336,9 @@
                     } else if (!saveplayer.hasOwnProperty('idexe')) {
                         saveplayer.idexe = null;
                     }
+                    console.log("lastcircle", lastcircle);
                     lastcircle = null;
-
+                    temp = null;
                     var xmlhttp10 = new XMLHttpRequest();
                     var dt = new Date(); //lasttime;
                     if (lasttime != null) {
@@ -1411,6 +1415,8 @@
                 return true;
             }
             removedetails();
+            lastcircle = null;
+            temp = null;
             if (evt.which == 3) {
 
                 evt.target.onclick(evt);
@@ -1723,7 +1729,7 @@
         p.style.left = '77%';
         p.style.top = '6%';
         p.style.position = 'absolute';
-        p.style.fontSize = avwidth/50+"px";
+        p.style.fontSize = avwidth/60+"px";
         p.appendChild(txt);
         document.body.appendChild(p);
 
@@ -1853,7 +1859,9 @@
                                         //divev.style.verticalAlign = 'middle';
                                         divev.appendChild(evname);
                                         divmain.appendChild(divev);
-
+                                        //var divborder = document.createElement('div');
+                                        //divborder.style.border = ' 1px solid';
+                                        //divborder.appendChild(divmain);
                                         document.body.appendChild(divmain);
                                     }
                                 };
@@ -1932,14 +1940,16 @@
                             data.addRows(mainarr);
                             
                             var options = {
-                                'title': ((opinion == "yes") ? "SIM" : "NÃO"),
+                                'title': ((opinion == "yes") ? "(Sim) Concordo" : "(Não) Concordo"),
                                 'width': avwidth / 2.5,
                                 'height': avheight / 2,
                                 'chartArea': { left: 0, width: 400 },
-                                'fontSize' : avwidth/70
+                                'fontSize' : avwidth/75
                             };
                             var chart = new google.visualization.PieChart(document.getElementById(iddiv));
                             chart.draw(data, options);
+                            var doc = document.getElementsByName('title');
+                            console.log("doc", doc);
                         }
                     }
                 };

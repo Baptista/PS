@@ -9,7 +9,7 @@
         <li>
             <a>Olá @User.Identity.GetUserName()</a>
         </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Disconecte-se</a></li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()">Desligar</a></li>
     </ul>
     }
 }
@@ -17,6 +17,6 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
         
-        <li>@Html.ActionLink("Conecte-se", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>@Html.ActionLink("Ligar", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
     </ul>
 }
